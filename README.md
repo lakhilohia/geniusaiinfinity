@@ -16,6 +16,10 @@ trade.
 
 ## Features
 
+- **7 languages:** English, Hindi, Hinglish, Assamese, Rajasthani, Urdu
+  (right-to-left) and Sanskrit — a UI language switcher in the header. The
+  interface chrome is translated; detailed clinical text stays in English for
+  safety. Translations are best-effort.
 - **Interactive symptom checker** across lung, eye, ear, gallbladder, skin,
   digestive and sleep symptoms → builds one combined protocol.
 - **Holistic diet plan builder** with a **conflict engine** that resolves
@@ -23,13 +27,22 @@ trade.
   lungs vs. cooling eyes) and a suggested unified daily menu.
 - **What to have / what to avoid** for every condition, each with a **classical
   citation** and an **indicative modern reference**.
+- **Conventional (MBBS / allopathic) reference** per condition — what standard
+  medicine focuses on, when to seek a doctor/surgeon, plus the standard textbook
+  (Harrison's, Kanski's, Bailey & Love's, Scott-Brown's, Fitzpatrick's,
+  Kryger's, etc.). No drug prescriptions — safety and referral guidance only.
 - **Ayurvedic herbal formulations directory** (Triphala, Mulethi, Ashwagandha,
   Vasaka, Guggulu, Neem, Turmeric) with traditional uses, modern direction,
   dosage and **contraindications**.
-- **Sujok & homeopathy** complementary guidance (symptomatic, clearly labelled).
+- **Sujok / acupressure** for each condition with the **correspondence point**,
+  **how to press**, **hold time (seconds)** and **number of repetitions**,
+  plus symptomatic **homeopathy** pairings.
+- **Atharvaveda, mantra & tantra** section — traditional healing mantras
+  (Dhanvantari, Mahamrityunjaya, Gayatri) with repetition counts, presented
+  strictly as **cultural/spiritual practice for calm — not a medical cure**.
 - **Offline meal & remedy logger** (stored locally on the device).
 - **Role-based access:** Admin (the two admin emails) · Subscribed (₹100/week) ·
-  Free tier.
+  Free tier (checker, diet do/don't, conventional safety notes, herb overview).
 - **Offline-first PWA:** a service worker caches the whole app so it opens and
   runs with **no internet**. Login-audit records queue offline and sync to the
   admin Google Sheet when back online.
