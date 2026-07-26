@@ -5,7 +5,7 @@
  * Sheets audit sync ever needs the internet, and that is handled by the page,
  * not here.
  */
-const CACHE = 'coserveu-v4';
+const CACHE = 'coserveu-v5';
 const SHELL = [
   './',
   './index.html',
