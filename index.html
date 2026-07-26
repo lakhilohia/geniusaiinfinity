@@ -92,6 +92,21 @@
   .tag{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:2px 7px; border-radius:6px; background:#f1f5f9; color:#475569; margin-right:6px}
   .tag.allo{background:#e0f2fe; color:#075985}
   .tag.sujok{background:#dcfce7; color:#166534}
+  .tag.homeo{background:#fef9c3; color:#854d0e}
+  .tag.mantra{background:#fae8ff; color:#86198f}
+  .tag.tantra{background:#ede9fe; color:#5b21b6}
+  .condwrap{border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:0 0 16px; background:#fff}
+  .condhead{padding:10px 14px; font-weight:700; color:#fff; font-size:14px; background:var(--brand2)}
+  .condhead.lung{background:#059669}.condhead.eye{background:#4f46e5}.condhead.ear{background:#0891b2}
+  .condhead.gall{background:#b45309}.condhead.skin{background:#db2777}.condhead.sleep{background:#7c3aed}.condhead.digest{background:#ca8a04}
+  .modality{padding:12px 14px; border-top:1px solid var(--line)}
+  .modality p{margin:4px 0; font-size:13px}
+  .modality .sk{font-family:"Noto Sans Devanagari",serif; color:#86198f; font-weight:600}
+  .cnt{display:inline-block; font-size:11px; font-weight:700; background:#f5d0fe; color:#86198f; padding:1px 8px; border-radius:999px}
+  .sujokrow{display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start}
+  .sujoktext{flex:1; min-width:200px}
+  .handpic{text-align:center}
+  .handpic .cap{font-size:10px; color:var(--muted); margin-top:2px}
   .have{color:#065f46}
   .avoid{color:#b91c1c}
   .cite{font-size:11px; color:var(--muted); background:#f8fafc; border:1px solid var(--line); border-radius:8px; padding:6px 8px; margin-top:6px}
@@ -555,6 +570,70 @@ const COND = {
 };
 function condResolve(k){ const c=COND[k]; return c && c.alias ? COND[c.alias] : c; }
 
+/* Sujok hand-map: correspondence point coordinates (schematic) + organ clock */
+const POINTS = {
+  insomnia:{x:52,y:104,label:"Head / brain",clock:"Calm hours: before sleep (10–11 PM)"},
+  cataract:{x:52,y:122,label:"Eyes",clock:"Peak: 7–9 AM"},
+  conjunctivitis:{x:52,y:122,label:"Eyes",clock:"Peak: 7–9 AM"},
+  ear:{x:62,y:140,label:"Ear",clock:"Peak: 7–9 AM"},
+  ild:{x:82,y:150,label:"Lung (thenar)",clock:"Lung meridian: 3–5 AM"},
+  gallstone:{x:128,y:150,label:"Gallbladder",clock:"Gallbladder meridian: 11 PM–1 AM"},
+  digestion:{x:106,y:176,label:"Stomach (centre of palm)",clock:"Stomach meridian: 7–9 AM"},
+  skin:{x:106,y:198,label:"Skin / blood zone",clock:"Large-intestine/skin: 5–7 AM"}
+};
+// Draw a schematic right-hand palm with all points; highlight the active one.
+function handSVG(activeKey){
+  const dots = Object.entries(POINTS).map(([k,p])=>{
+    const on = (k===activeKey);
+    return `<circle cx="${p.x}" cy="${p.y}" r="${on?7:3.2}" fill="${on?'#dc2626':'#94a3b8'}" ${on?'stroke="#fff" stroke-width="2"':''}/>`
+      + (on?`<text x="${p.x+11}" y="${p.y+4}" font-size="11" fill="#b91c1c" font-weight="700">${p.label}</text>`:'');
+  }).join("");
+  return `<svg viewBox="0 0 210 250" width="100%" style="max-width:230px" role="img" aria-label="Sujok hand map">
+    <!-- palm -->
+    <rect x="62" y="118" width="94" height="116" rx="30" fill="#fde8d7" stroke="#e3b48f"/>
+    <!-- fingers -->
+    <rect x="70" y="46" width="18" height="78" rx="9" fill="#fde8d7" stroke="#e3b48f"/>
+    <rect x="94" y="38" width="18" height="86" rx="9" fill="#fde8d7" stroke="#e3b48f"/>
+    <rect x="118" y="44" width="18" height="80" rx="9" fill="#fde8d7" stroke="#e3b48f"/>
+    <rect x="140" y="60" width="17" height="66" rx="8" fill="#fde8d7" stroke="#e3b48f"/>
+    <!-- thumb -->
+    <rect x="41" y="96" width="22" height="82" rx="11" fill="#fde8d7" stroke="#e3b48f"/>
+    ${dots}
+  </svg>`;
+}
+
+/* Per-condition traditional mantra (Atharvaveda / deity association) — cultural, NOT medical */
+const MANTRA = {
+  ild:{name:"Respiratory calm (Atharvaveda Yakshma-nashana tradition)", sk:"ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम्…", count:"11 or 108 times, sunrise",
+    note:"Atharvaveda (Kanda 3) has Yakshma-nashana healing hymns; the Mahamrityunjaya mantra is traditionally chanted for the unwell for courage and calm."},
+  cataract:{name:"Surya (Sun) — eyes", sk:"ॐ सूर्याय नमः", count:"108 times, morning sunlight",
+    note:"Eyes are traditionally associated with Surya; chanting is done for calm, not as a cure."},
+  conjunctivitis:{name:"Surya (Sun) — eyes", sk:"ॐ सूर्याय नमः", count:"108 times, morning",
+    note:"Traditional eye association with the Sun; supportive practice only."},
+  ear:{name:"Pranava (Om) — hearing/space", sk:"ॐ", count:"21 slow repetitions",
+    note:"Sound/space (Akasha) governs hearing in tradition; slow Om chanting for calm."},
+  gallstone:{name:"Dhanvantari (healing deity)", sk:"ॐ नमो भगवते वासुदेवाय धन्वन्तरये…", count:"108 times",
+    note:"Dhanvantari is the deity of Ayurveda; chanted for wellbeing before medicine."},
+  digestion:{name:"Agni (digestive fire)", sk:"ॐ अग्नये नमः", count:"11 or 108 times before meals",
+    note:"Agni is the traditional principle of digestion; a mindful pre-meal practice."},
+  skin:{name:"Surya / purification", sk:"ॐ सूर्याय नमः", count:"108 times, morning sun",
+    note:"Traditional association of the Sun with skin & vitality; supportive only."},
+  insomnia:{name:"Chandra (Moon) — calm & sleep", sk:"ॐ चन्द्राय नमः", count:"108 times at night",
+    note:"The Moon (Soma) is associated with coolness & rest; a calming bedtime practice."}
+};
+
+/* Per-condition Tantra = yogic mind-body practice (safe pranayama/meditation), NOT esoteric ritual */
+const TANTRA_C = {
+  ild:"Anulom-Vilom (alternate-nostril) & Bhramari (humming) pranayama, 5–10 min in fresh air. Stop if breathless.",
+  cataract:"Trataka (soft candle/dot gazing) then palming; gentle eye-rotation exercises. Never strain the eyes.",
+  conjunctivitis:"Only palming & rest during active infection; avoid gazing practices until healed.",
+  ear:"Bhramari (humming) breath, 5 rounds — the gentle vibration is calming.",
+  gallstone:"Slow abdominal (diaphragmatic) breathing; avoid vigorous kriyas during acute pain.",
+  digestion:"Sit in Vajrasana a few minutes after meals; slow deep breathing to aid digestion.",
+  skin:"Sheetali / Sheetkari (cooling) pranayama, 5 rounds; calm routine reduces flare stress.",
+  insomnia:"Yoga-Nidra body scan and Chandra-bhedana (left-nostril) slow breathing before bed."
+};
+
 const HERBS = [
   {name:"Triphala / Triphala Ghrita", bot:"Emblica officinalis, Terminalia chebula, Terminalia bellirica",
    uses:"Eye health (cataract, conjunctivitis), gentle digestion & bowel regularity, skin support.",
@@ -751,34 +830,108 @@ function sampleDay(keys){
   ];
   return `<table class="day">${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}</table>`;
 }
-function renderProtocol(keys, target){
-  const full=isFull(); const notes=conflictNotes(keys); let html="";
-  if(notes.length) html+=`<div class="panel gall"><h4>Cross-compatibility (how the plans complement each other)</h4>${notes.map(x=>`<p>• ${x}</p>`).join("")}</div>`;
-  keys.forEach(k=>{
-    const c=condResolve(k); if(!c) return; const s=c.sujok;
-    html+=`<div class="panel ${c.cls}">
-      <h4>${esc(c.label)}</h4>
-      <p><span class="tag">Have</span><span class="have">${c.have.map(esc).join(" · ")}</span></p>
-      <p><span class="tag">Avoid</span><span class="avoid">${c.avoid.map(esc).join(" · ")}</span></p>
-      <div class="allo-note"><span class="tag allo">Conventional (MBBS)</span> ${esc(c.allo)}<br><b>Ref:</b> ${esc(c.alloBook)}</div>
+let LAST_KEYS=[]; // remember selection for the printable plan
+// Build the separate-panel block for ONE condition. Each therapy system is its own panel.
+function conditionBlock(k, full){
+  const c=condResolve(k); if(!c) return "";
+  const s=c.sujok, homeo=HOMEO[k]||[], m=MANTRA[k], tn=TANTRA_C[k], pt=POINTS[k];
+  const lock='<span class="locked">🔒 Subscribe (₹100/wk) to unlock.</span>';
+  return `<div class="condwrap">
+    <div class="condhead ${c.cls}">${esc(c.label)}</div>
+
+    <div class="modality"><span class="tag">1 · Ayurvedic Diet</span>
+      <p><b class="have">Have:</b> <span class="have">${c.have.map(esc).join(" · ")}</span></p>
+      <p><b class="avoid">Avoid:</b> <span class="avoid">${c.avoid.map(esc).join(" · ")}</span></p>
+      <div class="cite"><b>Classical:</b> ${esc(c.classical)} · <b>Modern:</b> ${esc(c.clinical)}</div>
+    </div>
+
+    <div class="modality"><span class="tag allo">2 · Conventional / MBBS (Allopathic)</span>
+      <p>${esc(c.allo)}</p><div class="cite"><b>Textbook:</b> ${esc(c.alloBook)}</div>
+    </div>
+
+    <div class="modality"><span class="tag sujok">3 · Sujok / Acupressure</span>
+      <div class="sujokrow">
+        <div class="handpic">${handSVG(k)}<div class="cap">Schematic hand map — red = this point</div></div>
+        <div class="sujoktext">
+          ${ full
+            ? `<p><b>Point:</b> ${esc(s.point)}</p><p><b>How to press:</b> ${esc(s.how)}</p>
+               <p><b>Hold:</b> ${esc(s.time)} &nbsp; <b>Reps:</b> ${esc(s.reps)}</p>
+               <p><b>Best time (organ clock):</b> ${esc(pt.clock)}</p>`
+            : `<p>${lock}</p>` }
+        </div>
+      </div>
+    </div>
+
+    <div class="modality"><span class="tag homeo">4 · Homeopathy (symptomatic)</span>
+      <p>${ homeo.length ? (full? esc(homeo.join(", ")) : lock) : "General constitutional care — consult a homeopath." }</p>
+      <div class="cite">Take ~30 min apart from strong herbal decoctions. Complementary only.</div>
+    </div>
+
+    <div class="modality"><span class="tag mantra">5 · Atharvaveda / Mantra</span>
       ${ full
-        ? `<p style="margin-top:6px"><span class="tag sujok">Sujok / Acupressure</span><b>Point:</b> ${esc(s.point)} <b>How:</b> ${esc(s.how)} <b>Hold:</b> ${esc(s.time)} <b>Reps:</b> ${esc(s.reps)}</p>`
-        : `<p class="locked" style="margin-top:6px">🔒 Sujok point, hold-time & repetition count and herbal dosing — subscribe (₹100/wk) to unlock.</p>` }
-      <div class="cite"><b>Classical:</b> ${esc(c.classical)}<br><b>Modern (indicative):</b> ${esc(c.clinical)}</div>
-    </div>`;
-  });
-  html+=`<div class="panel"><h4>Suggested unified day</h4>${sampleDay(keys)}
+        ? `<p><b>${esc(m.name)}</b> — <span class="cnt">${esc(m.count)}</span></p><p class="sk">${esc(m.sk)}</p><p class="cite">${esc(m.note)} Cultural/spiritual practice for calm — not a cure.</p>`
+        : `<p>${lock}</p>` }
+    </div>
+
+    <div class="modality"><span class="tag tantra">6 · Tantra / Yogic (mind-body)</span>
+      <p>${ full ? esc(tn) : lock }</p>
+      <div class="cite">Breath &amp; meditation practice for calm — learn from a trained teacher; not a cure.</div>
+    </div>
+  </div>`;
+}
+function renderProtocol(keys, target){
+  LAST_KEYS=keys.slice();
+  const full=isFull(); const notes=conflictNotes(keys); let html="";
+  html+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <button class="btn sm" onclick="printPlan()">🖨️ Print / Save plan as PDF</button>
+    <span class="pill">Each therapy is shown in its own numbered panel</span></div>`;
+  if(notes.length) html+=`<div class="panel gall"><h4>Cross-compatibility (how the plans complement each other)</h4>${notes.map(x=>`<p>• ${x}</p>`).join("")}</div>`;
+  keys.forEach(k=>{ html+=conditionBlock(k, full); });
+  html+=`<div class="panel"><h4>Suggested unified day (all conditions combined)</h4>${sampleDay(keys)}
     <p class="cite" style="margin-top:8px">Adjust portions to your digestive strength (Agni). Stop and seek care if symptoms worsen.</p></div>`;
-  if(!full) html+=`<div class="block-note" style="margin-top:10px">You're on the <b>Free tier</b>. Diet do/don't, conventional (MBBS) safety notes and citations are shown.
-      Full herbal dosing, Sujok point/time/reps and homeopathy unlock with a ₹100/week subscription.
+  if(!full) html+=`<div class="block-note" style="margin-top:10px">You're on the <b>Free tier</b>. Diet do/don't and conventional (MBBS) safety notes are shown.
+      Full herbal dosing, Sujok point/time/reps, homeopathy, mantra & tantra unlock with a ₹100/week subscription.
       <div style="margin-top:8px"><button class="btn sm amber" onclick="subscribe()">Unlock ₹100/wk</button></div></div>`;
-  if(full){
-    const hs=keys.flatMap(k=> HOMEO[k]? [[condResolve(k).label, HOMEO[k]]]:[]);
-    if(hs.length) html+=`<div class="panel sleep"><h4>Complementary homeopathy (symptomatic)</h4>
-      ${hs.map(([lab,arr])=>`<p><b>${esc(lab)}:</b> ${arr.map(esc).join(", ")}</p>`).join("")}
-      <p class="cite">Take ~30 min apart from strong herbal decoctions. Complementary only — not a replacement for prescribed care.</p></div>`;
-  }
   target.innerHTML=html;
+}
+
+/* Printable / Save-as-PDF unified plan (works fully offline via the browser's own print) */
+function printPlan(){
+  if(!LAST_KEYS.length){ alert("Generate a plan first."); return; }
+  const full=isFull(); const u=currentUser||{};
+  const secByCond = LAST_KEYS.map(k=>{
+    const c=condResolve(k), s=c.sujok, homeo=HOMEO[k]||[], m=MANTRA[k], tn=TANTRA_C[k], pt=POINTS[k];
+    return `<h2>${esc(c.label)}</h2>
+      <p><b>1 · Ayurvedic diet — Have:</b> ${esc(c.have.join(", "))}</p>
+      <p><b>Avoid:</b> ${esc(c.avoid.join(", "))}</p>
+      <p><b>2 · Conventional (MBBS):</b> ${esc(c.allo)} <i>[${esc(c.alloBook)}]</i></p>
+      ${ full ? `<p><b>3 · Sujok / Acupressure:</b> ${esc(s.point)} — ${esc(s.how)} Hold ${esc(s.time)}, ${esc(s.reps)}. ${esc(pt.clock)}.</p>
+      <p><b>4 · Homeopathy:</b> ${esc(homeo.join(", ")||"as advised")}</p>
+      <p><b>5 · Mantra (${esc(m.name)}):</b> ${esc(m.sk)} — ${esc(m.count)}.</p>
+      <p><b>6 · Tantra / Yogic:</b> ${esc(tn)}</p>` : `<p><i>Subscribe (₹100/wk) for Sujok, homeopathy, mantra & tantra detail.</i></p>` }
+      <p style="font-size:11px;color:#555"><b>Classical:</b> ${esc(c.classical)} · <b>Modern:</b> ${esc(c.clinical)}</p><hr>`;
+  }).join("");
+  const w=window.open("","_blank");
+  if(!w){ alert("Please allow pop-ups to print/save the plan."); return; }
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>CoserveU Holistic Plan</title>
+    <style>body{font-family:system-ui,Arial,sans-serif;color:#0f172a;max-width:760px;margin:24px auto;padding:0 16px;line-height:1.5}
+    h1{color:#065f46;margin:0 0 2px} h2{color:#047857;font-size:16px;margin:16px 0 4px;border-bottom:1px solid #ddd}
+    .muted{color:#64748b;font-size:12px} p{margin:3px 0;font-size:13px} hr{border:none;border-top:1px dashed #cbd5e1;margin:12px 0}
+    .warn{background:#fff7ed;border:1px solid #fdba74;color:#9a3412;padding:10px;border-radius:8px;font-size:12px;margin:12px 0}
+    .sign{margin-top:24px;font-size:13px} @media print{.noprint{display:none}}</style></head><body>
+    <h1>CoserveU — Holistic Care Plan</h1>
+    <div class="muted">powered by studymadease · Founder: Adv. Lakhi Lohia (Advisory)</div>
+    <p><b>Name:</b> ${esc(u.name||"__________")} &nbsp; <b>Date:</b> ${esc(new Date().toLocaleDateString())}</p>
+    <div class="warn"><b>Educational care plan — not a doctor's prescription.</b> This unites Ayurveda, conventional
+      (MBBS) guidance, homeopathy, Sujok, mantra & tantra for information only. It does not authorise any
+      medicine. Verify every item with a qualified physician / registered practitioner before use; herbs can
+      interact with medicines.</div>
+    ${secByCond}
+    <p class="sign">Reviewed by (practitioner): ____________________________  Signature &amp; Reg. No.: __________</p>
+    <button class="noprint" onclick="window.print()" style="margin-top:16px;padding:10px 16px;background:#047857;color:#fff;border:none;border-radius:8px;cursor:pointer">Print / Save as PDF</button>
+    </body></html>`);
+  w.document.close();
+  setTimeout(()=>{ try{ w.print(); }catch(e){} }, 400);
 }
 
 /* ---------- Herbs ---------- */
@@ -797,23 +950,29 @@ function renderHerbs(){
     </div>`).join("");
 }
 
-/* ---------- Therapies (Sujok/acupressure + homeopathy) ---------- */
+/* ---------- Therapies (Sujok/acupressure hand-maps + organ clock) ---------- */
 function renderTherapies(){
   const full=isFull();
   const keys=["ild","cataract","conjunctivitis","ear","gallstone","digestion","skin","insomnia"];
-  document.getElementById('therapyList').innerHTML = keys.map(k=>{
-    const c=condResolve(k), s=c.sujok, homeo=HOMEO[k]||[];
+  document.getElementById('therapyList').innerHTML =
+    `<div class="panel"><h4>Hand map — all correspondence points</h4>
+       <div class="handpic" style="margin:auto">${handSVG(null)}<div class="cap">Schematic right-palm Sujok map (not to scale). Learn precise points from a trained Sujok therapist.</div></div></div>`
+    + keys.map(k=>{
+    const c=condResolve(k), s=c.sujok, homeo=HOMEO[k]||[], pt=POINTS[k];
     return `<div class="panel ${c.cls}">
-      <h4>${esc(c.label)}</h4>
-      ${ full
-        ? `<p><span class="tag sujok">Sujok / Acupressure</span></p>
-           <p><b>Point:</b> ${esc(s.point)}</p>
-           <p><b>How to press:</b> ${esc(s.how)}</p>
-           <p><b>Hold time:</b> ${esc(s.time)} &nbsp; <b>Repetitions:</b> ${esc(s.reps)}</p>`
-        : `<p class="locked">🔒 Subscribe (₹100/wk) to view the Sujok point, hold-time & repetition count.</p>` }
-      ${ homeo.length? `<p><span class="tag">Homeopathy</span>${ full? esc(homeo.join(", ")) : '<span class="locked">🔒 Subscribe to view.</span>'}</p>`:"" }
+      <h4>${esc(c.label)} <span class="pill">${esc(pt.clock)}</span></h4>
+      <div class="sujokrow">
+        <div class="handpic">${handSVG(k)}<div class="cap">Red = ${esc(pt.label)}</div></div>
+        <div class="sujoktext">
+          ${ full
+            ? `<p><b>Point:</b> ${esc(s.point)}</p><p><b>How to press:</b> ${esc(s.how)}</p>
+               <p><b>Hold time:</b> ${esc(s.time)} &nbsp; <b>Repetitions:</b> ${esc(s.reps)}</p>
+               ${ homeo.length? `<p><b>Homeopathy:</b> ${esc(homeo.join(", "))}</p>`:"" }`
+            : `<p class="locked">🔒 Subscribe (₹100/wk) to view the point, hold-time & repetition count.</p>` }
+        </div>
+      </div>
     </div>`;
-  }).join("") + `<p class="cite">Sujok, acupressure & homeopathy here are supportive/symptomatic. They do not replace prescribed treatment. Never place unsterile material in the eye or ear; stop if pain increases.</p>`;
+  }).join("") + `<p class="cite">Sujok & acupressure here are supportive/symptomatic. They do not replace prescribed treatment. Never place unsterile material in the eye or ear; stop if pain increases.</p>`;
 }
 
 /* ---------- Traditions (Atharvaveda / Mantra / Tantra) ---------- */
