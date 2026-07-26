@@ -1,14 +1,1175 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-    <script type="module" crossorigin src="/assets/index-CT83642Z.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BiGijqvN.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#065f46" />
+<title>CoserveU powered by studymadease</title>
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="./icon.svg" />
+<style>
+  :root{
+    --bg:#f1f5f4; --card:#ffffff; --ink:#0f172a; --muted:#64748b;
+    --line:#e2e8f0; --brand:#065f46; --brand2:#047857; --brand-soft:#ecfdf5;
+    --amber:#b45309; --amber-soft:#fffbeb; --indigo:#3730a3; --indigo-soft:#eef2ff;
+    --red:#b91c1c; --radius:14px; --shadow:0 1px 2px rgba(2,6,23,.06),0 8px 24px rgba(2,6,23,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.5; -webkit-text-size-adjust:100%;
+    min-height:100vh; display:flex; flex-direction:column;
+  }
+  a{color:var(--brand2)}
+  [dir=rtl]{text-align:right}
+  .wrap{width:100%; max-width:900px; margin:0 auto; padding:16px; flex:1}
+  header.top{
+    background:linear-gradient(135deg,#065f46,#047857); color:#fff; padding:14px 16px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px; position:sticky; top:0; z-index:40;
+    box-shadow:0 2px 10px rgba(2,6,23,.15);
+  }
+  header.top h1{font-size:20px; margin:0; letter-spacing:.3px}
+  header.top p{margin:2px 0 0; font-size:11px; color:#a7f3d0}
+  .hright{display:flex; align-items:center; gap:8px}
+  #langSel{font-size:12px; padding:5px 8px; border-radius:8px; border:1px solid #34d399; background:#065f46; color:#fff}
+  .status{font-size:11px; padding:5px 10px; border-radius:999px; border:1px solid; white-space:nowrap}
+  .status.online{background:#059669; border-color:#34d399; color:#fff}
+  .status.offline{background:#b45309; border-color:#f59e0b; color:#fff}
 
+  nav.tabs{background:#fff; border-bottom:1px solid var(--line); display:flex; overflow-x:auto; position:sticky; top:58px; z-index:30}
+  nav.tabs button{
+    flex:0 0 auto; background:none; border:none; padding:12px 14px; font-size:13px; color:var(--muted);
+    cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; font-weight:500;
+  }
+  nav.tabs button.active{color:var(--brand2); border-bottom-color:var(--brand2); font-weight:700}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; margin:0 0 16px}
+  .card h2{margin:0 0 4px; font-size:17px; color:var(--brand)}
+  .card h3{margin:14px 0 6px; font-size:14px}
+  .sub{color:var(--muted); font-size:12px; margin:0 0 12px}
+
+  label.fld{display:block; font-size:12px; font-weight:600; margin:0 0 4px; color:#334155}
+  input[type=text],input[type=email],select{
+    width:100%; padding:10px; border:1px solid var(--line); border-radius:10px; font-size:14px; background:#fff; color:var(--ink);
+  }
+  input:focus,select:focus{outline:2px solid #a7f3d0; border-color:var(--brand2)}
+  .grid{display:grid; grid-template-columns:1fr; gap:10px}
+  @media(min-width:640px){ .grid.cols3{grid-template-columns:1fr 1fr 1fr} .grid.cols2{grid-template-columns:1fr 1fr} }
+
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; border:none;
+    background:var(--brand2); color:#fff; padding:11px 16px; border-radius:10px; font-size:14px; font-weight:600}
+  .btn:hover{background:var(--brand)}
+  .btn.block{width:100%}
+  .btn.ghost{background:#fff; color:var(--brand2); border:1px solid var(--brand2)}
+  .btn.amber{background:var(--amber)}
+  .btn.sm{padding:6px 12px; font-size:12px}
+
+  .checks{display:grid; grid-template-columns:1fr; gap:8px}
+  @media(min-width:560px){ .checks{grid-template-columns:1fr 1fr} }
+  .grp{border:1px solid var(--line); border-radius:12px; padding:12px; background:#fafcfb}
+  .grp .glab{font-weight:700; font-size:12px; color:var(--brand); display:block; margin-bottom:6px}
+  .grp label{display:flex; gap:8px; align-items:flex-start; font-size:13px; padding:3px 0; cursor:pointer}
+
+  .alert{padding:10px 12px; border-radius:10px; font-size:12.5px; border:1px solid; margin:10px 0}
+  .alert.admin{background:var(--indigo-soft); color:var(--indigo); border-color:#c7d2fe}
+  .alert.paid{background:var(--brand-soft); color:var(--brand); border-color:#a7f3d0}
+  .alert.free{background:var(--amber-soft); color:var(--amber); border-color:#fde68a; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+
+  .block-note{background:#eef2ff; border:1px solid #c7d2fe; color:#3730a3; border-radius:10px; padding:14px; text-align:center; font-size:13px}
+
+  .panel{border:1px solid var(--line); border-radius:12px; padding:14px; margin:12px 0; background:#fff}
+  .panel.lung{border-left:4px solid #059669}
+  .panel.eye{border-left:4px solid #4f46e5}
+  .panel.ear{border-left:4px solid #0891b2}
+  .panel.gall{border-left:4px solid #b45309}
+  .panel.skin{border-left:4px solid #db2777}
+  .panel.sleep{border-left:4px solid #7c3aed}
+  .panel.digest{border-left:4px solid #ca8a04}
+  .panel h4{margin:0 0 6px; font-size:14px}
+  .panel p{margin:4px 0; font-size:13px}
+  .tag{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:2px 7px; border-radius:6px; background:#f1f5f9; color:#475569; margin-right:6px}
+  .tag.allo{background:#e0f2fe; color:#075985}
+  .tag.sujok{background:#dcfce7; color:#166534}
+  .tag.homeo{background:#fef9c3; color:#854d0e}
+  .tag.mantra{background:#fae8ff; color:#86198f}
+  .tag.tantra{background:#ede9fe; color:#5b21b6}
+  .condwrap{border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:0 0 16px; background:#fff}
+  .condhead{padding:10px 14px; font-weight:700; color:#fff; font-size:14px; background:var(--brand2)}
+  .condhead.lung{background:#059669}.condhead.eye{background:#4f46e5}.condhead.ear{background:#0891b2}
+  .condhead.gall{background:#b45309}.condhead.skin{background:#db2777}.condhead.sleep{background:#7c3aed}.condhead.digest{background:#ca8a04}
+  .modality{padding:12px 14px; border-top:1px solid var(--line)}
+  .modality p{margin:4px 0; font-size:13px}
+  .modality .sk{font-family:"Noto Sans Devanagari",serif; color:#86198f; font-weight:600}
+  .cnt{display:inline-block; font-size:11px; font-weight:700; background:#f5d0fe; color:#86198f; padding:1px 8px; border-radius:999px}
+  .sujokrow{display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start}
+  .sujoktext{flex:1; min-width:200px}
+  .handpic{text-align:center}
+  .handpic .cap{font-size:10px; color:var(--muted); margin-top:2px}
+  /* Donate */
+  .donatecard{max-width:320px; margin:0 auto; padding:16px; border:1px solid var(--line); border-radius:16px; background:#fafcfb}
+  .qrbox{width:240px; height:240px; margin:0 auto; background:#fff; padding:10px; border-radius:12px; border:1px solid var(--line)}
+  .qrbox svg{width:100%; height:100%; display:block}
+  .paylines{max-width:360px; margin:14px auto 0; display:flex; flex-direction:column; gap:8px}
+  .payrow{display:flex; align-items:center; gap:10px; justify-content:space-between; border:1px solid var(--line); border-radius:10px; padding:8px 12px; font-size:13px; background:#fff}
+  .payrow span{color:var(--muted); font-size:12px}
+  .payrow b{flex:1; text-align:left; word-break:break-all}
+  /* Library */
+  .libitem{border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px; background:#fff; font-size:13px}
+  .libitem .bk{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; padding:1px 7px; border-radius:6px; margin-bottom:5px}
+  .libitem mark{background:#fde68a; padding:0 1px}
+  .bookhdr{margin:14px 0 6px; font-size:14px; color:var(--brand); font-weight:700}
+  .have{color:#065f46}
+  .avoid{color:#b91c1c}
+  .cite{font-size:11px; color:var(--muted); background:#f8fafc; border:1px solid var(--line); border-radius:8px; padding:6px 8px; margin-top:6px}
+  .cite b{color:#334155}
+  .allo-note{font-size:12px; background:#f0f9ff; border:1px solid #bae6fd; color:#075985; border-radius:8px; padding:8px; margin-top:6px}
+
+  .herb{border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:12px; background:#fff}
+  .herb .hh{display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap}
+  .herb .hh h4{margin:0; color:var(--brand)}
+  .herb .bot{font-style:italic; color:var(--muted); font-size:12px}
+  .herb dl{margin:8px 0 0; font-size:13px}
+  .herb dt{font-weight:700; color:#334155; margin-top:6px; font-size:12px}
+  .herb dd{margin:0 0 2px}
+  .locked{color:var(--amber); font-weight:600}
+
+  ul.log{list-style:none; margin:0; padding:0}
+  ul.log li{display:flex; justify-content:space-between; gap:8px; padding:9px 2px; border-bottom:1px solid var(--line); font-size:13px}
+  ul.log li .t{color:var(--muted); font-size:11px; white-space:nowrap}
+  ul.log li button{background:none;border:none;color:var(--red);cursor:pointer;font-size:12px}
+  .empty{color:#94a3b8; font-style:italic; font-size:13px; padding:8px 0}
+
+  .disclaimer{background:#fff7ed; border:1px solid #fdba74; color:#9a3412; border-radius:12px; padding:14px; font-size:12.5px}
+  .disclaimer b{color:#7c2d12}
+  .mantra-box{background:#fdf4ff; border:1px solid #f0abfc; border-radius:12px; padding:14px; margin:10px 0}
+  .mantra-box .sk{font-weight:600; color:#86198f}
+  .mantra-box .cnt{display:inline-block; font-size:11px; font-weight:700; background:#f5d0fe; color:#86198f; padding:1px 8px; border-radius:999px; margin-left:6px}
+  footer{padding:18px 16px; text-align:center; font-size:11px; color:var(--muted)}
+  .kv{font-size:12px; color:var(--muted)}
+  .hide{display:none !important}
+  .pill{font-size:11px; padding:2px 8px; border-radius:999px; background:#e2e8f0; color:#475569}
+  table.day{width:100%; border-collapse:collapse; font-size:13px; margin-top:6px}
+  table.day td{padding:6px 8px; border-bottom:1px solid var(--line)}
+  table.day td:first-child{font-weight:600; white-space:nowrap; color:#334155}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <h1>CoserveU</h1>
+    <p data-i18n="brandTag">powered by studymadease &nbsp;•&nbsp; Founder: Adv. Lakhi Lohia (Advisory)</p>
+  </div>
+  <div class="hright">
+    <select id="langSel" title="Language / भाषा" aria-label="Language">
+      <option value="en">English</option>
+      <option value="hi">हिन्दी</option>
+      <option value="hinglish">Hinglish</option>
+      <option value="as">অসমীয়া</option>
+      <option value="raj">राजस्थानी</option>
+      <option value="ur">اردو</option>
+      <option value="sa">संस्कृतम्</option>
+    </select>
+    <span id="statusInd" class="status online">Online</span>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button data-tab="home" class="active" data-i18n="navHome">Home</button>
+  <button data-tab="symptom" data-i18n="navSymptom">Symptom Checker</button>
+  <button data-tab="diet" data-i18n="navDiet">Diet Plan</button>
+  <button data-tab="herbs" data-i18n="navHerbs">Herbal Formulations</button>
+  <button data-tab="therapy" data-i18n="navTherapy">Sujok &amp; Acupressure</button>
+  <button data-tab="traditions" data-i18n="navTraditions">Atharvaveda / Mantra / Tantra</button>
+  <button data-tab="library" data-i18n="navLibrary">Reference Library (Granth)</button>
+  <button data-tab="log" data-i18n="navLog">Meal Log</button>
+  <button data-tab="donate" data-i18n="navDonate">❤️ Donate</button>
+  <button data-tab="about" data-i18n="navAbout">About &amp; Safety</button>
+</nav>
+
+<div class="wrap">
+
+  <!-- ================= HOME ================= -->
+  <section class="tabpane" data-pane="home">
+    <div class="card">
+      <h2 data-i18n="welcomeTitle">Welcome</h2>
+      <p class="sub">A holistic, <b>offline-first</b> companion combining classical Ayurveda
+        (<i>Charaka Samhita</i>, <i>Ashtanga Hridaya</i>, <i>Atharvaveda</i>), modern nutrition and
+        conventional (MBBS) references — for lung, eye, ear, gallbladder, skin, digestive and sleep concerns.
+        Works with no internet connection.</p>
+      <p class="sub" id="langNote">🌐 Language: UI is translated into Hindi, Hinglish, Assamese, Rajasthani,
+        Urdu &amp; Sanskrit. Translations are best-effort; detailed clinical text stays in English for safety.</p>
+      <div class="disclaimer">
+        <b data-i18n="discBold">Educational use only — not medical advice.</b> This app does not diagnose,
+        treat, or cure any disease. Dietary, herbal, acupressure and traditional/spiritual suggestions are
+        general educational and cultural information and can interact with medicines or conditions. Always
+        consult a qualified physician / registered Ayurvedic practitioner before starting any herb, diet or
+        therapy — especially in pregnancy, or with diabetes, hypertension, kidney/liver disease, or gallstones
+        needing surgical care.
+      </div>
+    </div>
+
+    <div class="card" style="border-left:5px solid #dc2626">
+      <h2 style="color:#b91c1c" data-i18n="emergTitle">🚑 Emergency signs — turant hospital jaayein</h2>
+      <p class="sub">In me se koi bhi ho to diet/herb par time mat gawaayein — <b>seedha doctor / hospital</b>:</p>
+      <ul style="font-size:13px;margin:0;padding-left:18px;line-height:1.7">
+        <li><b>Saans:</b> bahut tez saans phoolna, honth/naakhun neele padna, seene me dard.</li>
+        <li><b>Pet (gallbladder):</b> tej pet dard + bukhaar + aankh/peshaab peela (jaundice) — emergency.</li>
+        <li><b>Aankh:</b> achanak dikhna kam/band, tej dard, chot lagna.</li>
+        <li><b>Kaan:</b> tej dard + pus/khoon nikalna + bukhaar.</li>
+        <li><b>General:</b> behoshi, bahut kamzori, seene/haath me dard, lakwa jaise lakshan.</li>
+      </ul>
+      <p class="kv" style="margin-top:8px">India emergency number: <b>112</b> · Ambulance: <b>108</b></p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="registerTitle">Login / Register (this is the login)</h2>
+      <div class="allo-note" style="margin:0 0 10px"><b>🔑 Admin full access:</b> apna admin email
+        (<b>advlakhilohia@gmail.com</b> ya <b>lakhilohia23@gmail.com</b>) + koi bhi naam daal ke
+        <b>Start Session</b> dabayein — poora access (Sujok, mantra, dosage) khul jayega.</div>
+      <p class="sub">Details are stored on <b>this device</b> first. With consent and internet, a login record
+        is also synced to the practitioner's Google Sheet.</p>
+      <form id="loginForm" class="grid cols3">
+        <div><label class="fld" data-i18n="nameLbl">Full name</label><input type="text" id="fName" required placeholder="e.g. Ramesh Kumar"></div>
+        <div><label class="fld" data-i18n="emailLbl">Email</label><input type="email" id="fEmail" required placeholder="you@email.com"></div>
+        <div><label class="fld" data-i18n="addrLbl">City / Address</label><input type="text" id="fAddr" placeholder="City"></div>
+        <div style="grid-column:1/-1">
+          <label style="display:flex; gap:8px; font-size:12px; color:#334155; align-items:flex-start">
+            <input type="checkbox" id="fConsent">
+            <span data-i18n="consentLbl">I consent to my name, email, address and login time being recorded and,
+            when online, synced to the practitioner's private admin sheet for care and audit.</span>
+          </label>
+        </div>
+        <button type="submit" class="btn block" style="grid-column:1/-1" data-i18n="startBtn">Start Session</button>
+      </form>
+      <div id="roleAlert" class="hide"></div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Access — sab kuch FREE 🎉</h3>
+      <p class="kv" style="margin:2px 0">• <b>Sabhi features free</b> — symptom checker, full diet, herbal dosing, Sujok maps, mantra, tantra, reference books. Koi ₹100/week fee nahi.</p>
+      <p class="kv" style="margin:2px 0">• <b>Login optional</b> — bina login bhi sab chalega. Admin email se login karne par audit sync milta hai.</p>
+      <p class="kv" style="margin:2px 0">• <b>❤️ Donation swaeksha</b> — sirf agar app se sach me fayda ho. <a href="#" onclick="goTab('donate');return false">Donate tab kholein</a>.</p>
+    </div>
+  </section>
+
+  <!-- ================= SYMPTOM CHECKER ================= -->
+  <section class="tabpane hide" data-pane="symptom">
+    <div class="card">
+      <h2 data-i18n="symptomTitle">Interactive Symptom Checker</h2>
+      <p class="sub">Tick every symptom that applies. The engine builds one combined plan and resolves conflicts
+        (e.g. gallbladder safety over heavy oily lung foods). <b>No login needed for the basic plan</b> —
+        for full Sujok/mantra/dosage, login on the Home tab with your admin email.</p>
+      <div class="checks" id="symptomChecks"></div>
+      <button class="btn block" style="margin-top:12px" onclick="analyzeSymptoms()" data-i18n="analyzeBtn">Analyze &amp; Build Protocol</button>
+    </div>
+    <div class="card hide" id="symptomResults">
+      <h2>Your Integrated Protocol</h2>
+      <div id="symptomOut"></div>
+    </div>
+  </section>
+
+  <!-- ================= DIET PLAN ================= -->
+  <section class="tabpane hide" data-pane="diet">
+    <div class="card">
+      <h2 data-i18n="dietTitle">Holistic Diet Plan Builder</h2>
+      <p class="sub">Select active conditions to generate a unified daily plan where one condition's diet
+        complements the others.</p>
+      <div class="checks" id="conditionChecks"></div>
+      <button class="btn block" style="margin-top:12px" onclick="renderDietPlan()" data-i18n="generateBtn">Generate Holistic Plan</button>
+    </div>
+    <div class="card hide" id="dietResults">
+      <h2>Unified Daily Plan</h2>
+      <div id="dietOut"></div>
+    </div>
+  </section>
+
+  <!-- ================= HERBS ================= -->
+  <section class="tabpane hide" data-pane="herbs">
+    <div class="card">
+      <h2 data-i18n="herbsTitle">Ayurvedic Herbal Formulations</h2>
+      <p class="sub">Traditional uses, modern scientific direction, dosage and contraindications. Classical
+        references from <i>Charaka Samhita</i> / <i>Ashtanga Hridaya</i>; modern notes are indicative research
+        areas — verify with a practitioner.</p>
+      <div id="herbList"></div>
+    </div>
+  </section>
+
+  <!-- ================= THERAPY (Sujok/Acupressure + Homeopathy) ================= -->
+  <section class="tabpane hide" data-pane="therapy">
+    <div class="card">
+      <h2 data-i18n="therapyTitle">Sujok, Acupressure &amp; Homeopathy</h2>
+      <p class="sub">Sujok is a hand/foot micro-acupressure system. For each condition you get the
+        <b>correspondence point</b>, <b>how to press</b>, <b>hold time</b> and <b>number of repetitions</b>.
+        Supportive only — never place unsterile material in the eye or ear.</p>
+      <div id="therapyList"></div>
+    </div>
+  </section>
+
+  <!-- ================= TRADITIONS (Atharvaveda / Mantra / Tantra) ================= -->
+  <section class="tabpane hide" data-pane="traditions">
+    <div class="card">
+      <h2 data-i18n="traditionsTitle">Atharvaveda, Mantra &amp; Tantra (Traditional)</h2>
+      <div class="disclaimer" style="margin-bottom:12px">
+        <b>Cultural &amp; spiritual practice — not a medical treatment or cure.</b> These are traditional
+        faith practices used for calm, focus and emotional support. They must <b>never</b> replace prescribed
+        medicine or a doctor's care. Do not delay real treatment. If chanting or any ritual causes distress,
+        stop and seek help.
+      </div>
+      <div id="traditionsOut"></div>
+    </div>
+  </section>
+
+  <!-- ================= REFERENCE LIBRARY ================= -->
+  <section class="tabpane hide" data-pane="library">
+    <div class="card">
+      <h2 data-i18n="libraryTitle">Reference Library (Granth) — works offline</h2>
+      <p class="sub">Full text of your uploaded books, stored inside the app for offline reading &amp; search:
+        <b>Charak Samhita — Hinglish Study Guide</b> and <b>Rog Nivaran — Vedic &amp; Ayurvedic Reference</b>
+        (Atharvaveda suktas + Charaka / Sushruta / Ashtanga Hridaya principles + Dinacharya/Ritucharya).</p>
+      <input type="text" id="libSearch" placeholder="Search (e.g. khansi, netra, kushtha, agni, nidra, vata)…"
+        oninput="renderLibrary()" style="margin-bottom:6px">
+      <div id="libInfo" class="kv" style="margin-bottom:10px"></div>
+      <div id="libraryOut"></div>
+    </div>
+  </section>
+
+  <!-- ================= DONATE ================= -->
+  <section class="tabpane hide" data-pane="donate">
+    <div class="card" style="text-align:center">
+      <h2 data-i18n="donateTitle">❤️ Donate (only if it helped you)</h2>
+      <p class="sub" style="max-width:520px;margin:0 auto 14px">
+        Is app ka poora istemaal <b>bilkul free</b> hai — koi fee nahi. Agar aapko ya aapke parivaar ko is app se
+        bimari me sach me <b>fayda / badlaav</b> mila ho, tabhi apni ichha se donate karein. Ye <b>swaeksha
+        (voluntary)</b> hai, koi zaroori shulk nahi, aur kisi bhi medical madad ke liye zaroori nahi.</p>
+
+      <div class="donatecard">
+        <div class="qrbox" id="donateQR"></div>
+        <p style="margin:10px 0 2px"><b>Scan to pay with any UPI app</b> (GPay, PhonePe, Paytm…)</p>
+        <p class="kv" style="margin:0">Study MadEase · State Bank of India</p>
+      </div>
+
+      <div class="paylines">
+        <div class="payrow"><span>UPI ID</span><b id="vpa">lakhilohia23@oksbi</b>
+          <button class="btn sm ghost" onclick="copyText('lakhilohia23@oksbi')">Copy</button></div>
+        <div class="payrow"><span>GPay / UPI number</span><b id="upinum">7002926537</b>
+          <button class="btn sm ghost" onclick="copyText('7002926537')">Copy</button></div>
+      </div>
+
+      <a id="upiPayBtn" class="btn block" style="max-width:360px;margin:14px auto 0"
+         href="upi://pay?pa=lakhilohia23@oksbi&pn=Study%20MadEase&cu=INR">Pay / Donate via UPI app</a>
+      <p class="kv" style="margin-top:8px">(Button phone par aapka UPI app kholega. Amount aap khud choose karein.)</p>
+
+      <div class="cite" style="max-width:520px;margin:16px auto 0;text-align:left">
+        <b>Note:</b> Donations are voluntary contributions to <b>studymadease</b> to keep this educational app
+        running — <b>not</b> a fee for medical advice and not a payment to any individual for professional
+        services. No donation is required to use any feature.
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MEAL LOG ================= -->
+  <section class="tabpane hide" data-pane="log">
+    <div class="card">
+      <h2 data-i18n="logTitle">Daily Meal &amp; Remedy Log</h2>
+      <p class="sub">Stored offline on this device. Log food, herbs, acupressure or a session.</p>
+      <div class="grid cols2" style="margin-bottom:10px">
+        <input type="text" id="mealInput" placeholder="e.g. Mulethi tea, Moong dal, Sujok lung point">
+        <select id="mealType">
+          <option>Breakfast</option><option>Mid-morning</option><option>Lunch</option>
+          <option>Evening</option><option>Dinner</option><option>Bedtime</option>
+          <option>Herb / Remedy</option><option>Acupressure / Therapy</option><option>Mantra / Meditation</option>
+        </select>
+      </div>
+      <button class="btn block" onclick="logMeal()" data-i18n="saveBtn">Save Entry</button>
+      <h3>History</h3>
+      <ul class="log" id="mealLog"></ul>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="tabpane hide" data-pane="about">
+    <div class="card">
+      <h2 data-i18n="aboutTitle">About, Data &amp; Safety</h2>
+      <div class="disclaimer" style="margin-bottom:12px">
+        <b>Not a substitute for professional medical care.</b> Information here is educational, drawn from
+        classical Ayurvedic texts, general nutrition literature and standard medical textbooks. It is not a
+        diagnosis or prescription. Herbs can interact with medication (e.g. licorice/Mulethi with BP & heart
+        medicines; Ashwagandha with thyroid medicines). Seek a qualified professional before use.
+      </div>
+      <h3 style="margin-top:0">How offline works</h3>
+      <p class="sub" style="margin-bottom:12px">A service worker caches the whole app on first load, so it
+        opens and runs with no connection. Profile, meal logs and settings live in this browser's storage.
+        Only the optional login-audit sync needs the internet.</p>
+
+      <h3>Practitioner admin — Google Sheet sync setup</h3>
+      <p class="sub">Login audit records queue offline and upload when online. Deploy a Google Apps Script Web
+        App bound to a Sheet owned by advlakhilohia@gmail.com and paste its <code>/exec</code> URL here.</p>
+      <label class="fld">Google Apps Script Web App URL</label>
+      <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/XXXX/exec">
+      <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap">
+        <button class="btn sm" onclick="saveScriptUrl()">Save endpoint</button>
+        <button class="btn sm ghost" onclick="forceSync()">Sync now</button>
+        <span class="pill" id="pendingCount">0 pending</span>
+      </div>
+      <p class="cite" style="margin-top:12px"><b>Admin note:</b> collecting personal data creates obligations
+        under privacy law (e.g. India's DPDP Act 2023). Keep the sheet private, collect only what you need, and
+        honour the consent shown to users.</p>
+
+      <h3>Legal / branding note</h3>
+      <p class="sub">Bar Council of India Rules restrict advocates from running a personal commercial trade.
+        Accordingly this product is branded <b>“CoserveU powered by studymadease”</b> with Adv. Lakhi Lohia in
+        a non-executive advisory role. General information, not legal advice — confirm with the Bar Council /
+        your own counsel.</p>
+
+      <h3>Sources referenced</h3>
+      <p class="cite"><b>Classical:</b> Charaka Samhita, Ashtanga Hridaya, Atharvaveda (Bhaishajya hymns).
+        <b>Conventional (MBBS) texts:</b> Harrison's Principles of Internal Medicine; Davidson's Principles &
+        Practice of Medicine; Kanski's Clinical Ophthalmology; Bailey & Love's / Sabiston Textbook of Surgery;
+        Scott-Brown's Otorhinolaryngology; Fitzpatrick's / Rook's Dermatology; Kryger's Principles & Practice
+        of Sleep Medicine. <b>Modern (indicative):</b> research on licorice in respiratory inflammation;
+        lutein/zeaxanthin in lens & macular health; soluble fibre & low saturated fat in bile lithogenicity;
+        withanolides in sleep. Citations are pointers for further reading — verify primary sources.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  CoserveU • powered by studymadease • Educational use only — not a substitute for professional medical advice.
+</footer>
+
+<script>
+/* ============================================================
+   CoserveU — offline-first logic (vanilla JS, no dependencies)
+   ============================================================ */
+const ADMIN_EMAILS = ["advlakhilohia@gmail.com", "lakhilohia23@gmail.com"];
+const LS = { user:"coserveu_user", meals:"coserveu_meals", pending:"coserveu_pending", script:"coserveu_script_url", lang:"coserveu_lang" };
+let currentUser = safeParse(localStorage.getItem(LS.user), null);
+
+function safeParse(s, fb){ try{ return s? JSON.parse(s): fb; }catch(e){ return fb; } }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function now(){ return new Date().toLocaleString(); }
+
+/* ============================================================
+   i18n  (UI strings only; clinical detail stays in English)
+   ============================================================ */
+const I18N = {
+  en:{}, // base = HTML defaults
+  hi:{ brandTag:"स्टडीमेडईज़ द्वारा • संस्थापक: एडवोकेट लखी लोहिया (सलाहकार)",
+    navHome:"होम", navSymptom:"लक्षण जाँच", navDiet:"आहार योजना", navHerbs:"औषधीय जड़ी-बूटियाँ",
+    navTherapy:"सुजोक व एक्यूप्रेशर", navTraditions:"अथर्ववेद / मंत्र / तंत्र", navLibrary:"संदर्भ ग्रंथ", navDonate:"❤️ दान", navLog:"भोजन लॉग", navAbout:"जानकारी व सुरक्षा",
+    libraryTitle:"संदर्भ ग्रंथालय (ऑफ़लाइन)", donateTitle:"❤️ दान करें (केवल यदि लाभ हुआ हो)", emergTitle:"🚑 आपातकालीन लक्षण — तुरंत अस्पताल जाएं",
+    welcomeTitle:"स्वागत है", registerTitle:"पंजीकरण / सत्र आरंभ करें", nameLbl:"पूरा नाम", emailLbl:"ईमेल", addrLbl:"शहर / पता",
+    consentLbl:"मैं सहमत हूँ कि मेरा नाम, ईमेल, पता व लॉगिन समय दर्ज किया जाए और ऑनलाइन होने पर एडमिन शीट में सिंक हो।",
+    startBtn:"सत्र आरंभ करें", symptomTitle:"इंटरैक्टिव लक्षण जाँच", analyzeBtn:"विश्लेषण करें व योजना बनाएं",
+    dietTitle:"समग्र आहार योजना", generateBtn:"योजना बनाएं", herbsTitle:"आयुर्वेदिक औषधि योग",
+    therapyTitle:"सुजोक, एक्यूप्रेशर व होम्योपैथी", traditionsTitle:"अथर्ववेद, मंत्र व तंत्र (पारंपरिक)",
+    logTitle:"दैनिक भोजन व उपचार लॉग", saveBtn:"सहेजें", aboutTitle:"जानकारी, डेटा व सुरक्षा",
+    discBold:"केवल शैक्षिक उपयोग — चिकित्सा सलाह नहीं।" },
+  hinglish:{ brandTag:"powered by studymadease • Founder: Adv. Lakhi Lohia (Advisory)",
+    navHome:"Home", navSymptom:"Lakshan Check", navDiet:"Diet Plan", navHerbs:"Herbal Jadi-Booti",
+    navTherapy:"Sujok & Acupressure", navTraditions:"Atharvaved / Mantra / Tantra", navLibrary:"Reference Granth", navDonate:"❤️ Donate", navLog:"Meal Log", navAbout:"Info & Safety",
+    libraryTitle:"Reference Library (offline)", donateTitle:"❤️ Donate (only if it helped)", emergTitle:"🚑 Emergency signs — turant hospital jaayein",
+    welcomeTitle:"Swagat hai", registerTitle:"Register / Session shuru karein", nameLbl:"Pura naam", emailLbl:"Email", addrLbl:"Sheher / Pata",
+    consentLbl:"Main sehmat hoon ki mera naam, email, pata aur login time record ho aur online hone par admin sheet me sync ho.",
+    startBtn:"Session Shuru Karein", symptomTitle:"Interactive Lakshan Check", analyzeBtn:"Analyze karein & plan banayein",
+    dietTitle:"Holistic Diet Plan", generateBtn:"Plan Banayein", herbsTitle:"Ayurvedic Herbal Yog",
+    therapyTitle:"Sujok, Acupressure & Homeopathy", traditionsTitle:"Atharvaved, Mantra & Tantra (Paramparik)",
+    logTitle:"Daily Meal & Remedy Log", saveBtn:"Save karein", aboutTitle:"Info, Data & Safety",
+    discBold:"Sirf educational use — medical advice nahi." },
+  as:{ brandTag:"studymadease দ্বাৰা • প্ৰতিষ্ঠাতা: এডভোকেট লখী লোহিয়া (উপদেষ্টা)",
+    navHome:"ঘৰ", navSymptom:"লক্ষণ পৰীক্ষা", navDiet:"আহাৰ পৰিকল্পনা", navHerbs:"আয়ুৰ্বেদিক ঔষধি",
+    navTherapy:"ছুজক আৰু একুপ্ৰেছাৰ", navTraditions:"অথৰ্ববেদ / মন্ত্ৰ / তন্ত্ৰ", navLog:"আহাৰ লগ", navAbout:"তথ্য আৰু সুৰক্ষা",
+    welcomeTitle:"স্বাগতম", registerTitle:"পঞ্জীয়ন / ছেছন আৰম্ভ কৰক", nameLbl:"সম্পূৰ্ণ নাম", emailLbl:"ইমেইল", addrLbl:"চহৰ / ঠিকনা",
+    consentLbl:"মোৰ নাম, ইমেইল, ঠিকনা আৰু লগইন সময় ৰেকৰ্ড কৰা আৰু অনলাইন হ'লে এডমিন শ্বীটত ছিংক কৰাত মই সন্মত।",
+    startBtn:"ছেছন আৰম্ভ কৰক", symptomTitle:"ইণ্টাৰেক্টিভ লক্ষণ পৰীক্ষা", analyzeBtn:"বিশ্লেষণ কৰি পৰিকল্পনা বনাওক",
+    dietTitle:"সামগ্ৰিক আহাৰ পৰিকল্পনা", generateBtn:"পৰিকল্পনা বনাওক", herbsTitle:"আয়ুৰ্বেদিক ঔষধি যোগ",
+    therapyTitle:"ছুজক, একুপ্ৰেছাৰ আৰু হোমিঅ'পেথী", traditionsTitle:"অথৰ্ববেদ, মন্ত্ৰ আৰু তন্ত্ৰ (পৰম্পৰাগত)",
+    logTitle:"দৈনিক আহাৰ আৰু চিকিৎসা লগ", saveBtn:"ছেভ কৰক", aboutTitle:"তথ্য, ডেটা আৰু সুৰক্ষা",
+    discBold:"কেৱল শিক্ষামূলক ব্যৱহাৰ — চিকিৎসা পৰামৰ্শ নহয়।" },
+  raj:{ brandTag:"studymadease रो • संस्थापक: एडवोकेट लखी लोहिया (सलाहकार)",
+    navHome:"घर", navSymptom:"लक्षण जाँच", navDiet:"खुराक योजना", navHerbs:"जड़ी-बूटी",
+    navTherapy:"सुजोक अर एक्यूप्रेशर", navTraditions:"अथर्ववेद / मंतर / तंतर", navLog:"भोजन बही", navAbout:"जाणकारी अर सुरक्षा",
+    welcomeTitle:"पधारो", registerTitle:"रजिस्टर / सत्र सरू करो", nameLbl:"पूरो नाम", emailLbl:"ईमेल", addrLbl:"सैर / ठिकाणो",
+    consentLbl:"म्हैं राजी हूँ कै म्हारो नाम, ईमेल, ठिकाणो अर लॉगिन टेम रिकॉर्ड होवै अर ऑनलाइन होवण पर एडमिन शीट में सिंक होवै।",
+    startBtn:"सत्र सरू करो", symptomTitle:"लक्षण जाँच", analyzeBtn:"जाँच करो अर योजना बणावो",
+    dietTitle:"समग्र खुराक योजना", generateBtn:"योजना बणावो", herbsTitle:"आयुर्वेदिक औषधि योग",
+    therapyTitle:"सुजोक, एक्यूप्रेशर अर होम्योपैथी", traditionsTitle:"अथर्ववेद, मंतर अर तंतर (पारंपरिक)",
+    logTitle:"रोजीना भोजन अर उपचार बही", saveBtn:"सुरक्षित करो", aboutTitle:"जाणकारी, डेटा अर सुरक्षा",
+    discBold:"बस सीखण री खातर — डॉक्टरी सलाह कोनी।" },
+  ur:{ brandTag:"studymadease کے ذریعے • بانی: ایڈووکیٹ لکھی لوہیا (مشیر)",
+    navHome:"ہوم", navSymptom:"علامات کی جانچ", navDiet:"غذائی منصوبہ", navHerbs:"جڑی بوٹیاں",
+    navTherapy:"سوجوک و ایکیوپریشر", navTraditions:"اتھرووید / منتر / تنتر", navLog:"کھانے کا ریکارڈ", navAbout:"معلومات و حفاظت",
+    welcomeTitle:"خوش آمدید", registerTitle:"رجسٹر / سیشن شروع کریں", nameLbl:"پورا نام", emailLbl:"ای میل", addrLbl:"شہر / پتہ",
+    consentLbl:"میں رضامند ہوں کہ میرا نام، ای میل، پتہ اور لاگ اِن وقت ریکارڈ ہو اور آن لائن ہونے پر ایڈمن شیٹ میں سنک ہو۔",
+    startBtn:"سیشن شروع کریں", symptomTitle:"انٹرایکٹو علامات کی جانچ", analyzeBtn:"تجزیہ کریں اور منصوبہ بنائیں",
+    dietTitle:"جامع غذائی منصوبہ", generateBtn:"منصوبہ بنائیں", herbsTitle:"آیوروید جڑی بوٹیاں",
+    therapyTitle:"سوجوک، ایکیوپریشر و ہومیوپیتھی", traditionsTitle:"اتھرووید، منتر و تنتر (روایتی)",
+    logTitle:"روزانہ کھانا و علاج ریکارڈ", saveBtn:"محفوظ کریں", aboutTitle:"معلومات، ڈیٹا و حفاظت",
+    discBold:"صرف تعلیمی مقصد — طبی مشورہ نہیں۔" },
+  sa:{ brandTag:"studymadease द्वारा • संस्थापकः एडवोकेट लखी लोहिया (परामर्शकः)",
+    navHome:"गृहम्", navSymptom:"लक्षणपरीक्षा", navDiet:"आहारयोजना", navHerbs:"औषधियोगाः",
+    navTherapy:"सुजोक-आक्युप्रेशर", navTraditions:"अथर्ववेद / मन्त्र / तन्त्र", navLog:"आहारलेखः", navAbout:"विवरणम् सुरक्षा च",
+    welcomeTitle:"स्वागतम्", registerTitle:"पञ्जीकरणम् / सत्रारम्भः", nameLbl:"पूर्णं नाम", emailLbl:"विपत्रम्", addrLbl:"नगरम् / पता",
+    consentLbl:"मम नाम विपत्रं पता प्रवेशकालश्च लेख्यताम्, अन्तर्जालसंयोगे प्रशासकपत्रे संयोज्यतां च इति सम्मतिः।",
+    startBtn:"सत्रम् आरभताम्", symptomTitle:"लक्षणपरीक्षा", analyzeBtn:"विश्लेषणं योजनानिर्माणं च",
+    dietTitle:"समग्र-आहारयोजना", generateBtn:"योजनां रचयतु", herbsTitle:"आयुर्वेदीय-औषधियोगाः",
+    therapyTitle:"सुजोक, आक्युप्रेशर, होम्योपैथी च", traditionsTitle:"अथर्ववेदः, मन्त्रः, तन्त्रं च (पारम्परिकम्)",
+    logTitle:"दैनिक-आहार-चिकित्सा-लेखः", saveBtn:"रक्षतु", aboutTitle:"विवरणम्, दत्तांशः, सुरक्षा च",
+    discBold:"केवलं शिक्षार्थम् — न चिकित्सापरामर्शः।" }
+};
+const RTL = new Set(["ur"]);
+function applyLang(code){
+  const dict = I18N[code] || {};
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(dict[k]!=null) el.textContent = dict[k];
+    else if(code==='en'){ /* keep original English already in DOM */ }
+  });
+  document.documentElement.lang = code==='hinglish'?'en':code;
+  document.documentElement.dir = RTL.has(code)?'rtl':'ltr';
+  localStorage.setItem(LS.lang, code);
+}
+// Cache English originals so switching back to English restores them.
+const EN_CACHE={};
+function cacheEnglish(){ document.querySelectorAll('[data-i18n]').forEach(el=>{ EN_CACHE[el.getAttribute('data-i18n')]=el.textContent; }); I18N.en=EN_CACHE; }
+
+/* ---------- Access role ---------- */
+function role(){
+  if(!currentUser) return "guest";
+  if(ADMIN_EMAILS.includes((currentUser.email||"").toLowerCase())) return "admin";
+  if(currentUser.paid) return "paid";
+  return "free";
+}
+// Full access is FREE for everyone now (paywall removed). Donations are voluntary.
+function isFull(){ return true; }
+
+/* ============================================================
+   KNOWLEDGE BASE
+   ============================================================ */
+const LIBRARY = [{"book":"Charak Samhita — Hinglish Study Guide (Ch.1: Principles)","src":"Based on Charak Samhita Vol I (P.V. Sharma / G. Van Loon ed.); concepts in the author's own words, study/reference use.","paras":["Charak Samhita — Hinglish Study Guide","Volume I, Chapter 1: Principles (Original pages 11–100) Charak Samhita — Hinglish Study Guide","Part 1 of 7 | Chapter 1: Principles (Siddhant)","Yeh ek condensed, apne shabdon mein likha gaya study guide hai jo Charak Samhita ke Chapter 1 (Principles) ke core concepts ko cover karta hai. Original book ka word-for-word translation nahi hai — topics ko samajhkar, apni bhasha mein explain kiya gaya hai, taaki concept clearly samajh aaye. 1. Ayurveda Kya Hai — Buniyadi Definitions","Ayurveda ka matlab hai “life ka gyaan”. Yeh sirf bimari thik karne ka science nahi hai — yeh poori zindagi ko samajhne ka tareeka hai: kya cheezein zindagi ko achha banati hain, kya bura karti hain, health ka nature kya hai, aur life ko measure kaise karte hain.","Ayus (life) ko charon cheezon ka jod maana gaya hai — sharir (body), indriyan (senses), man (mind) aur atma (self). Jab tak yeh chaaron sath hain, tabhi tak “jeevan” hai.","Health aur bimari ka source ek hi hai — jo cheez sahi matra mein sahi tarike se use ho toh health banati hai, aur wahi cheez galat matra ya galat tarike se use ho toh bimari paida karti hai. Simple shabdon mein: health = dhatuon ka balance, bimari = dhatuon ka imbalance.","Do tarah ke doctor bataye gaye hain: - Jo life ko promote karte hain aur disease ko khatam karte hain (achhe doctor) - Jo (anjaane mein ya galat treatment se) disease ko badhava dete hain aur life ko kamzor karte hain (bure/agyani doctor)","Ek skilled doctor ke haath mein bade se bada rog bhi jaldi thik ho sakta hai; ek anadi (ignorant) doctor ke haath mein chhota rog bhi bigad sakta hai. Ayurveda ki 8 Shakhayein (8 Branches) Kayachikitsa — General medicine","Shalakya — Sar aur gale ke upar ke rog (ENT, eye, etc.) Shalya — Surgery / foreign body nikalna","Vishagara-vairodhika-prashamana — Zeher (poison) aur uske effects ka ilaj","Bhootavidya — Mansik/spiritual disorders (jinhe “spirits se judi” bimari kaha gaya) Kaumarbhritya — Bacchon ka ilaj (Pediatrics) Rasayana — Rejuvenation, longevity therapy","Vajikarana — Reproductive health, aphrodisiac therapy Happy Life vs Unhappy Life","Ek sukhi jeevan (happy life) wala vyakti wo hai jo bimari se mukt ho, jawan aur strong ho, achhi reputation rakhta ho, gyaan aur strong senses ho, dhan-daulat ho, aur jo chaahe wo kar sake. Iska ulta unhappy life hai.","Beneficial life wo hai jahan insaan sabka bhala chahta ho, sach bole, dusron ka haq na le, gyaan aur shanti mein lagaa ho, buzurgon ka saath rakhta ho, aur apne emotions (attachment, jealousy, ego) ko control mein rakhta ho.","Similarity aur Dissimilarity ka Universal Rule","Yeh ek core Ayurvedic principle hai jo poori book mein baar-baar use hota hai: “jaisa se jaisa badhta hai, ulta se ulta ghat-ta hai” (Law of Similars & Law of Opposites). Agar body mein koi quality zyada ho gayi hai, toh usi jaisi cheez use karne se woh aur badhegi, aur ulti quality use karne se woh kam hogi. Yehi poore treatment system ka foundation hai — chahe khana ho, dawai ho, mausam ho, ya lifestyle.","Sharir, Man aur Atma — Teen Pillars","Body (sharir), mind (man) aur self/soul (atma) — inn teenon ko milakar “Purusha” (person) kaha gaya hai, aur yehi jeevit sansar ka aadhar hai. Ayurveda inhi teenon ka gyaan hai. Dravya, Guna aur Karma","Dravya (Substance) — jahan actions aur properties reh-te hain (jaise khana, herb, mausam)","Guna (Property/Quality) — substance ki khaasiyat, jo khud action nahi karti par substance ke saath judi rehti hai","Karma (Action) — effort se shuru hua movement/kaam","Samavaya (Inherence) — substance aur uski property ka na-alag-hone-wala rishta — koi bhi substance bina property ke nahi hota Paradi — Treatment ki 10 Buniyadi Concepts","Yeh 10 tools hain jo treatment plan karte waqt zaroori hain: para-apara (relative excellence — jagah, samay, umar ke hisaab se), yukti (rational planning), sankhya (counting/statistics), samyoga (do cheezon ka milna — jaise herbs ka formula banana), vibhaga (alag karna), prithaktva (separateness), parimana (measurement), samskara (processing), abhyasa (regular practice/habit). Inka gyaan na ho toh theek se ilaj nahi ho sakta.","2. 10 Jodi Gunon Ka System (10 Pairs of Qualities)","Har substance — chahe khana ho, herb ho, mausam ho, ya insaan ka nature ho — inn 20 gunon (10 jodiyon) mein se kisi na kisi combination mein aata hai:","<w:tblPr><w:tblStyle w:val=\"Table\" /><w:tblW w:type=\"auto\" w:w=\"0\" /><w:tblLook w:firstRow=\"1\" w:lastRow=\"0\" w:firstColumn=\"0\" w:lastColumn=\"0\" w:noHBand=\"0\" w:noVBand=\"0\" w:val=\"0020\" /><w:jc w:val=\"start\" /></w:tblPr><w:tblGrid><w:gridCol w:w=\"3960\" /><w:gridCol w:w=\"3960\" /></w:tblGrid><w:tr><w:trPr><w:tblHeader w:val=\"true\" /></w:trPr><w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Jodi 1","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Jodi 2","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Garam (hot) — Thanda (cold)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Bhaari (heavy) — Halka (light)","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Chikna (unctuous) — Rukha (dry)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Tez (sharp) — Manda (dull)","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Sthir (stable) — Chal (mobile)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Sukshma (subtle) — Sthool (gross)","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Ghana (dense) — Drava (liquid)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Mridu (soft) — Kathin (hard)","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vishad (clear) — Picchil (slimy)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Slakshna (smooth) — Khar (rough)","Golden rule: Jab do virudh (opposite) guna aapas mein takrate hain, toh jo strong hai wahi weak ko dabata hai. Isi principle se treatment decide hota hai — agar body mein excess “garmi” hai, toh “thandi” cheez use karke balance karte hain. 3. Panch Mahabhoot (5 Elements)","Poori srishti — aur body bhi — 5 elements se bani hai: Prithvi (earth), Jal (water), Agni (fire), Vayu (air), Aakash (space). Har element ek indriya (sense) se juda hai:","<w:tblPr><w:tblStyle w:val=\"Table\" /><w:tblW w:type=\"auto\" w:w=\"0\" /><w:tblLook w:firstRow=\"1\" w:lastRow=\"0\" w:firstColumn=\"0\" w:lastColumn=\"0\" w:noHBand=\"0\" w:noVBand=\"0\" w:val=\"0020\" /><w:jc w:val=\"start\" /></w:tblPr><w:tblGrid><w:gridCol w:w=\"3960\" /><w:gridCol w:w=\"3960\" /></w:tblGrid><w:tr><w:trPr><w:tblHeader w:val=\"true\" /></w:trPr><w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Element","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Sense (Gyanendriya)","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Prithvi","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Gandh (smell)","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Jal","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Ras (taste)","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Agni","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Roop (sight)","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vayu","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Sparsh (touch)","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Aakash","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Shabd (sound)","Har substance mein yeh paanchon elements alag-alag proportion mein hote hain, aur yehi proportion decide karta hai ki us cheez ka taste, effect aur nature kaisa hoga. 3. 6 Ras (Tastes) — Ek Detailed System","Ayurveda mein sirf 6 tastes maane gaye hain, kyunki yeh 5 elements ke combination se bante hain aur combinations limited hain (mathematically 63 variations possible hain individual/combined rasas ke, lekin core categories 6 hi hain).","6 Rasas: Madhur (sweet), Amla (sour), Lavan (salty), Katu (pungent), Tikta (bitter), Kashaya (astringent)","<w:tblPr><w:tblStyle w:val=\"Table\" /><w:tblW w:type=\"auto\" w:w=\"0\" /><w:tblLook w:firstRow=\"1\" w:lastRow=\"0\" w:firstColumn=\"0\" w:lastColumn=\"0\" w:noHBand=\"0\" w:noVBand=\"0\" w:val=\"0020\" /><w:jc w:val=\"start\" /></w:tblPr><w:tblGrid><w:gridCol w:w=\"1980\" /><w:gridCol w:w=\"1980\" /><w:gridCol w:w=\"1980\" /><w:gridCol w:w=\"1980\" /></w:tblGrid><w:tr><w:trPr><w:tblHeader w:val=\"true\" /></w:trPr><w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Ras","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Predominant Elements","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Doshas Badhata Hai","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Doshas Ghatata Hai","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Madhur (Sweet)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Prithvi + Jal","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Kapha","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vata, Pitta","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Amla (Sour)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Prithvi + Agni","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Pitta, Kapha","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vata","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Lavan (Salty)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Jal + Agni","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Pitta, Kapha","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vata","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Katu (Pungent)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Agni + Vayu","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Pitta, Vata","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Kapha","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Tikta (Bitter)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vayu + Aakash","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vata","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Pitta, Kapha","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Kashaya (Astringent)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vayu + Prithvi","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vata","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Pitta, Kapha","Simple yaad rakhne ka tareeka: - Vata ko badhate hain: Katu, Tikta, Kashaya | Vata ko shant karte hain: Madhur, Amla, Lavan - Pitta ko badhate hain: Amla, Lavan, Katu | Pitta ko shant karte hain: Madhur, Tikta, Kashaya - Kapha ko badhate hain: Madhur, Amla, Lavan | Kapha ko shant karte hain: Katu, Tikta, Kashaya Taste ke 4 Stages (Rasa Panchak)","Ek substance ka poora effect samajhne ke liye 4 cheezein dekhte hain: 1. Rasa — pehla taste jo mooth mein pata chalta hai 2. Virya — potency, jo digestion ke waqt effect karti hai (mainly garam ya thandi) 3. Vipaka — final taste jo digestion ke baad (excretion tak) reh jaata hai 4. Prabhava — special/unique effect jo taste, virya, vipaka se explain nahi hota (jaise ek herb sabse alag kaam kare bina kisi obvious reason ke)","Inme se Prabhava sabse strong hai, phir Vipaka, phir Virya, aur sabse kam strong Rasa khud hai — matlab agar in char cheezon mein conflict ho, toh prabhava sabse zyada matter karta hai.","Example: Nimbu khatta (Amla ras) hota hai lekin uska vipaka bhi khatta hi rehta hai — jabki doodh meetha (madhur) hota hai aur virya thandi hoti hai. 4. Tridosha Siddhant — Vata, Pitta, Kapha","Yeh Ayurveda ka sabse core concept hai. Har bimari, chahe kitni bhi complex ho, in teen doshon (Vata, Pitta, Kapha) ke imbalance se hi hoti hai — sirf bahar se lagi chot (external injury) iska apwaad hai.","Dosha ki definition: Yeh body ke woh energy-systems hain jo sahi matra mein ho toh body ka function chalate hain, aur imbalance (zyada ya kam) hone par bimari paida karte hain. Vata (Air + Space)","Movement, communication aur nervous system ka doshas. Guna: Rukha (dry), Halka (light), Thanda (cold), Chal (mobile), Sukshma (subtle), Khar (rough). Vata ke kaam: Body ke saare movements (walking, breathing, blood circulation), nervous system, elimination (urine, stool, delivery), sense perception ko control karna. Zyada Vata hone par: Ghabrahat, dryness, weight loss, insomnia, joint pain, constipation, anxiety.","Pitta (Fire + Water)","Digestion, metabolism aur transformation ka doshas. Guna: Garam (hot), Tez (sharp), Halka (light), Chikna (oily), Drava (liquid). Pitta ke kaam: Digestion (Agni), body temperature, vision, intelligence, courage, skin ka rang. Zyada Pitta hone par: Jalan (burning), gussa, acidity, skin rashes, jyada bhookh-pyaas, inflammation. Kapha (Water + Earth)","Structure, stability aur lubrication ka doshas. Guna: Bhaari (heavy), Thanda (cold), Chikna (unctuous), Mridu (soft), Sthir (stable). Kapha ke kaam: Body ki structure banaye rakhna, joints ka lubrication, immunity, emotional stability (patience, love). Zyada Kapha hone par: Weight gain, laziness, sardi-zukam, sust digestion, oversleeping, depression jaisa feel hona. Prakriti — Body Constitution","Har insaan paida hote waqt hi ek unique Prakriti (constitution) leke aata hai — kis dosha ka usme kitna predominance hai. Yeh life bhar nahi badalti (yeh genetic/birth-based hai), lekin Vikriti (current imbalance) waqt-waqt par khaane-peene, mausam, umar aur lifestyle se badalti rehti hai. Treatment mein doctor dono ko dekhta hai — original prakriti aur abhi ki vikriti. Man ke 2 Dosha — Rajas aur Tamas","Body ke 3 dosha ke alawa mann (mind) ke bhi 2 dosha hote hain: Rajas (agitation, restlessness — anger, greed, excitement, fear jaisi cheezein) aur Tamas (ignorance, inertia — confusion, laziness). Sattva (pure balanced mind state) inka ulta hai aur isko dosha nahi mana gaya, balki mind ka natural/ideal state mana gaya hai. Interesting baat: Rajas aur Tamas hamesha saath chalte hain — akela Tamas move nahi kar sakta, use Rajas ka sahara chahiye.","Doshon ka Mausam Se Sambandh","Doshas seasons ke hisaab se naturally badhte-ghatte hain — grishma (garmi) mein Vata accumulate hota hai aur varsha (baarish) mein aggravate; sardi mein Kapha jama hota hai aur vasant (spring) mein aggravate hota hai; sharad (autumn) mein Pitta jama hota hai. Yehi wajah hai ki Ayurveda seasonal diet-lifestyle (Ritucharya) par itna zor deta hai. 5. Sharir Rachna — Anatomy","Charak Samhita mein body ko is tarah divide kiya gaya hai:","7 Dhatu (Tissues): Rasa (plasma), Rakta (blood), Mamsa (muscle), Meda (fat), Asthi (bone), Majja (marrow), Shukra (reproductive tissue). Khaana khane ke baad ek dhatu doosre dhatu ko sequence mein nourish karta hai (jaise ek chain). 6 Skin Layers","360 Bones (in this classical counting, cartilage/teeth bhi shamil hain)","56 Sub-parts of the body (jaise 2 jaangh, 2 haath, honth, gaal, etc. — sab milakar 56)","5 Gyanendriya (sense organs): Skin, tongue, nose, eyes, ears — inke corresponding senses hain touch, taste, smell, sight, sound","5 Karmendriya (motor organs): Hands, feet, anus, genitals, speech organ","9 Major Openings (Orifices): 7 sar mein (2 aankh, 2 kaan, 2 naak, 1 mooh) + 2 neeche (urethra, anus) Heart — consciousness ka seat mana gaya hai","10 Pranasthan (seats of vital breath): sir, gala, hriday, naabhi, gudaa, mootrashay, ojas, veerya, rakt, maans","Elements Body Parts Mein Kahan Predominant Hain","Prithvi (Earth): Naak, haddi, maans, twacha (skin), baal","Jal (Water): Rakt, kapha, urine, sweat (moist tissues)","Agni (Fire): Digestion, body ka temperature, complexion, sight","Vayu (Air): Touch sensation, movement, breathing","Aakash (Space): Sound perception, khaali jagah body ke andar (jaise cavities) Dhatu Nourishment Process","Khaana khane ke baad, digestion ke through nutrients pehle Rasa dhatu ko nourish karte hain, phir sequence mein Rakta → Mamsa → Meda → Asthi → Majja → Shukra tak jaate hain. Har stage par agar Agni (digestive fire) weak ho, toh us stage se aage ka dhatu poori tarah nahi ban paata — isliye weakness, anemia, infertility jaisi problems ka connection Agni se hota hai.","Health ka matlab: Saare dhatu apni normal matra mein balanced hon. Bimari ka matlab: Kisi dhatu ka zyada ya kam ho jaana. 6. Agni — Digestion aur Metabolism","Agni (digestive fire) wo shakti hai jo khaane ko dhatu mein convert karti hai. Iske bina zindagi mumkin nahi. Agni ke 4 types dosha ke hisaab se:","<w:tblPr><w:tblStyle w:val=\"Table\" /><w:tblW w:type=\"pct\" w:w=\"5000\" /><w:tblLook w:firstRow=\"1\" w:lastRow=\"0\" w:firstColumn=\"0\" w:lastColumn=\"0\" w:noHBand=\"0\" w:noVBand=\"0\" w:val=\"0020\" /><w:jc w:val=\"start\" /></w:tblPr><w:tblGrid><w:gridCol w:w=\"2640\" /><w:gridCol w:w=\"2640\" /><w:gridCol w:w=\"2640\" /></w:tblGrid><w:tr><w:trPr><w:tblHeader w:val=\"true\" /></w:trPr><w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Agni Type","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Kya Hota Hai","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Kis Dosha Mein Milta Hai","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:rPr><w:bCs /><w:b /></w:rPr><w:t xml:space=\"preserve\">Tikshna (Intense)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Kuch bhi khao, paccha lega — lekin overactive digestion","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Pitta predominant log","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:rPr><w:bCs /><w:b /></w:rPr><w:t xml:space=\"preserve\">Manda (Mild/Weak)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Halka sa galat khana bhi trouble karta hai, digestion slow","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Kapha predominant log","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:rPr><w:bCs /><w:b /></w:rPr><w:t xml:space=\"preserve\">Sama (Regular/Balanced)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Normal, stable digestion","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Jinme V-P-K balance ho","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:rPr><w:bCs /><w:b /></w:rPr><w:t xml:space=\"preserve\">Vishama (Irregular)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Kabhi theek, kabhi bilkul kharab — unpredictable","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vata predominant log","Khaana pehle Amashaya (stomach) mein pachta hai, phir uska processed form blood vessels ke through poore body ke organs tak pahunchta hai.","7. Man, Indriyan aur Atma — Mind, Senses aur Soul","Mann (Mind) senses se upar hota hai — yeh decide karta hai ki kaunsi sense kis waqt kaam karegi. Ek waqt mein mann sirf ek hi indriya par focus kar sakta hai (chahe yeh switch bahut fast ho). 5 Gyanendriyon ka Mahabhoot Se Rishta","<w:tblPr><w:tblStyle w:val=\"Table\" /><w:tblW w:type=\"auto\" w:w=\"0\" /><w:tblLook w:firstRow=\"1\" w:lastRow=\"0\" w:firstColumn=\"0\" w:lastColumn=\"0\" w:noHBand=\"0\" w:noVBand=\"0\" w:val=\"0020\" /><w:jc w:val=\"start\" /></w:tblPr><w:tblGrid><w:gridCol w:w=\"1980\" /><w:gridCol w:w=\"1980\" /><w:gridCol w:w=\"1980\" /><w:gridCol w:w=\"1980\" /></w:tblGrid><w:tr><w:trPr><w:tblHeader w:val=\"true\" /></w:trPr><w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Indriya","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Element","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Sense Object","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Location","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Kaan (Ears)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Aakash","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Shabd (Sound)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Ear","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Twacha (Skin)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vayu","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Sparsh (Touch)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Skin","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Aankh (Eyes)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Agni","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Roop (Sight)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Eye","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Jeebh (Tongue)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Jal","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Ras (Taste)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Tongue","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Naak (Nose)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Prithvi","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Gandh (Smell)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Nose Personality Types (Sattva ke Aadhar Par)","Charak ne mann ke type ke hisaab se logon ko 16 categories mein baanta hai — treatment plan karte waqt insaan ka nature samajhna zaroori hai:","7 Sattvic (pure/balanced) types — jaise Brahma-type (satya-vaadi, gyaani, nishpaksh), Arsha-type (tapasvi, vidwan), Aindra-type (nyaay-priya, mehnati), etc. — yeh sab high moral character, calm mind, control wale log hain.","6 Rajasic (restless/agitated) types — jaise Asura-type (violent, deceitful), Rakshasa-type (cruel, intolerant), Pishach-type (unclean habits) — inme ego, anger, ya excess desire dominant hai.","3 Tamasic (dull/ignorant) types — Pashu-type (animal-like, sirf khaana-sona), Matsya-type (dara-dara, unstable), Vanaspati-type (bilkul inactive, no intelligence use) — yeh laziness aur low-awareness wale types hain.","Yeh categorization isliye ki gayi hai taaki treatment sirf body ka nahi, balki mann ka bhi ho sake — kyunki bahut si bimariyan mann ke imbalance se shuru hoti hain. Body, Mind aur Universe Ka Rishta","Ek interesting philosophical baat batayi gayi hai: jaise universe Prithvi, Jal, Agni, Vayu, Aakash aur Brahman (consciousness) — in 6 tatvon se bana hai, waise hi ek insaan bhi inhi 6 tatvon se bana hai. Matlab — “jo srishti mein hai, wahi insaan mein hai” (microcosm-macrocosm principle). Isi wajah se Ayurveda insaan ko nature se alag nahi, balki nature ka hi ek chhota roop maanta hai. 8. Kaal aur Ritu — Time aur Seasons","Time (Kaal) ko Ayurveda mein bahut important maana gaya hai kyunki dosha, digestion aur bimari — sab time ke saath cycle mein chalte hain. Saal Ke 6 Ritu (Seasons) Hemant (early winter)","Shishir (deep winter — kabhi kabhi Hemant ke saath count hota hai) Vasant (spring) Grishma (summer) Varsha (monsoon) Sharad (autumn)","Har ritu mein khaan-paan aur lifestyle badalna chahiye — yehi Ritucharya ka concept hai. Jo mausam ke hisaab se apni diet/routine nahi badalta, uska body imbalance ho jaata hai. Umar Ke 3 Stages (Age-based Dosha Dominance)","Balyavastha (Childhood, ~0-16 saal): Kapha dominant — body soft, dhatu develop ho rahe hote hain","Madhyavastha (Middle age, ~16-60 saal): Pitta dominant — strength, energy, virility peak par","Vriddhavastha (Old age, 60+): Vata dominant — dhatu, strength, memory dheere-dheere kam hone lagti hai","Yeh samajhna zaroori hai kyunki treatment aur diet age ke hisaab se bhi adjust karni padti hai. 9. Bhoomi Ke Prakar — Types of Land/Climate","Jagah (region) ka bhi seedha asar body aur health par padta hai. Charak ne 3 types batayi hain:","<w:tblPr><w:tblStyle w:val=\"Table\" /><w:tblW w:type=\"pct\" w:w=\"5000\" /><w:tblLook w:firstRow=\"1\" w:lastRow=\"0\" w:firstColumn=\"0\" w:lastColumn=\"0\" w:noHBand=\"0\" w:noVBand=\"0\" w:val=\"0020\" /><w:jc w:val=\"start\" /></w:tblPr><w:tblGrid><w:gridCol w:w=\"2640\" /><w:gridCol w:w=\"2640\" /><w:gridCol w:w=\"2640\" /></w:tblGrid><w:tr><w:trPr><w:tblHeader w:val=\"true\" /></w:trPr><w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Type","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Characteristics","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Dominant Doshas","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:rPr><w:bCs /><w:b /></w:rPr><w:t xml:space=\"preserve\">Jangala (Arid/Dry)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Kam paani, kam ped, tez hawa, tez dhoop; log physically strong hote hain","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vata + Pitta","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:rPr><w:bCs /><w:b /></w:rPr><w:t xml:space=\"preserve\">Anupa (Marshy/Wet)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Zyada paani, ghane jungle, thandi/mild hawa; log delicate hote hain","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Vata + Kapha","<w:tc><w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:rPr><w:bCs /><w:b /></w:rPr><w:t xml:space=\"preserve\">Sadharan (Medium)","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Dono ke beech ka balance","<w:tcPr /><w:p><w:pPr><w:pStyle w:val=\"Compact\" /><w:jc w:val=\"left\" /></w:pPr><w:r><w:t xml:space=\"preserve\">Balanced","Sabse healthy region: Jangala (kam paani, tez dhoop) — kyunki yahan sabse kam bimariyan hoti hain. Sabse kam healthy region: Anupa (zyada namee, ghana jungle) — yahan doshas jyada accumulate hote hain.","Yeh concept aaj bhi kaam ka hai — jahan aap rehte hain, wahan ke climate ke hisaab se apni diet aur lifestyle adjust karna Ayurveda ki basic salaah hai. Chapter 1 Ka Saar (Summary)","Yeh poora chapter Ayurveda ki foundation rakhta hai: - Kya hai Ayurveda aur health/disease ka basic definition - 20 gunon ka universal classification system - 5 elements jo har cheez banate hain - 6 tastes jo doshas ko control karte hain - 3 doshas (Vata-Pitta-Kapha) — poori medicine ka core - Body anatomy — dhatu, srotas, organs - Agni — digestion ka engine - Mind aur personality ka classification - Time, seasons aur umar ka body par asar - Geography/climate ka health par asar","Agle part (Part 2 — Study/Adhyayan) mein hum dekhenge ki Charak ke according ek vaidya (doctor) ko kaise padhna chahiye, examination ka tareeka, aur clinical training ke principles.","Yeh study guide Charak Samhita Volume I (P.V. Sharma ke English translation, Gabriel Van Loon ke edited version) par based hai, lekin original text ka translation nahi balki concepts ka independent, condensed explanation hai — study aur reference purpose ke liye."]},{"book":"Rog Nivaran — Vedic & Ayurvedic Reference (Atharvaveda + Charaka/Sushruta/Ashtanga Hridaya)","src":"Cultural/educational reference: Atharvaveda suktas (Hinglish bhaavaanuvaad) + classical Ayurveda general principles + Dinacharya/Ritucharya. Not a prescription.","paras":["Rog Nivaran — Vedic aur Ayurvedic Sandarbh","Shwas (Lung), Tvacha (Skin), Netra-Karna (Eye-Ear) aur Nidra (Sleep) sambandhi Atharvaveda ke Suktas + Charaka / Sushruta / Ashtanga Hridaya ke Holistic Siddhant Zaroori Suchna (Important Notice): sanskritik-aadhyaatmik aur shaikshik (educational) reference hai — Atharvaveda ke mool shlokon ka Hinglish bhaavaanuvaad, aur classical Ayurveda granthon (Charaka Samhita, Sushruta Samhita, Ashtanga Hridaya) ke authentic, verified general siddhant, jo web-search se cite karke liye gaye hain. Isme","koi specific dawai ki matra (dosage) ya prescription NAHI di gayi hai, kyunki ye personalised hoti hai (umar, prakriti, rog ki avastha, mausam ke anusaar) aur sirf ek qualified BAMS/Ayurvedic Vaidya hi sahi dosage tay kar sakta hai. Lung disease, chronic skin disease, eye/ear disease jaise conditions — khaaskar budhe logo mein — ke liye pehle allopathic/specialist doctor se check-up zaroori hai.","Ye text un checkups ka substitute nahi, balki saath mein rakhne wala samagri (supportive knowledge) hai. Is Document Ko Kaise Samjhein Ye document teen hisso mein bata hai: Bhag 1 — Atharvaveda ke Suktas:","Jis original Atharvaveda text (Kanda 1 se 6) diya gaya tha, usme se lung/khansi, skin (kushtha), eye (netra), jwar-yakshma jaise rogo se related suktas nikal kar Hinglish mein diye gaye hain — Kanda aur Sukta number ke saath, taaki original verify kiya ja sake. Bhag 2 — Ayurveda ke Classical Granth:","Charaka Samhita, Sushruta Samhita aur Ashtanga Hridaya in bimariyo jaise Nidana-Parivarjana (karan door karna), Shodhana (shuddhikaran), Shamana (santulan) — inhe authentic online sources se cite karke diya gaya hai. Bhag 3 — Practical Application:","Dinacharya (daily routine) aur Ritucharya (seasonal routine) ke general, well-documented concepts — kab, kis samay, kis mausam mein kya karna chahiye — budhe aur jawan dono ke liye alag point ke saath.","Bhag 1 — Atharvaveda ke Rog-Sambandhi Suktas (Hinglish)","1. Shwas-Kasa Rog (Fefdo/Saans/Khansi ki Bimari)","Kanda 6, Sukta 14 — Devta: Shlemakshan (Khansi ka Rog)","Mantra ki shakti se sharir ke jodo mein vyapt khansi (kasa) rog ki shakti ka vinash karo, jo saans aur khansi se sambandhit hai. Jis prakar sarovar se kamal ukhad jata hai, usi prakar main is rogi ke shlemakshan (khansi) rog ko jad se nasht karta hoon. Jis prakar paki hui kakdi apni lata se alag ho jaati hai, usi prakar main is rogi ka khansi-bandhan todta hoon. Jis prakar bhaga hua hiran door chala jaata hai aur beeta hua saal wapas nahi aata, usi prakar ye rog is vyakti ko chhodkar door chala jaaye.","Reference: Atharvaveda, Kanda 6, Sukta 14 (Shlemakshan devta)","Kanda 1, Sukta 25 — Devta: Yakshma-Nashak Agni (Jeerna Rog / TB-jaisi kamzori)","Jis agni ne prithvi se jwar utpann kiya, us agni ke madhyam se main is jwar-jwarit purush ko chhudata hoon. Jeevan ko sukhad banane wala jwar bhale hi ushnata wala ho, phir bhi is vyakti ke sharir se bahar nikal jaaye. Sheet jwar (thand wala bukhaar) bhi shareer ko chhodkar chala jaaye.","Reference: Atharvaveda, Kanda 1, Sukta 25 (Yakshma-nashak Agni devta)","Kanda 4, Sukta 33 — Devta: Yakshma-nashak / Krimi-nashak","Yakshma rog se peedit purush, main teri aankho se, naak se, kaano se aur mooh se yakshma rog ko bahar nikaalta hoon. Main tere sir ke mastishk se, gale ki rakt-poorna naadiyo se, hansli aur seene ki haddiyo se, kandho aur bhujaao se yakshma rog ko bahar nikaalta hoon.","Reference: Atharvaveda, Kanda 4, Sukta 33 (Yakshma-nashak Rishi Kashyap ke mantra) 2. Tvacha Rog (Skin Disease / Kushtha)","Kanda 1, Sukta 23-24 — Devta: Vanaspati (Kushtha-nashak Jadi-Booti)","Hey Haridra (haldi) naamak aushadhi, tu raat mein utpann hui hai isliye tu sharir ki safedi (safed daag) door karne mein saksham hai. Bhringraj, Indravaruni aur Neel naamak aushadhiyaan — tum Kushtha rog ke karan vikrit ho gaye ang ko apne rang mein rang do. Vridhavastha ke karan jo baal shwet ho gaye hain, unhe bhi apne rang mein rang do.","Reference: Atharvaveda, Kanda 1, Sukta 23-24 (Vanaspati devta, Kushtha-nashak)","Kanda 5, Sukta 4 — Devta: Kushtha (Vishesh Tvacha Rog Sukt)","Ye divya gunon wali Kushtha (jadi-booti) tvacha-rog ka nivaran kare. Devon ne sone ke maarg se, swarg ki nauka dwaara amrit-sadrish is kushtha vanaspati ko praapt kiya tha. Hey aushadhi, tu is purush ke praan, gyaan aur netro ko sukh dene wali bano.","Reference: Atharvaveda, Kanda 5, Sukta 4 (Kushtha devta) 3. Netra Rog aur Sambandhit Suktas (Aankh) Kanda 4, Sukta 9 — Devta: Anjan-Mani","Anjan-mani, tu Trikuta parvat se utpann hai. Indra aadi sabhi devon ne rog-rahit rehne ke liye tujhe suraksha-kavach ke roop mein pradaan kiya hai. Ye anjan yakshma rog ko is prakar door karta hai jis prakar shaktishali vayu meghon ke jal ko kshan-matra mein door le jaati hai.","Reference: Atharvaveda, Kanda 4, Sukta 9 (Anjan-mani devta — netra-suraksha ke sandarbh mein)","4. Jwar (Fever) — jo Lung/Skin dono se juda ho sakta hai","Kanda 5, Sukta 22 — Devta: Takman-Nashak Agni","Agni, in cheezo ko jwar ke saath baandh do. Ye dehik shakti ko nasht karne wala jwar sabhi manushyo ko santaap deta hai. Hey shaktishali jwar, tu ise chhodkar nimn (nirbal) sthaan ki taraf chala jaa.","Reference: Atharvaveda, Kanda 5, Sukta 22 (Takman-nashak devta) Kanda 6, Sukta 20 — Devta: Jwar-Nivaran","Sheeta aur ushna dono prakar ke jwar ko shanti ho. Hey jwar, tu apne bhai khansi ke saath is purush ko chhodkar chala jaa. Reference: Atharvaveda, Kanda 6, Sukta 20","5. Nidra (Neend) ke baare mein — Ek Zaroori Spashteekaran Diye gaye Atharvaveda text mein mein 'nidra' shabd zaroor aata hai, lekin uska bhaav insomnia (khud ki neend na aana) theek karna nahi hai — balki wo mantra kisi ko 'chup-chaap sula dena' (jaise gupt karya ke liye) ke sandarbh mein hai. Isliye ise neend na aane ki bimari (insomnia) ke ilaj ke roop mein use karna galat hoga.","Neend ke liye asli aur pramaanik Vedic-Ayurvedic sandarbh Ashtanga Hridaya ke 'Nidra' adhyaay mein milta hai — jo Bhag 2 mein aage diya gaya hai.","Bhag 2 — Charaka, Sushruta aur Ashtanga Hridaya ke Holistic Siddhant authentic online scholarly sources se cite karke liya gaya hai (neeche reference diya gaya hai). Ye general treatment-philosophy hai, exact herb-quantity/dosage nahi — kyunki dosage vyakti-vishesh (prakriti, umar, rog ki avastha) ke anusaar Vaidya tay karte hain.","1. Kasa-Shwas (Cough-Lung Disease) — Charaka Samhita Chikitsa Sthana, Adhyaya 18 (Kasa Chikitsa) mein likha hai ki Hikka (hichki), Shwasa (saans phoolna) aur Kasa (khansi) — teeno hi 'Pranavaha Srotas' (respiratory system) ki bimariyan hain aur inka ilaj ek jaisa hai. Kasa 5 prakar ka hota hai — (vayu-dosha se, sookhi khansi),","(dhatu-kshaya/TB-jaisi kamzori se). Pehle teen prakar sahi ilaj se theek ho sakte hain, aakhri do (chot aur kshaya wale) sirf 'yapya' (control mein rakhne yogya) mane gaye hain.","Charaka ke General Chikitsa Sutra (Treatment Principle):","— sabse pehle bimari ka karan (jaise dhool, dhuaan, thanda khana) chhodna.","— shareer ki shuddhi (jaise panchakarma-type therapy) — sirf Vaidya ki dekh-rekh mein.","— santulan-karak upchar (halka, madhur aahar aur jeevaniya-varg ki cheezein).","Reference: carakasamhitaonline.com — 'Kasa Chikitsa', Charaka Samhita Chikitsa Sthana Ch. 18; easyayurveda.com — 'Charaka Kasa Chikitsa 18th Chapter'","2. Tvacha Rog (Kushtha) — Charaka aur Sushruta Samhita","Charaka Samhita mein Kushtha (skin disease) ko bhi dosha-anusaar classify kiya gaya hai — Vata, Pitta, Kapha aur inke mix se bane 18 prakar ke Kushtha bataye gaye hain. Sushruta Samhita (jo surgery-pradhan granth hai) mein bhi Kushtha aur Visarpa (jaise erysipelas) ka vistrit varnan hai, jisme rakt-shuddhi (blood purification), aahar-niyam (diet) aur bahya-lepa (external application) ka mahatva bataya gaya hai.","Purane granthon ke anusaar tvacha rog sirf 'upar ki' bimari nahi, balki khoon aur pachan (digestion) se juda hua maana jaata hai — isliye sirf cream/lep se nahi, aahar sudhaar aur andar se shuddhi par zor diya jaata hai. Ye concept aaj ke dermatology mein bhi 'gut-skin connection' ke roop mein maana jaata hai.","Reference: carakasamhitaonline.com — Chikitsa Sthana (Kushtha Chikitsa, Ch. 7); Sushruta Samhita Nidana Sthana (Kushtha-Visarpa)","3. Netra-Karna Rog (Eye-Ear) — Sushruta Samhita aur Sharngadhara Samhita Sushruta Samhita (Uttar Tantra) mein","(aankh ko swasth rakhne ki vidhiyan) ka poora adhyaay hai. Isi tarah Sharngadhara Samhita ke Uttar Khanda mein","Anjana Vidhi (kajal lagane ki vidhi), Karna-Purana Vidhi (kaan mein tel daalna) aur Netra-Prasadana Karma alag-alag procedures ke roop mein diye gaye hain.","Sharngadhara Samhita ke anusaar in procedures mein shaamil hain — Ashchotana-Anjana Vidhi (aankh mein drops/kajal), Tarpana-Putapaka Vidhi (aankh ko poshan dena), aur Karna-Purana Vidhi (kaan mein tel).","Reference: wisdomlib.org — 'Sharngadhara-Samhita (Ayurveda book)', doc1210387","4. Nidra (Neend/Insomnia) — Ashtanga Hridaya (Vagbhata)","Ahara (bhojan) aur Brahmacharya ke saath 'Trayopastambha' (jeevan ke teen mool stambh)","\"Sukh-dukh, poshan-durbalta, shakti-kamzori, gyaan-agyaan, jeevan-mrityu — sab kuch neend par nirbhar hai.\" — Ashtanga Hridaya, Sutra Sthana, Shlok 53 samyak (sahi) neend se sukh, bal aur jeevan milta hai; asamyak (galat) neend se dukh, kamzori aur rog hote hain.","Modern research bhi Ashwagandha, Brahmi aur Tagara jaisi jadi-booti ko neend behtar karne mein sahayak maanti hai — lekin unka use bhi Vaidya ki salah se hi karna chahiye.","Reference: greencompassion.wordpress.com (Ashtanga Hridayam v.53, 65); rsisinternational.org — 'Physiological aspects of Nidra' (2025), citing Charaka, Sushruta, Ashtanga Hridaya","Bhag 3 — Practical Application: Kab aur Kaise (Dinacharya-Ritucharya)","Ashtanga Hridaya Sutra Sthana Adhyaya 2 (Dinacharya) aur Adhyaya 3 (Ritucharya) ke well-documented, general concepts par based hai — jo safe aur widely-cited hain. Ye hai, dawai ki dosage nahi.","A. Roz ka Samay (Dinacharya) — Sabke Liye Common","Kaise Madad Karta Hai Brahma Muhurta (Surya udayse ~1.5 ghante pehle) Uthna, paani peena, mooh-daant saaf karna","Charaka/Ashtanga Hridaya ke anusaar is samay vaayu shuddh Subah (Snaan se pehle)","Halka vyayam / pranayam / tel-maalish (Abhyanga)Sharir ki nadiya khulti hain, khoon-sancharan behtar hota hai — Din mein","Bhaari bhojan din ke samay (jab pachan-shakti sabse tez hoti hai) Charaka ke anusaar Agni (pachan) din mein sabse balvaan hoti Sham (Sunset ke aas-paas) Halka bhojan, screen/tez roshni kam karna","Ashtanga Hridaya ke Nidra-siddhant ke anusaar isse raat ki nee Raat (jaldi sona)","10 baje se pehle sona, purv-disha ya uttar-disha mein sar rakh kar Samyak Nidra ke liye zaroori — der raat jaagna 'Ratricharya' ke","B. Mausam ke Anusaar (Ritucharya) — Lung aur Skin ke liye Zaroori Kya Dhyaan Rakhein Sardi (Hemant-Shishir)","Lung/khansi ke rogiyo ko thandi hawa se bachna chahiye, garam kapde, halka tel-maalish Vasant (Basant)","Kapha badhne ka mausam — bhaari, thanda, oily khana kam karein (khansi-cold badhta hai) Grishma (Garmi)","Pitta badhta hai — tez dhoop se bachein, thanda aur halka bhojan (skin rashes is mausam mein zyada) Varsha (Barsaat)","Pachan-shakti kamzor hoti hai — infection ka khatra zyada, swachhta zaroori Sharad","Pitta shaant karne wala aahar — jaundice/skin heat-related issues ke liye accha samay","Reference: Ashtanga Hridaya, Sutra Sthana, Ch. 2 (Dinacharya) aur Ch. 3 (Ritucharya) — ayurvedahub.in, ahsutrasthana.blogspot.com C. Budhe Logo (Elderly) ke liye Alag Dhyaan","Lung/khansi: Thandi hawa, dhool-dhuaan se bachna sabse zaroori — Charaka ke Nidana-Parivarjana siddhant ke anusaar 'karan hataana' pehla kadam hai. Agar saans phoolna, seene mein dard ho — turant pulmonologist se milein.","Neend: Ashtanga Hridaya kehta hai budhe logo mein Vata dosha swabhavik roop se badhta hai, jisse neend patli ho sakti hai — is umar mein sona-jagna fix time par rakhna aur din mein bahut zyada activity se bachna madadgar mana gaya hai.","Skin: Umar ke saath tvacha sookhi hoti hai (Vata badhne se) — halka tel-maalish (Abhyanga) Ashtanga Hridaya mein roz ke liye recommend kiya gaya hai, khaaskar budhe logo ke liye. Prasadana' procedures hain, lekin ye ophthalmologist ke checkup ka substitute nahi hain. D. Jawan Logo (Young) ke liye Alag Dhyaan","Lung: Aajkal pollution, smoking, late-night jaagna — inse Kaphaja/Vataja Kasa jaldi hota hai. Dinacharya ke anusaar subah ka halka vyayam sabse zaroori.","Neend: Screen-time/stress se neend sabse zyada disturb hoti hai jawan logo mein — Ashtanga Hridaya 'Ratricharya' mein raat ko der tak jaagna avoid karne ko kaha gaya hai.","Skin: Pitta-pradhan diet (tel-masala, junk food) se acne/rashes badhte hain — Ritucharya ke anusaar garmi mein thanda-halka bhojan rakhna chahiye.","Eye: Screen ke zyada use se aankho mein strain — beech-beech mein break lena aur Sushruta ke 'Netra Prasadana' jaisi basic eye-care habits (jaise aankh dhona) helpful mani jaati hain. Tulnatmak Saaransh (Comparison Table)","Ayurveda (Charaka/Sushruta/Ashtanga) ka Approach Lung/Kasa","Mantra + Shlemakshan devta ka aahvaan, rog ko 'jad se ukhaadne' ka bhaav Dosha-anusaar (Vataja/Paittika/Kaphaja/Kshataja/Kshayaja) classificatio Skin/Kushtha","Haldi, Bhringraj, Neel jaisi aushadhiyon ka mantra-sahit prayog 18 prakar ke Kushtha, rakt-shuddhi aur aahar-niyam par zor Eye/Netra Anjan-mani ko suraksha-kavach maana gaya","Netra Prasadana Karma — Anjana, Tarpana jaisi structured procedures Jwar (Fever)","Takman-nashak Agni devta ki stuti, jwar ko 'door bhagaana' Jwar ko bhi dosha-anusaar classify kiya gaya, samprapti (disease proce Neend (Sleep)","Seedha koi cure-sukta nahi milta (galatfehmi common hai) Nidra ko 'Trayopastambha' (3 mool stambh) mein rakha gaya — poora s","Sampoorna Reference Suchi (Full Reference List)","1. Atharvaveda (Hindi anuvaad), Kanda 1-6 — user-provided source text (mool Sanskrit ka Hindi bhaavaanuvaad)","2. carakasamhitaonline.com — 'Chikitsa Sthana' aur 'Kasa Chikitsa' (Charaka Samhita, Chikitsa Sthana, Adhyaya 18)","3. easyayurveda.com — 'Charaka Kasa Chikitsa 18th Chapter' by Dr. Hebbar","4. ayurvedicindia.info — 'Kasa Chikitsa: Ayurvedic Treatment for Cough & Bronchitis'","5. wisdomlib.org — 'Atharvaveda and Charaka Samhita' by Laxmi Maji (2021), including 'Sharngadhara-Samhita', 'Classification of diseases in Caraka-Samhita', 'Treatment of Kasa (cough)'","6. greencompassion.wordpress.com — 'Healthy Sleep through Ayurveda and Yoga' (citing Ashtanga Hridaya Sutra Sthana v.53, 65)","7. rsisinternational.org — 'Physiological aspects of Nidra with special reference to Sleep Hygiene' (2025), citing Charaka Samhita, Sushruta Samhita, Ashtanga Hridaya","8. ayurvedahub.in — 'Ashtanga Hridaya by Vagbhata: 6 Sections, 120 Chapters' (Dinacharya/Ritucharya overview)","9. ahsutrasthana.blogspot.com — 'Ashtanga Hridayam Sutrasthana Chapters' (chapter-wise index) sanskritik/shaikshik sandarbh hai, medical prescription nahi. Lung disease, chronic skin disease, eye/ear problems, ya lambe samay se insomnia — in sabke liye qualified doctor (allopathic specialist ya BAMS Vaidya) se milna anivarya hai , khaaskar budhe logo ke liye jinme ye symptoms kisi badi bimari (jaise COPD, heart issue, diabetes-related eye problem) ka sanket ho sakte hain. Yahaan diye gaye jadi-booti ke naam (haldi, bhringraj,","saath interaction ho sakta hai","— isliye inhe shuru karne se pehle bhi doctor/Vaidya se salah zaroor lein."]}];
+const SYMPTOMS = [
+  {grp:"Lungs & Respiratory", items:[
+    {v:"ild", t:"Breathlessness / Interstitial Lung Disease (ILD)"},
+    {v:"cough", t:"Dry cough or mucus"} ]},
+  {grp:"Eyes & Vision", items:[
+    {v:"cataract", t:"Blurry vision / cataract"},
+    {v:"conjunctivitis", t:"Redness, itching (conjunctivitis)"} ]},
+  {grp:"Ear", items:[ {v:"ear", t:"Earache / ringing (tinnitus)"} ]},
+  {grp:"Gallbladder & Digestion", items:[
+    {v:"gallstone", t:"Right-upper abdominal pain / gallstones"},
+    {v:"digestion", t:"Acidity, bloating, weak digestion"} ]},
+  {grp:"Skin & Sleep", items:[
+    {v:"skin", t:"Rash / eczema / Kushtha"},
+    {v:"insomnia", t:"Sleeplessness (Anidra)"} ]}
+];
+
+// Each condition: diet, classical + modern citation, allopathic (MBBS) note + textbook,
+// and detailed Sujok acupressure (point / how / hold time / repetitions).
+const COND = {
+  ild:{ label:"Lungs / ILD", cls:"lung", fatHeavy:false,
+    have:["Mulethi (licorice) warm decoction","Vasaka (Adhatoda) leaf infusion","Warm barley (yava) gruel","A little warm ghee","Honey (not heated)","Steamed vegetables, warm soups"],
+    avoid:["Cold & iced drinks","Curd/dairy at night","Dry, astringent, raw foods","Deep-fried heavy oils"],
+    classical:"Charaka Samhita, Chikitsa Sthana — Hikka-Svasa Chikitsa (17)",
+    clinical:"Licorice glycyrrhizin & Vasaka vasicine studied for anti-inflammatory / bronchodilator, mucolytic action.",
+    allo:"Conventional care needs pulmonology review, lung-function tests & HRCT; antifibrotics (e.g. pirfenidone/nintedanib) are specialist-only. Do NOT self-medicate; sudden breathlessness is an emergency.",
+    alloBook:"Harrison's Principles of Internal Medicine; Murray & Nadel's Textbook of Respiratory Medicine",
+    sujok:{point:"Lung zone — the fleshy mound at the base of the thumb (thenar) on the palm; on fingers, the upper phalanx.",
+      how:"Press with the opposite thumb-tip or a blunt probe; you may tape a red seed (e.g. black pepper) there.",
+      time:"Firm press 5–7 seconds, release 2–3 sec.", reps:"Repeat 8–10 times per session, 2–3 sessions/day." } },
+  cough:{ alias:"ild" },
+  cataract:{ label:"Eyes / Cataract", cls:"eye",
+    have:["Triphala Ghrita (1 tsp) with warm water, empty stomach","Amla (Indian gooseberry)","Cooked spinach, carrot, green gram","A little cow's ghee"],
+    avoid:["Excess salt","Excess pungent (katu) spices","Fermented foods","Direct heat / smoke to eyes"],
+    classical:"Ashtanga Hridaya, Uttara Sthana — Netra Roga (approx. 13)",
+    clinical:"Lutein/zeaxanthin & vitamin-C rich foods associated with lens & macular protection.",
+    allo:"An established cataract is not reversible by diet; definitive treatment is day-care surgery (phacoemulsification + intra-ocular lens). See an ophthalmologist for grading and timing.",
+    alloBook:"Kanski's Clinical Ophthalmology; AAO Preferred Practice Pattern (Cataract)",
+    sujok:{point:"Eye zone — the pad/tip of the thumb (and the tips of the index & middle fingers).",
+      how:"Very gentle circular press with a fingernail edge; a small seed may be taped to the thumb-tip. Never touch the eye itself.",
+      time:"Gentle press 3–5 seconds.", reps:"6–8 repeats, 2–3 times/day." } },
+  conjunctivitis:{ label:"Eyes / Conjunctivitis", cls:"eye",
+    have:["Cooling foods: green gram, coriander water","Amla, pomegranate","Warm (not hot) water","Sterile, professionally-prepared eye-wash only"],
+    avoid:["Sour, fermented, very salty foods","Pungent chillies","Rubbing the eyes","Heat & dust exposure"],
+    classical:"Ashtanga Hridaya, Uttara Sthana — Netra Roga",
+    clinical:"Anti-inflammatory + strict hygiene; Euphrasia used symptomatically (see homeopathy below).",
+    allo:"Most viral cases self-limit with hygiene & cold compress; bacterial may need antibiotic drops; allergic responds to antihistamine drops. Red eye with pain, photophobia or vision drop = urgent review.",
+    alloBook:"Kanski's Clinical Ophthalmology; AAO Conjunctivitis PPP",
+    sujok:{point:"Same eye zone — thumb-pad; keep it symptomatic and hygienic.",
+      how:"Gentle press only; wash hands first; never place anything in the eye.",
+      time:"3–5 seconds.", reps:"6–8 repeats, 2×/day." } },
+  ear:{ label:"Ear (Karna Roga)", cls:"ear",
+    have:["Warm foods & drinks","Ginger, garlic in cooking","Keep head & ears warm"],
+    avoid:["Cold-water head baths","Cold breeze exposure","Excess sour foods"],
+    classical:"Ashtanga Hridaya, Uttara Sthana — Karna Roga",
+    clinical:"Warmth & kitchen antimicrobials (ginger, garlic) traditionally supportive.",
+    allo:"Ear pain, discharge or hearing loss needs ENT review to exclude infection/impacted wax/perforation. Never instil oils/drops into an ear with possible perforation.",
+    alloBook:"Scott-Brown's Otorhinolaryngology; Davidson's Principles & Practice of Medicine",
+    sujok:{point:"Ear zone — the outer (lateral) side of the thumb tip.",
+      how:"Press with a fingernail edge along the side of the thumb tip.",
+      time:"5 seconds hold.", reps:"6–8 repeats, 2–3×/day." } },
+  gallstone:{ label:"Gallbladder stones", cls:"gall", fatHeavy:true, priority:true,
+    have:["Warm water, warm lemon water","Radish (mulaka) & its juice","High-fibre whole grains, barley","Cooked light vegetables (bottle gourd)","Moong dal"],
+    avoid:["Deep-fried foods","Heavy fats, butter, red meat","Refined sugar & rich sweets","Very large heavy meals"],
+    classical:"Charaka Samhita, Chikitsa Sthana — Grahani/Agni context (15)",
+    clinical:"Low saturated fat + high soluble fibre associated with reduced bile lithogenicity.",
+    allo:"Symptomatic gallstones are commonly treated with laparoscopic cholecystectomy; acute cholecystitis / obstructive jaundice / fever is an emergency. See a surgeon — do not rely on diet alone for stones causing pain.",
+    alloBook:"Bailey & Love's Short Practice of Surgery; Sabiston Textbook of Surgery",
+    sujok:{point:"Gallbladder zone — right palm, just below the ring finger.",
+      how:"Press and apply a small green dot/seed; green colour is traditionally used here.",
+      time:"Press 5–7 seconds.", reps:"8 repeats, 2×/day." } },
+  digestion:{ label:"Digestion / Agni", cls:"digest",
+    have:["Warm, freshly cooked light meals","Ginger, cumin, ajwain, fennel","Buttermilk (takra) at midday","Eat to ~75% fullness"],
+    avoid:["Cold, leftover, incompatible (viruddha) foods","Overeating, late-night heavy meals","Excess raw salad at night"],
+    classical:"Charaka Samhita — Agni & Grahani principles",
+    clinical:"Smaller warm meals & carminative spices support digestion and reduce reflux.",
+    allo:"Persistent dyspepsia/reflux should be evaluated (H. pylori testing; endoscopy if alarm features — weight loss, bleeding, difficulty swallowing, anaemia).",
+    alloBook:"Sleisenger & Fordtran's Gastrointestinal & Liver Disease; Harrison's",
+    sujok:{point:"Stomach zone — the centre of the palm.",
+      how:"Clockwise circular massage with the opposite thumb after meals.",
+      time:"Massage ~2 minutes.", reps:"After each main meal (3×/day)." } },
+  skin:{ label:"Skin (Kushtha)", cls:"skin",
+    have:["Bitter greens: neem, bitter gourd","Turmeric in cooking","Moong dal, light bitter vegetables","Plenty of warm water"],
+    avoid:["Sour curd","Fish + milk & other viruddha combos","Excess salt, sour, jaggery","Fried & fermented foods"],
+    classical:"Charaka Samhita, Chikitsa Sthana — Kushtha Chikitsa (7)",
+    clinical:"Curcumin & neem constituents studied for anti-inflammatory / skin-soothing effects.",
+    allo:"Management is diagnosis-specific; eczema uses emollients & topical steroids, infection must be excluded; chronic/severe disease needs dermatology (phototherapy, systemics).",
+    alloBook:"Fitzpatrick's Dermatology; Rook's Textbook of Dermatology",
+    sujok:{point:"Correspondence of the affected skin area on the matching hand region; general — liver & blood zones.",
+      how:"Gentle press over the mapped area; keep skin clean, avoid known triggers.",
+      time:"5 seconds.", reps:"6–8 repeats, 2×/day." } },
+  insomnia:{ label:"Sleep (Anidra)", cls:"sleep",
+    have:["Warm milk with a pinch of nutmeg at bedtime","Ashwagandha with warm milk (if suitable)","Warm ghee foot-massage (Padabhyanga)","Light early dinner"],
+    avoid:["Caffeine after noon","Alcohol","Very spicy or heavy late meals","Screens late at night"],
+    classical:"Charaka Samhita, Sutra Sthana — Nidra Adhyaya (21)",
+    clinical:"Tryptophan/magnesium foods & withanolides (Ashwagandha) studied for sleep support.",
+    allo:"Sleep hygiene first; CBT-I is first-line therapy; screen for sleep apnoea, depression & thyroid disease. Avoid long-term sedatives without supervision.",
+    alloBook:"Kryger's Principles & Practice of Sleep Medicine; Harrison's",
+    sujok:{point:"Head/brain zone — the very tip of the thumb.",
+      how:"Slow, calming press with the opposite thumb while breathing out slowly.",
+      time:"Hold 5–7 seconds with slow breathing.", reps:"10 slow repeats at bedtime." } }
+};
+function condResolve(k){ const c=COND[k]; return c && c.alias ? COND[c.alias] : c; }
+
+/* Sujok hand-map: correspondence point coordinates (schematic) + organ clock */
+const POINTS = {
+  insomnia:{x:52,y:104,label:"Head / brain",clock:"Calm hours: before sleep (10–11 PM)"},
+  cataract:{x:52,y:122,label:"Eyes",clock:"Peak: 7–9 AM"},
+  conjunctivitis:{x:52,y:122,label:"Eyes",clock:"Peak: 7–9 AM"},
+  ear:{x:62,y:140,label:"Ear",clock:"Peak: 7–9 AM"},
+  ild:{x:82,y:150,label:"Lung (thenar)",clock:"Lung meridian: 3–5 AM"},
+  gallstone:{x:128,y:150,label:"Gallbladder",clock:"Gallbladder meridian: 11 PM–1 AM"},
+  digestion:{x:106,y:176,label:"Stomach (centre of palm)",clock:"Stomach meridian: 7–9 AM"},
+  skin:{x:106,y:198,label:"Skin / blood zone",clock:"Large-intestine/skin: 5–7 AM"}
+};
+// Draw a schematic right-hand palm with all points; highlight the active one.
+function handSVG(activeKey){
+  const dots = Object.entries(POINTS).map(([k,p])=>{
+    const on = (k===activeKey);
+    return `<circle cx="${p.x}" cy="${p.y}" r="${on?7:3.2}" fill="${on?'#dc2626':'#94a3b8'}" ${on?'stroke="#fff" stroke-width="2"':''}/>`
+      + (on?`<text x="${p.x+11}" y="${p.y+4}" font-size="11" fill="#b91c1c" font-weight="700">${p.label}</text>`:'');
+  }).join("");
+  return `<svg viewBox="0 0 210 250" width="100%" style="max-width:230px" role="img" aria-label="Sujok hand map">
+    <!-- palm -->
+    <rect x="62" y="118" width="94" height="116" rx="30" fill="#fde8d7" stroke="#e3b48f"/>
+    <!-- fingers -->
+    <rect x="70" y="46" width="18" height="78" rx="9" fill="#fde8d7" stroke="#e3b48f"/>
+    <rect x="94" y="38" width="18" height="86" rx="9" fill="#fde8d7" stroke="#e3b48f"/>
+    <rect x="118" y="44" width="18" height="80" rx="9" fill="#fde8d7" stroke="#e3b48f"/>
+    <rect x="140" y="60" width="17" height="66" rx="8" fill="#fde8d7" stroke="#e3b48f"/>
+    <!-- thumb -->
+    <rect x="41" y="96" width="22" height="82" rx="11" fill="#fde8d7" stroke="#e3b48f"/>
+    ${dots}
+  </svg>`;
+}
+
+/* Per-condition traditional mantra (Atharvaveda / deity association) — cultural, NOT medical */
+const MANTRA = {
+  ild:{name:"Respiratory calm (Atharvaveda Yakshma-nashana tradition)", sk:"ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम्…", count:"11 or 108 times, sunrise",
+    note:"Atharvaveda (Kanda 3) has Yakshma-nashana healing hymns; the Mahamrityunjaya mantra is traditionally chanted for the unwell for courage and calm."},
+  cataract:{name:"Surya (Sun) — eyes", sk:"ॐ सूर्याय नमः", count:"108 times, morning sunlight",
+    note:"Eyes are traditionally associated with Surya; chanting is done for calm, not as a cure."},
+  conjunctivitis:{name:"Surya (Sun) — eyes", sk:"ॐ सूर्याय नमः", count:"108 times, morning",
+    note:"Traditional eye association with the Sun; supportive practice only."},
+  ear:{name:"Pranava (Om) — hearing/space", sk:"ॐ", count:"21 slow repetitions",
+    note:"Sound/space (Akasha) governs hearing in tradition; slow Om chanting for calm."},
+  gallstone:{name:"Dhanvantari (healing deity)", sk:"ॐ नमो भगवते वासुदेवाय धन्वन्तरये…", count:"108 times",
+    note:"Dhanvantari is the deity of Ayurveda; chanted for wellbeing before medicine."},
+  digestion:{name:"Agni (digestive fire)", sk:"ॐ अग्नये नमः", count:"11 or 108 times before meals",
+    note:"Agni is the traditional principle of digestion; a mindful pre-meal practice."},
+  skin:{name:"Surya / purification", sk:"ॐ सूर्याय नमः", count:"108 times, morning sun",
+    note:"Traditional association of the Sun with skin & vitality; supportive only."},
+  insomnia:{name:"Chandra (Moon) — calm & sleep", sk:"ॐ चन्द्राय नमः", count:"108 times at night",
+    note:"The Moon (Soma) is associated with coolness & rest; a calming bedtime practice."}
+};
+
+/* Per-condition Tantra = yogic mind-body practice (safe pranayama/meditation), NOT esoteric ritual */
+const TANTRA_C = {
+  ild:"Anulom-Vilom (alternate-nostril) & Bhramari (humming) pranayama, 5–10 min in fresh air. Stop if breathless.",
+  cataract:"Trataka (soft candle/dot gazing) then palming; gentle eye-rotation exercises. Never strain the eyes.",
+  conjunctivitis:"Only palming & rest during active infection; avoid gazing practices until healed.",
+  ear:"Bhramari (humming) breath, 5 rounds — the gentle vibration is calming.",
+  gallstone:"Slow abdominal (diaphragmatic) breathing; avoid vigorous kriyas during acute pain.",
+  digestion:"Sit in Vajrasana a few minutes after meals; slow deep breathing to aid digestion.",
+  skin:"Sheetali / Sheetkari (cooling) pranayama, 5 rounds; calm routine reduces flare stress.",
+  insomnia:"Yoga-Nidra body scan and Chandra-bhedana (left-nostril) slow breathing before bed."
+};
+
+const HERBS = [
+  {name:"Triphala / Triphala Ghrita", bot:"Emblica officinalis, Terminalia chebula, Terminalia bellirica",
+   uses:"Eye health (cataract, conjunctivitis), gentle digestion & bowel regularity, skin support.",
+   modern:"Polyphenol-rich; antioxidant activity studied for lens proteins and gut health.",
+   dose:"Powder 3–5 g with warm water at night; or Triphala Ghrita 1 tsp on empty stomach (as advised).",
+   contra:"Avoid large doses in acute diarrhoea and in pregnancy; may loosen stools.",
+   classical:"Ashtanga Hridaya (Netra); Charaka Sutra Sthana 27", clinical:"Antioxidant / ocular-support research."},
+  {name:"Mulethi (Licorice)", bot:"Glycyrrhiza glabra",
+   uses:"Respiratory support (ILD, cough), soothing to throat & gastric mucosa.",
+   modern:"Glycyrrhizin studied for anti-inflammatory and demulcent effects.",
+   dose:"Decoction 1–3 g twice daily, short courses only.",
+   contra:"AVOID in hypertension, low potassium, heart or kidney disease, pregnancy; interacts with BP/heart/diuretic drugs. Not for long-term use.",
+   classical:"Charaka Samhita — Hikka-Svasa Chikitsa (17)", clinical:"Glycyrrhizin respiratory / mucosal research."},
+  {name:"Ashwagandha", bot:"Withania somnifera",
+   uses:"Sleep (Anidra), stress, general strength & recovery.",
+   modern:"Withanolides studied for sleep quality and stress markers.",
+   dose:"300–600 mg standardized extract, or ~3 g powder with warm milk before bed.",
+   contra:"Avoid in hyperthyroidism, acute fever; caution with thyroid, sedative & immunosuppressant drugs; avoid in pregnancy.",
+   classical:"Charaka Samhita — Rasayana / Vata context", clinical:"Withanolide sleep & stress research."},
+  {name:"Vasaka (Malabar nut)", bot:"Adhatoda vasica",
+   uses:"Cough, bronchial congestion, respiratory support.",
+   modern:"Vasicine studied for bronchodilator & mucolytic (expectorant) action.",
+   dose:"Leaf juice 5–10 ml with honey, or as decoction (as advised).",
+   contra:"Avoid in pregnancy and bleeding disorders.",
+   classical:"Ashtanga Hridaya — Kasa-Svasa", clinical:"Vasicine expectorant research."},
+  {name:"Guggulu (Triphala Guggulu)", bot:"Commiphora mukul",
+   uses:"Fat & lipid metabolism, joint and biliary support.",
+   modern:"Guggulsterones studied for lipid metabolism.",
+   dose:"250–500 mg with warm water after meals (as advised).",
+   contra:"Caution with thyroid & blood-thinning drugs; avoid in pregnancy.",
+   classical:"Classical Guggulu Kalpanas", clinical:"Guggulsterone lipid research."},
+  {name:"Neem", bot:"Azadirachta indica",
+   uses:"Skin disorders (Kushtha), blood purification, antimicrobial support.",
+   modern:"Nimbidin/azadirachtin studied for anti-inflammatory & antimicrobial effects.",
+   dose:"Small amounts of leaf/decoction, short courses; topical use as advised.",
+   contra:"Avoid in pregnancy; not for infants; avoid prolonged high doses (liver caution).",
+   classical:"Charaka Samhita — Kushtha Chikitsa (7)", clinical:"Nimbidin dermatological research."},
+  {name:"Turmeric (Haridra)", bot:"Curcuma longa",
+   uses:"Skin, anti-inflammatory support, digestion.",
+   modern:"Curcumin widely studied for anti-inflammatory activity (low oral bioavailability).",
+   dose:"Culinary use; 1–3 g/day with black pepper & fat to aid absorption.",
+   contra:"High doses caution with gallstones (may stimulate bile), blood thinners, and before surgery.",
+   classical:"Charaka Samhita — Kushtha", clinical:"Curcumin anti-inflammatory research."}
+];
+
+const HOMEO = {
+  ild:["Arsenicum album (breathing ease)","Spongia tosta (dry cough)"],
+  gallstone:["Chelidonium majus (biliary/liver)","Lycopodium (bloating)"],
+  conjunctivitis:["Euphrasia officinalis (watering/redness)"],
+  cataract:["Cineraria maritima drops — alcohol-free, only if professionally supplied"],
+  insomnia:["Coffea cruda","Nux vomica (over-stimulation)"],
+  skin:["Sulphur","Graphites (oozing eczema)"]
+};
+
+// Traditional Atharvaveda / mantra / tantra content — cultural, NOT medical.
+const TRADITIONS = {
+  intro:"The Atharvaveda contains <i>Bhaishajya</i> (healing) hymns that traditionally accompanied the use of herbs and water. In classical culture, chanting (<i>mantra</i>), breath and ritual were used to steady the mind and support the sick. They are practised here only for calm, focus and emotional comfort — alongside, never instead of, medicine.",
+  mantras:[
+    {name:"Dhanvantari Mantra", sk:"ॐ नमो भगवते वासुदेवाय धन्वन्तरये अमृतकलश हस्ताय सर्वामय विनाशनाय त्रैलोक्यनाथाय श्री महाविष्णवे नमः॥",
+     note:"Dedicated to Dhanvantari, the deity of Ayurveda/healing. Chanted traditionally for wellbeing before taking medicine.", count:"108 (one mala), morning" },
+    {name:"Mahamrityunjaya Mantra", sk:"ॐ त्र्यम्बकं यजामहे सुगन्धिं पुष्टिवर्धनम्। उर्वारुकमिव बन्धनान् मृत्योर्मुक्षीय मामृतात्॥",
+     note:"Traditionally chanted for health, courage and longevity; widely used for the seriously ill as a comfort practice.", count:"11, 21 or 108 times" },
+    {name:"Gayatri Mantra", sk:"ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि धियो यो नः प्रचोदयात्॥",
+     note:"General mantra for clarity of mind and calm; suitable at dawn/dusk.", count:"3, 11 or 108 times" }
+  ],
+  tantra:"“Tantra” here means classical mind-body disciplines — regulated breath (pranayama), meditation, yantra focus and disciplined routine (dinacharya). Authentic tantra should be learned only from a qualified traditional teacher. It is a spiritual/mental-wellbeing practice, not a cure for any disease, and must not delay medical care.",
+  practice:"Sit quietly, keep the spine easy, breathe out slowly, and repeat the chosen mantra with a mala (108 beads) or a simple count. Morning and evening, a few minutes each, is the traditional rhythm."
+};
+
+/* ============================================================
+   UI: tabs & language
+   ============================================================ */
+document.getElementById('tabs').addEventListener('click', (e)=>{
+  const b=e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const t=b.dataset.tab;
+  document.querySelectorAll('.tabpane').forEach(p=>p.classList.toggle('hide', p.dataset.pane!==t));
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('langSel').addEventListener('change', (e)=> applyLang(e.target.value));
+
+function updateStatus(){
+  const el=document.getElementById('statusInd');
+  if(navigator.onLine){ el.textContent="Online"; el.className="status online"; syncPending(); }
+  else { el.textContent="Offline Mode"; el.className="status offline"; }
+}
+window.addEventListener('online', updateStatus);
+window.addEventListener('offline', updateStatus);
+
+/* ---------- Registration ---------- */
+document.getElementById('loginForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const name=document.getElementById('fName').value.trim();
+  const email=document.getElementById('fEmail').value.trim().toLowerCase();
+  const addr=document.getElementById('fAddr').value.trim();
+  const consent=document.getElementById('fConsent').checked;
+  if(!name||!email){ toast("Naam aur email dono bharein / Enter name and email."); return; }
+  const prevPaid = currentUser && currentUser.email===email ? !!currentUser.paid : false;
+  currentUser={ name, email, address:addr, loginTime:now(), consent, paid:prevPaid };
+  localStorage.setItem(LS.user, JSON.stringify(currentUser));
+  if(consent) queueAudit(currentUser);
+  renderRole(); renderHerbs(); renderTherapies(); renderPending();
+  const r=role();
+  toast(r==="admin" ? "✅ ADMIN login — full master access!" : "✅ Logged in — sab features free & unlocked.");
+});
+
+function renderRole(){
+  const box=document.getElementById('roleAlert');
+  if(!currentUser){ box.classList.add('hide'); return; }
+  box.classList.remove('hide');
+  const r=role();
+  if(r==="admin"){ box.className="alert admin"; box.innerHTML="<b>Admin access active</b> — full master access. Welcome, "+esc(currentUser.name)+"."; }
+  else { box.className="alert paid";
+    box.innerHTML="<span><b>Full access active (free)</b> — sabhi features khule hain. Welcome, "+esc(currentUser.name)+". Agar app se fayda ho to swaeksha se donate kar sakte hain.</span>"+
+      "<button class='btn sm' onclick=\"goTab('donate')\">❤️ Donate</button>"; }
+}
+// Kept for backward-compat; now just guides to the donation tab (no paywall).
+function subscribe(){ goTab('donate'); }
+/* Small inline notice — works everywhere, including preview sandboxes that block alert() */
+function toast(msg){
+  let t=document.getElementById('cu-toast');
+  if(!t){ t=document.createElement('div'); t.id='cu-toast';
+    t.style.cssText='position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:11px 16px;border-radius:10px;font-size:13px;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:92%;text-align:center;transition:opacity .3s';
+    document.body.appendChild(t); }
+  t.textContent=msg; t.style.opacity='1';
+  clearTimeout(t._h); t._h=setTimeout(()=>{ t.style.opacity='0'; }, 3000);
+}
+function goHome(){ goTab('home'); const n=document.getElementById('fName'); if(n) n.focus(); }
+function goTab(name){ const b=document.querySelector('#tabs button[data-tab='+name+']'); if(b) b.click(); }
+
+/* ---------- Google Sheets audit sync ---------- */
+function scriptUrl(){ return localStorage.getItem(LS.script) || ""; }
+function saveScriptUrl(){ const v=document.getElementById('scriptUrl').value.trim(); localStorage.setItem(LS.script, v);
+  toast(v? "Endpoint saved. Records will sync when online." : "Endpoint cleared."); syncPending(); }
+function queueAudit(u){ const p=safeParse(localStorage.getItem(LS.pending), []);
+  p.push({ adminTargets:ADMIN_EMAILS, name:u.name, email:u.email, address:u.address, loginTime:u.loginTime });
+  localStorage.setItem(LS.pending, JSON.stringify(p)); renderPending(); if(navigator.onLine) syncPending(); }
+async function syncPending(){
+  const url=scriptUrl(); let p=safeParse(localStorage.getItem(LS.pending), []);
+  if(!url || p.length===0 || !navigator.onLine){ renderPending(); return; }
+  const remaining=[];
+  for(const rec of p){
+    try{ await fetch(url,{ method:"POST", mode:"no-cors", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(rec) }); }
+    catch(err){ remaining.push(rec); }
+  }
+  localStorage.setItem(LS.pending, JSON.stringify(remaining)); renderPending();
+}
+function forceSync(){ if(!navigator.onLine){ toast("Offline — records will sync automatically when back online."); return; } if(!scriptUrl()){ toast("Set the Apps Script URL first."); return;} syncPending(); }
+function renderPending(){ const p=safeParse(localStorage.getItem(LS.pending), []); const el=document.getElementById('pendingCount'); if(el) el.textContent=p.length+" pending";
+  const s=document.getElementById('scriptUrl'); if(s && !s.value) s.value=scriptUrl(); }
+
+/* ---------- Symptom / condition UI ---------- */
+function buildSymptomUI(){
+  document.getElementById('symptomChecks').innerHTML=SYMPTOMS.map(g=>`
+    <div class="grp"><span class="glab">${esc(g.grp)}</span>
+      ${g.items.map(it=>`<label><input type="checkbox" class="sym" value="${it.v}"><span>${esc(it.t)}</span></label>`).join("")}
+    </div>`).join("");
+}
+function buildConditionUI(){
+  const keys=["ild","cataract","conjunctivitis","ear","gallstone","digestion","skin","insomnia"];
+  document.getElementById('conditionChecks').innerHTML=`<div class="grp"><span class="glab">Active conditions</span>
+    ${keys.map(k=>`<label><input type="checkbox" class="cond" value="${k}"><span>${esc(condResolve(k).label)}</span></label>`).join("")}</div>`;
+}
+function analyzeSymptoms(){
+  const picked=[...document.querySelectorAll('.sym:checked')].map(x=>x.value);
+  if(picked.length===0){ toast("Kam se kam ek symptom tick karein / Select at least one symptom."); return; }
+  const map={ild:"ild",cough:"ild",cataract:"cataract",conjunctivitis:"conjunctivitis",ear:"ear",gallstone:"gallstone",digestion:"digestion",skin:"skin",insomnia:"insomnia"};
+  const keys=[...new Set(picked.map(p=>map[p]))];
+  renderProtocol(keys, document.getElementById('symptomOut'));
+  document.getElementById('symptomResults').classList.remove('hide');
+  document.getElementById('symptomResults').scrollIntoView({behavior:'smooth'});
+}
+function renderDietPlan(){
+  const keys=[...document.querySelectorAll('.cond:checked')].map(x=>x.value);
+  if(keys.length===0){ toast("Kam se kam ek condition tick karein / Select at least one condition."); return; }
+  renderProtocol(keys, document.getElementById('dietOut'));
+  document.getElementById('dietResults').classList.remove('hide');
+  document.getElementById('dietResults').scrollIntoView({behavior:'smooth'});
+}
+function conflictNotes(keys){
+  const n=[];
+  if(keys.includes("gallstone")) n.push("Gallbladder safety takes priority: keep fats low. Use Mulethi as a <b>watery decoction</b> (not ghee-heavy) and take medicated ghee (Triphala Ghrita) only in a very small dose or as advised.");
+  if(keys.includes("ild") && keys.includes("conjunctivitis")) n.push("Lungs prefer warm; eyes/conjunctivitis prefer cooling. Bridge with <b>warm-but-not-hot</b> foods and cooling herbs (green gram, amla) rather than iced items.");
+  if(keys.includes("skin") && keys.includes("insomnia")) n.push("For skin, bitter/cooling foods help; for sleep, warm milk at night helps. Keep bitter foods for daytime and warm milk at bedtime.");
+  if(keys.includes("ear") && keys.includes("conjunctivitis")) n.push("Ears want warmth, eyes want cooling — apply warmth to the ears/head, keep the diet neutral-cooling.");
+  return n;
+}
+function sampleDay(keys){
+  const gall=keys.includes("gallstone"), lung=keys.includes("ild"),
+        eye=keys.includes("cataract")||keys.includes("conjunctivitis"), sleep=keys.includes("insomnia");
+  const rows=[
+    ["Morning", (lung?"Warm Mulethi decoction + ":"Warm water + ")+"lemon"],
+    ["Breakfast", "Barley/oats porridge"+(gall?" (low-fat)":"")+" + stewed apple"],
+    ["Mid-morning", eye? "Amla juice"+(isFull()?" + Triphala Ghrita ½–1 tsp":""): "Buttermilk (takra)"],
+    ["Lunch", "Steamed moong dal + bottle gourd + rice"+(keys.includes("skin")?" + bitter gourd":"")],
+    ["Evening", lung?"Warm ginger tea (no dairy)":"Warm herbal tea"],
+    ["Dinner", "Bottle-gourd / vegetable soup + soft rice (light, early)"],
+    ["Bedtime", sleep?"Warm milk + pinch of nutmeg":"Warm water"]
+  ];
+  return `<table class="day">${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}</table>`;
+}
+let LAST_KEYS=[]; // remember selection for the printable plan
+// Build the separate-panel block for ONE condition. Each therapy system is its own panel.
+function conditionBlock(k, full){
+  const c=condResolve(k); if(!c) return "";
+  const s=c.sujok, homeo=HOMEO[k]||[], m=MANTRA[k], tn=TANTRA_C[k], pt=POINTS[k];
+  const lock='<span class="locked">🔒 Subscribe (₹100/wk) to unlock.</span>';
+  return `<div class="condwrap">
+    <div class="condhead ${c.cls}">${esc(c.label)}</div>
+
+    <div class="modality"><span class="tag">1 · Ayurvedic Diet</span>
+      <p><b class="have">Have:</b> <span class="have">${c.have.map(esc).join(" · ")}</span></p>
+      <p><b class="avoid">Avoid:</b> <span class="avoid">${c.avoid.map(esc).join(" · ")}</span></p>
+      <div class="cite"><b>Classical:</b> ${esc(c.classical)} · <b>Modern:</b> ${esc(c.clinical)}</div>
+    </div>
+
+    <div class="modality"><span class="tag allo">2 · Conventional / MBBS (Allopathic)</span>
+      <p>${esc(c.allo)}</p><div class="cite"><b>Textbook:</b> ${esc(c.alloBook)}</div>
+    </div>
+
+    <div class="modality"><span class="tag sujok">3 · Sujok / Acupressure</span>
+      <div class="sujokrow">
+        <div class="handpic">${handSVG(k)}<div class="cap">Schematic hand map — red = this point</div></div>
+        <div class="sujoktext">
+          ${ full
+            ? `<p><b>Point:</b> ${esc(s.point)}</p><p><b>How to press:</b> ${esc(s.how)}</p>
+               <p><b>Hold:</b> ${esc(s.time)} &nbsp; <b>Reps:</b> ${esc(s.reps)}</p>
+               <p><b>Best time (organ clock):</b> ${esc(pt.clock)}</p>`
+            : `<p>${lock}</p>` }
+        </div>
+      </div>
+    </div>
+
+    <div class="modality"><span class="tag homeo">4 · Homeopathy (symptomatic)</span>
+      <p>${ homeo.length ? (full? esc(homeo.join(", ")) : lock) : "General constitutional care — consult a homeopath." }</p>
+      <div class="cite">Take ~30 min apart from strong herbal decoctions. Complementary only.</div>
+    </div>
+
+    <div class="modality"><span class="tag mantra">5 · Atharvaveda / Mantra</span>
+      ${ full
+        ? `<p><b>${esc(m.name)}</b> — <span class="cnt">${esc(m.count)}</span></p><p class="sk">${esc(m.sk)}</p><p class="cite">${esc(m.note)} Cultural/spiritual practice for calm — not a cure.</p>`
+        : `<p>${lock}</p>` }
+    </div>
+
+    <div class="modality"><span class="tag tantra">6 · Tantra / Yogic (mind-body)</span>
+      <p>${ full ? esc(tn) : lock }</p>
+      <div class="cite">Breath &amp; meditation practice for calm — learn from a trained teacher; not a cure.</div>
+    </div>
+  </div>`;
+}
+function renderProtocol(keys, target){
+  LAST_KEYS=keys.slice();
+  const full=isFull(); const notes=conflictNotes(keys); let html="";
+  html+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+    <button class="btn sm" onclick="printPlan()">🖨️ Print / Save plan as PDF</button>
+    <span class="pill">Each therapy is shown in its own numbered panel</span></div>`;
+  if(notes.length) html+=`<div class="panel gall"><h4>Cross-compatibility (how the plans complement each other)</h4>${notes.map(x=>`<p>• ${x}</p>`).join("")}</div>`;
+  keys.forEach(k=>{ html+=conditionBlock(k, full); });
+  html+=`<div class="panel"><h4>Suggested unified day (all conditions combined)</h4>${sampleDay(keys)}
+    <p class="cite" style="margin-top:8px">Adjust portions to your digestive strength (Agni). Stop and seek care if symptoms worsen.</p></div>`;
+  if(!full) html+=`<div class="block-note" style="margin-top:10px">You're on the <b>Free tier</b>. Diet do/don't and conventional (MBBS) safety notes are shown.
+      Full herbal dosing, Sujok point/time/reps, homeopathy, mantra & tantra unlock with a ₹100/week subscription.
+      <div style="margin-top:8px"><button class="btn sm amber" onclick="subscribe()">Unlock ₹100/wk</button></div></div>`;
+  target.innerHTML=html;
+}
+
+/* Printable / Save-as-PDF unified plan (works fully offline via the browser's own print) */
+function printPlan(){
+  if(!LAST_KEYS.length){ toast("Pehle plan generate karein / Generate a plan first."); return; }
+  const full=isFull(); const u=currentUser||{};
+  const secByCond = LAST_KEYS.map(k=>{
+    const c=condResolve(k), s=c.sujok, homeo=HOMEO[k]||[], m=MANTRA[k], tn=TANTRA_C[k], pt=POINTS[k];
+    return `<h2>${esc(c.label)}</h2>
+      <p><b>1 · Ayurvedic diet — Have:</b> ${esc(c.have.join(", "))}</p>
+      <p><b>Avoid:</b> ${esc(c.avoid.join(", "))}</p>
+      <p><b>2 · Conventional (MBBS):</b> ${esc(c.allo)} <i>[${esc(c.alloBook)}]</i></p>
+      ${ full ? `<p><b>3 · Sujok / Acupressure:</b> ${esc(s.point)} — ${esc(s.how)} Hold ${esc(s.time)}, ${esc(s.reps)}. ${esc(pt.clock)}.</p>
+      <p><b>4 · Homeopathy:</b> ${esc(homeo.join(", ")||"as advised")}</p>
+      <p><b>5 · Mantra (${esc(m.name)}):</b> ${esc(m.sk)} — ${esc(m.count)}.</p>
+      <p><b>6 · Tantra / Yogic:</b> ${esc(tn)}</p>` : `<p><i>Subscribe (₹100/wk) for Sujok, homeopathy, mantra & tantra detail.</i></p>` }
+      <p style="font-size:11px;color:#555"><b>Classical:</b> ${esc(c.classical)} · <b>Modern:</b> ${esc(c.clinical)}</p><hr>`;
+  }).join("");
+  const planBody = `<h1>CoserveU — Holistic Care Plan</h1>
+    <div class="muted">powered by studymadease · Founder: Adv. Lakhi Lohia (Advisory)</div>
+    <p><b>Name:</b> ${esc(u.name||"__________")} &nbsp; <b>Date:</b> ${esc(new Date().toLocaleDateString())}</p>
+    <div class="warn"><b>Educational care plan — not a doctor's prescription.</b> This unites Ayurveda, conventional
+      (MBBS) guidance, homeopathy, Sujok, mantra & tantra for information only. It does not authorise any
+      medicine. Verify every item with a qualified physician / registered practitioner before use; herbs can
+      interact with medicines.</div>
+    ${secByCond}
+    <p class="sign">Reviewed by (practitioner): ____________________________  Signature &amp; Reg. No.: __________</p>`;
+  const planCSS = `body{font-family:system-ui,Arial,sans-serif;color:#0f172a;max-width:760px;margin:24px auto;padding:0 16px;line-height:1.5}
+    h1{color:#065f46;margin:0 0 2px} h2{color:#047857;font-size:16px;margin:16px 0 4px;border-bottom:1px solid #ddd}
+    .muted{color:#64748b;font-size:12px} p{margin:3px 0;font-size:13px} hr{border:none;border-top:1px dashed #cbd5e1;margin:12px 0}
+    .warn{background:#fff7ed;border:1px solid #fdba74;color:#9a3412;padding:10px;border-radius:8px;font-size:12px;margin:12px 0}
+    .sign{margin-top:24px;font-size:13px} @media print{.noprint{display:none}}`;
+  const w=window.open("","_blank");
+  if(!w){
+    // Pop-ups blocked (e.g. preview sandbox): show the plan inline with a print button instead.
+    let box=document.getElementById('planInline');
+    if(!box){ box=document.createElement('div'); box.id='planInline'; document.querySelector('.wrap').prepend(box); }
+    box.innerHTML=`<div class="card"><style>${planCSS}</style>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <b style="color:#065f46">Your printable plan</b>
+        <span><button class="btn sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+        <button class="btn sm ghost" onclick="document.getElementById('planInline').remove()">Close</button></span></div>
+      ${planBody}</div>`;
+    box.scrollIntoView({behavior:'smooth'});
+    toast("Plan neeche khul gaya — Print/Save PDF dabayein.");
+    return;
+  }
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>CoserveU Holistic Plan</title>
+    <style>body{font-family:system-ui,Arial,sans-serif;color:#0f172a;max-width:760px;margin:24px auto;padding:0 16px;line-height:1.5}
+    h1{color:#065f46;margin:0 0 2px} h2{color:#047857;font-size:16px;margin:16px 0 4px;border-bottom:1px solid #ddd}
+    .muted{color:#64748b;font-size:12px} p{margin:3px 0;font-size:13px} hr{border:none;border-top:1px dashed #cbd5e1;margin:12px 0}
+    .warn{background:#fff7ed;border:1px solid #fdba74;color:#9a3412;padding:10px;border-radius:8px;font-size:12px;margin:12px 0}
+    .sign{margin-top:24px;font-size:13px} @media print{.noprint{display:none}}</style></head><body>
+    <h1>CoserveU — Holistic Care Plan</h1>
+    <div class="muted">powered by studymadease · Founder: Adv. Lakhi Lohia (Advisory)</div>
+    <p><b>Name:</b> ${esc(u.name||"__________")} &nbsp; <b>Date:</b> ${esc(new Date().toLocaleDateString())}</p>
+    <div class="warn"><b>Educational care plan — not a doctor's prescription.</b> This unites Ayurveda, conventional
+      (MBBS) guidance, homeopathy, Sujok, mantra & tantra for information only. It does not authorise any
+      medicine. Verify every item with a qualified physician / registered practitioner before use; herbs can
+      interact with medicines.</div>
+    ${secByCond}
+    <p class="sign">Reviewed by (practitioner): ____________________________  Signature &amp; Reg. No.: __________</p>
+    <button class="noprint" onclick="window.print()" style="margin-top:16px;padding:10px 16px;background:#047857;color:#fff;border:none;border-radius:8px;cursor:pointer">Print / Save as PDF</button>
+    </body></html>`);
+  w.document.close();
+  setTimeout(()=>{ try{ w.print(); }catch(e){} }, 400);
+}
+
+/* ---------- Herbs ---------- */
+function renderHerbs(){
+  const full=isFull();
+  document.getElementById('herbList').innerHTML = HERBS.map(h=>`
+    <div class="herb">
+      <div class="hh"><h4>${esc(h.name)}</h4><span class="bot">${esc(h.bot)}</span></div>
+      <dl>
+        <dt>Traditional uses</dt><dd>${esc(h.uses)}</dd>
+        <dt>Modern scientific direction</dt><dd>${esc(h.modern)}</dd>
+        <dt>Dosage</dt><dd>${ full ? esc(h.dose) : '<span class="locked">🔒 Unlock dosage with a ₹100/week subscription.</span>' }</dd>
+        <dt>Contraindications / cautions</dt><dd style="color:#b91c1c">${esc(h.contra)}</dd>
+      </dl>
+      <div class="cite"><b>Classical:</b> ${esc(h.classical)} &nbsp;·&nbsp; <b>Modern (indicative):</b> ${esc(h.clinical)}</div>
+    </div>`).join("");
+}
+
+/* ---------- Therapies (Sujok/acupressure hand-maps + organ clock) ---------- */
+function renderTherapies(){
+  const full=isFull();
+  const keys=["ild","cataract","conjunctivitis","ear","gallstone","digestion","skin","insomnia"];
+  document.getElementById('therapyList').innerHTML =
+    `<div class="panel"><h4>Hand map — all correspondence points</h4>
+       <div class="handpic" style="margin:auto">${handSVG(null)}<div class="cap">Schematic right-palm Sujok map (not to scale). Learn precise points from a trained Sujok therapist.</div></div></div>`
+    + keys.map(k=>{
+    const c=condResolve(k), s=c.sujok, homeo=HOMEO[k]||[], pt=POINTS[k];
+    return `<div class="panel ${c.cls}">
+      <h4>${esc(c.label)} <span class="pill">${esc(pt.clock)}</span></h4>
+      <div class="sujokrow">
+        <div class="handpic">${handSVG(k)}<div class="cap">Red = ${esc(pt.label)}</div></div>
+        <div class="sujoktext">
+          ${ full
+            ? `<p><b>Point:</b> ${esc(s.point)}</p><p><b>How to press:</b> ${esc(s.how)}</p>
+               <p><b>Hold time:</b> ${esc(s.time)} &nbsp; <b>Repetitions:</b> ${esc(s.reps)}</p>
+               ${ homeo.length? `<p><b>Homeopathy:</b> ${esc(homeo.join(", "))}</p>`:"" }`
+            : `<p class="locked">🔒 Subscribe (₹100/wk) to view the point, hold-time & repetition count.</p>` }
+        </div>
+      </div>
+    </div>`;
+  }).join("") + `<p class="cite">Sujok & acupressure here are supportive/symptomatic. They do not replace prescribed treatment. Never place unsterile material in the eye or ear; stop if pain increases.</p>`;
+}
+
+/* ---------- Traditions (Atharvaveda / Mantra / Tantra) ---------- */
+function renderTraditions(){
+  const t=TRADITIONS;
+  let html=`<p class="sub">${t.intro}</p>`;
+  html+=`<h3>Healing mantras (traditional chanting)</h3>`;
+  html+= t.mantras.map(m=>`
+    <div class="mantra-box">
+      <div><b>${esc(m.name)}</b><span class="cnt">Repeat: ${esc(m.count)}</span></div>
+      <p class="sk">${esc(m.sk)}</p>
+      <p class="sub" style="margin:4px 0 0">${esc(m.note)}</p>
+    </div>`).join("");
+  html+=`<h3>Practice rhythm</h3><p class="sub">${esc(t.practice)}</p>`;
+  html+=`<h3>Tantra (traditional mind-body discipline)</h3><p class="sub">${esc(t.tantra)}</p>`;
+  html+=`<div class="allo-note" style="margin-top:10px"><b>Reminder:</b> These are cultural & spiritual practices for calm and support — not a treatment or cure. Keep taking prescribed medicine and see your doctor.</div>`;
+  document.getElementById('traditionsOut').innerHTML=html;
+}
+
+/* ---------- Meal log ---------- */
+function logMeal(){
+  const input=document.getElementById('mealInput'), type=document.getElementById('mealType').value;
+  const txt=input.value.trim(); if(!txt) return;
+  const logs=safeParse(localStorage.getItem(LS.meals), []);
+  logs.unshift({ text:txt, type, time:now() }); localStorage.setItem(LS.meals, JSON.stringify(logs));
+  input.value=""; renderMealLog();
+}
+function delMeal(i){ const logs=safeParse(localStorage.getItem(LS.meals), []); logs.splice(i,1); localStorage.setItem(LS.meals, JSON.stringify(logs)); renderMealLog(); }
+function renderMealLog(){
+  const logs=safeParse(localStorage.getItem(LS.meals), []); const el=document.getElementById('mealLog');
+  if(logs.length===0){ el.innerHTML="<li class='empty'>No entries yet.</li>"; return; }
+  el.innerHTML=logs.map((l,i)=>`<li><span><span class="pill">${esc(l.type||"")}</span> ${esc(l.text)}</span>
+    <span class="t">${esc(l.time)} <button onclick="delMeal(${i})">✕</button></span></li>`).join("");
+}
+
+/* ---------- Donate ---------- */
+const UPI_QR_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h35v35H0z"/><path stroke="#000000" d="M1 1.5h7m2 0h1m2 0h1m3 0h1m1 0h4m1 0h1m2 0h7M1 2.5h1m5 0h1m4 0h2m2 0h2m4 0h1m4 0h1m5 0h1M1 3.5h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h1m6 0h2m3 0h1m1 0h3m1 0h1M1 4.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h4m1 0h3m1 0h1m1 0h3m1 0h1M1 5.5h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h4m1 0h2m2 0h1m2 0h1m1 0h3m1 0h1M1 6.5h1m5 0h1m1 0h2m1 0h1m1 0h1m4 0h1m1 0h3m3 0h1m5 0h1M1 7.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M9 8.5h2m1 0h2m3 0h1m2 0h1m1 0h1M1 9.5h1m1 0h5m3 0h1m2 0h2m1 0h2m4 0h2m2 0h5M4 10.5h1m3 0h1m3 0h1m1 0h1m2 0h6m1 0h2m1 0h1m3 0h1m1 0h1M3 11.5h1m3 0h2m3 0h1m1 0h4m3 0h3m2 0h1m1 0h1m2 0h2M1 12.5h1m1 0h1m2 0h1m1 0h1m1 0h1m2 0h2m5 0h3m2 0h1m2 0h1m1 0h2M1 13.5h1m4 0h4m5 0h1m1 0h1m2 0h1m1 0h2m1 0h2m1 0h2M1 14.5h1m2 0h1m3 0h1m1 0h5m1 0h1m2 0h4m3 0h2m2 0h1m1 0h2M2 15.5h1m1 0h1m1 0h2m1 0h1m5 0h3m1 0h1m2 0h1m2 0h1m6 0h1M4 16.5h1m1 0h1m1 0h1m1 0h2m3 0h2m3 0h4m1 0h2m4 0h2M1 17.5h1m2 0h1m2 0h2m2 0h2m1 0h1m1 0h1m1 0h2m3 0h1m1 0h2m2 0h2m1 0h1M2 18.5h2m5 0h1m2 0h1m1 0h2m1 0h2m1 0h3m1 0h1m1 0h2m4 0h2M2 19.5h1m3 0h3m1 0h1m1 0h2m2 0h2m1 0h1m2 0h2m1 0h1m1 0h1m1 0h4M3 20.5h1m1 0h1m2 0h1m3 0h1m1 0h2m1 0h1m3 0h3m1 0h2m2 0h1m1 0h1m1 0h1M1 21.5h3m3 0h1m2 0h3m1 0h2m4 0h1m2 0h1m5 0h2m1 0h1M1 22.5h5m3 0h1m1 0h7m1 0h2m3 0h2m1 0h1m2 0h1m1 0h2M1 23.5h1m1 0h1m1 0h7m1 0h3m2 0h2m1 0h1m3 0h1m1 0h2m1 0h3M1 24.5h1m1 0h3m2 0h3m6 0h1m1 0h1m1 0h6m3 0h3M1 25.5h1m1 0h1m1 0h1m1 0h2m4 0h1m4 0h2m3 0h1m1 0h7m1 0h1M9 26.5h2m1 0h1m1 0h1m2 0h2m1 0h3m1 0h2m3 0h1m3 0h1M1 27.5h7m4 0h1m3 0h1m1 0h1m2 0h2m1 0h2m1 0h1m1 0h1M1 28.5h1m5 0h1m1 0h1m3 0h1m2 0h1m2 0h1m2 0h4m3 0h1m1 0h2M1 29.5h1m1 0h3m1 0h1m1 0h2m2 0h4m3 0h1m2 0h1m1 0h5m3 0h1M1 30.5h1m1 0h3m1 0h1m1 0h1m1 0h6m3 0h2m1 0h2m3 0h2m1 0h3M1 31.5h1m1 0h3m1 0h1m1 0h2m1 0h5m1 0h2m1 0h2m1 0h1m1 0h3m1 0h1M1 32.5h1m5 0h1m3 0h2m7 0h1m1 0h1m1 0h1m1 0h1m2 0h3M1 33.5h7m1 0h1m1 0h2m3 0h1m6 0h1m1 0h2m2 0h2m1 0h1"/></svg>`;
+function initDonate(){ const b=document.getElementById('donateQR'); if(b) b.innerHTML=UPI_QR_SVG; }
+function copyText(t){
+  const done=()=>toast("Copied: "+t);
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done).catch(()=>fallbackCopy(t,done)); }
+  else fallbackCopy(t,done);
+}
+function fallbackCopy(t,cb){ const ta=document.createElement('textarea'); ta.value=t; ta.style.position='fixed'; ta.style.opacity='0'; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');}catch(e){} document.body.removeChild(ta); cb&&cb(); }
+
+/* ---------- Reference Library (offline books, searchable) ---------- */
+function renderLibrary(){
+  const q=(document.getElementById('libSearch').value||"").trim().toLowerCase();
+  const out=document.getElementById('libraryOut'), info=document.getElementById('libInfo');
+  let html="", total=0, shown=0;
+  const hl=(s)=>{ if(!q) return esc(s); const i=s.toLowerCase().indexOf(q); if(i<0) return esc(s);
+    return esc(s.slice(0,i))+"<mark>"+esc(s.slice(i,i+q.length))+"</mark>"+esc(s.slice(i+q.length)); };
+  LIBRARY.forEach(bk=>{
+    const matches = q ? bk.paras.filter(p=>p.toLowerCase().includes(q)) : bk.paras;
+    total += bk.paras.length;
+    if(matches.length===0) return;
+    html+=`<div class="bookhdr">📖 ${esc(bk.book)}</div>`;
+    const list = q ? matches : matches.slice(0,40); // cap when browsing all
+    list.forEach(p=>{ shown++; html+=`<div class="libitem"><span class="bk">${esc(bk.book.split(' — ')[0])}</span><div>${hl(p)}</div></div>`; });
+    if(!q && matches.length>40) html+=`<p class="kv">…aur ${matches.length-40} paragraph. Upar search box me shabd likhein (e.g. “netra”, “kushtha”, “nidra”).</p>`;
+  });
+  if(q && shown===0) html=`<p class="empty">Koi result nahi mila “${esc(q)}” ke liye. Doosra shabd try karein.</p>`;
+  info.textContent = q ? (shown+" matching paragraphs") : (total+" paragraphs across "+LIBRARY.length+" books — search to filter");
+  out.innerHTML=html;
+}
+
+/* ============================================================
+   Boot
+   ============================================================ */
+cacheEnglish();
+buildSymptomUI(); buildConditionUI();
+renderRole(); renderHerbs(); renderTherapies(); renderTraditions(); renderMealLog(); renderPending();
+initDonate(); renderLibrary();
+const savedLang=localStorage.getItem(LS.lang)||"en";
+document.getElementById('langSel').value=savedLang; applyLang(savedLang);
+updateStatus();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=> navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
