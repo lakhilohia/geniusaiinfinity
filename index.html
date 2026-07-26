@@ -197,7 +197,10 @@
     </div>
 
     <div class="card">
-      <h2 data-i18n="registerTitle">Register / Start Session</h2>
+      <h2 data-i18n="registerTitle">Login / Register (this is the login)</h2>
+      <div class="allo-note" style="margin:0 0 10px"><b>🔑 Admin full access:</b> apna admin email
+        (<b>advlakhilohia@gmail.com</b> ya <b>lakhilohia23@gmail.com</b>) + koi bhi naam daal ke
+        <b>Start Session</b> dabayein — poora access (Sujok, mantra, dosage) khul jayega.</div>
       <p class="sub">Details are stored on <b>this device</b> first. With consent and internet, a login record
         is also synced to the practitioner's Google Sheet.</p>
       <form id="loginForm" class="grid cols3">
@@ -229,7 +232,8 @@
     <div class="card">
       <h2 data-i18n="symptomTitle">Interactive Symptom Checker</h2>
       <p class="sub">Tick every symptom that applies. The engine builds one combined plan and resolves conflicts
-        (e.g. gallbladder safety over heavy oily lung foods).</p>
+        (e.g. gallbladder safety over heavy oily lung foods). <b>No login needed for the basic plan</b> —
+        for full Sujok/mantra/dosage, login on the Home tab with your admin email.</p>
       <div class="checks" id="symptomChecks"></div>
       <button class="btn block" style="margin-top:12px" onclick="analyzeSymptoms()" data-i18n="analyzeBtn">Analyze &amp; Build Protocol</button>
     </div>
@@ -731,12 +735,14 @@ document.getElementById('loginForm').addEventListener('submit', (e)=>{
   const email=document.getElementById('fEmail').value.trim().toLowerCase();
   const addr=document.getElementById('fAddr').value.trim();
   const consent=document.getElementById('fConsent').checked;
-  if(!name||!email){ alert("Please enter name and email."); return; }
+  if(!name||!email){ toast("Naam aur email dono bharein / Enter name and email."); return; }
   const prevPaid = currentUser && currentUser.email===email ? !!currentUser.paid : false;
   currentUser={ name, email, address:addr, loginTime:now(), consent, paid:prevPaid };
   localStorage.setItem(LS.user, JSON.stringify(currentUser));
   if(consent) queueAudit(currentUser);
   renderRole(); renderHerbs(); renderTherapies(); renderPending();
+  const r=role();
+  toast(r==="admin" ? "✅ ADMIN login — full access unlocked!" : (r==="paid" ? "✅ Subscribed — full access." : "✅ Logged in (Free tier)."));
 });
 
 function renderRole(){
@@ -751,11 +757,23 @@ function renderRole(){
       "<button class='btn sm amber' onclick='subscribe()'>Unlock ₹100/wk</button>"; }
 }
 function subscribe(){
-  if(!currentUser){ alert("Please register first."); return; }
-  if(!confirm("This is a demo unlock (no real payment is taken). Enable full access on this device?")) return;
+  if(!currentUser){ toast("Pehle Home tab pe login karein / Login on Home tab first."); goHome(); return; }
   currentUser.paid=true; localStorage.setItem(LS.user, JSON.stringify(currentUser));
-  renderRole(); renderHerbs(); renderTherapies(); alert("Full access enabled on this device (demo).");
+  renderRole(); renderHerbs(); renderTherapies();
+  toast("✅ Full access enabled (demo — no real payment taken).");
+  // refresh any open plan
+  if(LAST_KEYS.length){ renderProtocol(LAST_KEYS, document.getElementById('symptomOut')); renderProtocol(LAST_KEYS, document.getElementById('dietOut')); }
 }
+/* Small inline notice — works everywhere, including preview sandboxes that block alert() */
+function toast(msg){
+  let t=document.getElementById('cu-toast');
+  if(!t){ t=document.createElement('div'); t.id='cu-toast';
+    t.style.cssText='position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#0f172a;color:#fff;padding:11px 16px;border-radius:10px;font-size:13px;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:92%;text-align:center;transition:opacity .3s';
+    document.body.appendChild(t); }
+  t.textContent=msg; t.style.opacity='1';
+  clearTimeout(t._h); t._h=setTimeout(()=>{ t.style.opacity='0'; }, 3000);
+}
+function goHome(){ const b=document.querySelector('#tabs button[data-tab=home]'); if(b) b.click(); const n=document.getElementById('fName'); if(n) n.focus(); }
 
 /* ---------- Google Sheets audit sync ---------- */
 function scriptUrl(){ return localStorage.getItem(LS.script) || ""; }
@@ -791,9 +809,8 @@ function buildConditionUI(){
     ${keys.map(k=>`<label><input type="checkbox" class="cond" value="${k}"><span>${esc(condResolve(k).label)}</span></label>`).join("")}</div>`;
 }
 function analyzeSymptoms(){
-  if(!currentUser){ alert("Please register on the Home tab first."); return; }
   const picked=[...document.querySelectorAll('.sym:checked')].map(x=>x.value);
-  if(picked.length===0){ alert("Select at least one symptom."); return; }
+  if(picked.length===0){ toast("Kam se kam ek symptom tick karein / Select at least one symptom."); return; }
   const map={ild:"ild",cough:"ild",cataract:"cataract",conjunctivitis:"conjunctivitis",ear:"ear",gallstone:"gallstone",digestion:"digestion",skin:"skin",insomnia:"insomnia"};
   const keys=[...new Set(picked.map(p=>map[p]))];
   renderProtocol(keys, document.getElementById('symptomOut'));
@@ -801,9 +818,8 @@ function analyzeSymptoms(){
   document.getElementById('symptomResults').scrollIntoView({behavior:'smooth'});
 }
 function renderDietPlan(){
-  if(!currentUser){ alert("Please register on the Home tab first."); return; }
   const keys=[...document.querySelectorAll('.cond:checked')].map(x=>x.value);
-  if(keys.length===0){ alert("Select at least one condition."); return; }
+  if(keys.length===0){ toast("Kam se kam ek condition tick karein / Select at least one condition."); return; }
   renderProtocol(keys, document.getElementById('dietOut'));
   document.getElementById('dietResults').classList.remove('hide');
   document.getElementById('dietResults').scrollIntoView({behavior:'smooth'});
@@ -897,7 +913,7 @@ function renderProtocol(keys, target){
 
 /* Printable / Save-as-PDF unified plan (works fully offline via the browser's own print) */
 function printPlan(){
-  if(!LAST_KEYS.length){ alert("Generate a plan first."); return; }
+  if(!LAST_KEYS.length){ toast("Pehle plan generate karein / Generate a plan first."); return; }
   const full=isFull(); const u=currentUser||{};
   const secByCond = LAST_KEYS.map(k=>{
     const c=condResolve(k), s=c.sujok, homeo=HOMEO[k]||[], m=MANTRA[k], tn=TANTRA_C[k], pt=POINTS[k];
@@ -911,8 +927,35 @@ function printPlan(){
       <p><b>6 · Tantra / Yogic:</b> ${esc(tn)}</p>` : `<p><i>Subscribe (₹100/wk) for Sujok, homeopathy, mantra & tantra detail.</i></p>` }
       <p style="font-size:11px;color:#555"><b>Classical:</b> ${esc(c.classical)} · <b>Modern:</b> ${esc(c.clinical)}</p><hr>`;
   }).join("");
+  const planBody = `<h1>CoserveU — Holistic Care Plan</h1>
+    <div class="muted">powered by studymadease · Founder: Adv. Lakhi Lohia (Advisory)</div>
+    <p><b>Name:</b> ${esc(u.name||"__________")} &nbsp; <b>Date:</b> ${esc(new Date().toLocaleDateString())}</p>
+    <div class="warn"><b>Educational care plan — not a doctor's prescription.</b> This unites Ayurveda, conventional
+      (MBBS) guidance, homeopathy, Sujok, mantra & tantra for information only. It does not authorise any
+      medicine. Verify every item with a qualified physician / registered practitioner before use; herbs can
+      interact with medicines.</div>
+    ${secByCond}
+    <p class="sign">Reviewed by (practitioner): ____________________________  Signature &amp; Reg. No.: __________</p>`;
+  const planCSS = `body{font-family:system-ui,Arial,sans-serif;color:#0f172a;max-width:760px;margin:24px auto;padding:0 16px;line-height:1.5}
+    h1{color:#065f46;margin:0 0 2px} h2{color:#047857;font-size:16px;margin:16px 0 4px;border-bottom:1px solid #ddd}
+    .muted{color:#64748b;font-size:12px} p{margin:3px 0;font-size:13px} hr{border:none;border-top:1px dashed #cbd5e1;margin:12px 0}
+    .warn{background:#fff7ed;border:1px solid #fdba74;color:#9a3412;padding:10px;border-radius:8px;font-size:12px;margin:12px 0}
+    .sign{margin-top:24px;font-size:13px} @media print{.noprint{display:none}}`;
   const w=window.open("","_blank");
-  if(!w){ alert("Please allow pop-ups to print/save the plan."); return; }
+  if(!w){
+    // Pop-ups blocked (e.g. preview sandbox): show the plan inline with a print button instead.
+    let box=document.getElementById('planInline');
+    if(!box){ box=document.createElement('div'); box.id='planInline'; document.querySelector('.wrap').prepend(box); }
+    box.innerHTML=`<div class="card"><style>${planCSS}</style>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+        <b style="color:#065f46">Your printable plan</b>
+        <span><button class="btn sm" onclick="window.print()">🖨️ Print / Save PDF</button>
+        <button class="btn sm ghost" onclick="document.getElementById('planInline').remove()">Close</button></span></div>
+      ${planBody}</div>`;
+    box.scrollIntoView({behavior:'smooth'});
+    toast("Plan neeche khul gaya — Print/Save PDF dabayein.");
+    return;
+  }
   w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>CoserveU Holistic Plan</title>
     <style>body{font-family:system-ui,Arial,sans-serif;color:#0f172a;max-width:760px;margin:24px auto;padding:0 16px;line-height:1.5}
     h1{color:#065f46;margin:0 0 2px} h2{color:#047857;font-size:16px;margin:16px 0 4px;border-bottom:1px solid #ddd}
