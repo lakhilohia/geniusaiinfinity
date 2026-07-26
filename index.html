@@ -1,14 +1,760 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
-    <script type="module" crossorigin src="/assets/index-CT83642Z.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-BiGijqvN.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#065f46" />
+<title>CoserveU powered by studymadease</title>
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./icon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="./icon.svg" />
+<style>
+  :root{
+    --bg:#f1f5f4; --card:#ffffff; --ink:#0f172a; --muted:#64748b;
+    --line:#e2e8f0; --brand:#065f46; --brand2:#047857; --brand-soft:#ecfdf5;
+    --amber:#b45309; --amber-soft:#fffbeb; --indigo:#3730a3; --indigo-soft:#eef2ff;
+    --red:#b91c1c; --radius:14px; --shadow:0 1px 2px rgba(2,6,23,.06),0 8px 24px rgba(2,6,23,.06);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.5; -webkit-text-size-adjust:100%;
+    min-height:100vh; display:flex; flex-direction:column;
+  }
+  a{color:var(--brand2)}
+  .wrap{width:100%; max-width:900px; margin:0 auto; padding:16px; flex:1}
+  header.top{
+    background:linear-gradient(135deg,#065f46,#047857); color:#fff; padding:14px 16px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px; position:sticky; top:0; z-index:40;
+    box-shadow:0 2px 10px rgba(2,6,23,.15);
+  }
+  header.top h1{font-size:20px; margin:0; letter-spacing:.3px}
+  header.top p{margin:2px 0 0; font-size:11px; color:#a7f3d0}
+  .status{font-size:11px; padding:5px 10px; border-radius:999px; border:1px solid; white-space:nowrap}
+  .status.online{background:#059669; border-color:#34d399; color:#fff}
+  .status.offline{background:#b45309; border-color:#f59e0b; color:#fff}
 
+  nav.tabs{background:#fff; border-bottom:1px solid var(--line); display:flex; overflow-x:auto; position:sticky; top:58px; z-index:30}
+  nav.tabs button{
+    flex:0 0 auto; background:none; border:none; padding:12px 14px; font-size:13px; color:var(--muted);
+    cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; font-weight:500;
+  }
+  nav.tabs button.active{color:var(--brand2); border-bottom-color:var(--brand2); font-weight:700}
+
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; margin:0 0 16px}
+  .card h2{margin:0 0 4px; font-size:17px; color:var(--brand)}
+  .card h3{margin:14px 0 6px; font-size:14px}
+  .sub{color:var(--muted); font-size:12px; margin:0 0 12px}
+
+  label.fld{display:block; font-size:12px; font-weight:600; margin:0 0 4px; color:#334155}
+  input[type=text],input[type=email],select{
+    width:100%; padding:10px; border:1px solid var(--line); border-radius:10px; font-size:14px; background:#fff; color:var(--ink);
+  }
+  input:focus,select:focus{outline:2px solid #a7f3d0; border-color:var(--brand2)}
+  .grid{display:grid; grid-template-columns:1fr; gap:10px}
+  @media(min-width:640px){ .grid.cols3{grid-template-columns:1fr 1fr 1fr} .grid.cols2{grid-template-columns:1fr 1fr} }
+
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; border:none;
+    background:var(--brand2); color:#fff; padding:11px 16px; border-radius:10px; font-size:14px; font-weight:600}
+  .btn:hover{background:var(--brand)}
+  .btn.block{width:100%}
+  .btn.ghost{background:#fff; color:var(--brand2); border:1px solid var(--brand2)}
+  .btn.amber{background:var(--amber)}
+  .btn.sm{padding:6px 12px; font-size:12px}
+
+  .checks{display:grid; grid-template-columns:1fr; gap:8px}
+  @media(min-width:560px){ .checks{grid-template-columns:1fr 1fr} }
+  .grp{border:1px solid var(--line); border-radius:12px; padding:12px; background:#fafcfb}
+  .grp .glab{font-weight:700; font-size:12px; color:var(--brand); display:block; margin-bottom:6px}
+  .grp label{display:flex; gap:8px; align-items:flex-start; font-size:13px; padding:3px 0; cursor:pointer}
+
+  .alert{padding:10px 12px; border-radius:10px; font-size:12.5px; border:1px solid; margin:10px 0}
+  .alert.admin{background:var(--indigo-soft); color:var(--indigo); border-color:#c7d2fe}
+  .alert.paid{background:var(--brand-soft); color:var(--brand); border-color:#a7f3d0}
+  .alert.free{background:var(--amber-soft); color:var(--amber); border-color:#fde68a; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+
+  .block-note{background:#eef2ff; border:1px solid #c7d2fe; color:#3730a3; border-radius:10px; padding:14px; text-align:center; font-size:13px}
+
+  .panel{border:1px solid var(--line); border-radius:12px; padding:14px; margin:12px 0; background:#fff}
+  .panel.lung{border-left:4px solid #059669}
+  .panel.eye{border-left:4px solid #4f46e5}
+  .panel.ear{border-left:4px solid #0891b2}
+  .panel.gall{border-left:4px solid #b45309}
+  .panel.skin{border-left:4px solid #db2777}
+  .panel.sleep{border-left:4px solid #7c3aed}
+  .panel.digest{border-left:4px solid #ca8a04}
+  .panel h4{margin:0 0 6px; font-size:14px}
+  .panel p{margin:4px 0; font-size:13px}
+  .tag{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:2px 7px; border-radius:6px; background:#f1f5f9; color:#475569; margin-right:6px}
+  .have{color:#065f46}
+  .avoid{color:#b91c1c}
+  .cite{font-size:11px; color:var(--muted); background:#f8fafc; border:1px solid var(--line); border-radius:8px; padding:6px 8px; margin-top:6px}
+  .cite b{color:#334155}
+
+  .herb{border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:12px; background:#fff}
+  .herb .hh{display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap}
+  .herb .hh h4{margin:0; color:var(--brand)}
+  .herb .bot{font-style:italic; color:var(--muted); font-size:12px}
+  .herb dl{margin:8px 0 0; font-size:13px}
+  .herb dt{font-weight:700; color:#334155; margin-top:6px; font-size:12px}
+  .herb dd{margin:0 0 2px}
+  .locked{color:var(--amber); font-weight:600}
+
+  ul.log{list-style:none; margin:0; padding:0}
+  ul.log li{display:flex; justify-content:space-between; gap:8px; padding:9px 2px; border-bottom:1px solid var(--line); font-size:13px}
+  ul.log li .t{color:var(--muted); font-size:11px; white-space:nowrap}
+  ul.log li button{background:none;border:none;color:var(--red);cursor:pointer;font-size:12px}
+  .empty{color:#94a3b8; font-style:italic; font-size:13px; padding:8px 0}
+
+  .disclaimer{background:#fff7ed; border:1px solid #fdba74; color:#9a3412; border-radius:12px; padding:14px; font-size:12.5px}
+  .disclaimer b{color:#7c2d12}
+  footer{padding:18px 16px; text-align:center; font-size:11px; color:var(--muted)}
+  .kv{font-size:12px; color:var(--muted)}
+  .hide{display:none !important}
+  .pill{font-size:11px; padding:2px 8px; border-radius:999px; background:#e2e8f0; color:#475569}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <h1>CoserveU</h1>
+    <p>powered by studymadease &nbsp;•&nbsp; Founder: Adv. Lakhi Lohia (Advisory)</p>
+  </div>
+  <span id="statusInd" class="status online">Online</span>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button data-tab="home" class="active">Home</button>
+  <button data-tab="symptom">Symptom Checker</button>
+  <button data-tab="diet">Diet Plan</button>
+  <button data-tab="herbs">Herbal Formulations</button>
+  <button data-tab="therapy">Sujok &amp; Homeopathy</button>
+  <button data-tab="log">Meal Log</button>
+  <button data-tab="about">About &amp; Safety</button>
+</nav>
+
+<div class="wrap">
+
+  <!-- ================= HOME / REGISTRATION ================= -->
+  <section class="tabpane" data-pane="home">
+    <div class="card">
+      <h2>Welcome</h2>
+      <p class="sub">A holistic, <b>offline-first</b> companion combining classical Ayurvedic guidance
+        (<i>Charaka Samhita</i>, <i>Ashtanga Hridaya</i>) with modern nutrition — for lung, eye, ear, gallbladder,
+        skin, digestive and sleep concerns. Everything below works with no internet connection.</p>
+      <div class="disclaimer">
+        <b>Educational use only — not medical advice.</b> This app does not diagnose, treat, or cure any
+        disease. Dietary and herbal suggestions are general educational information and can interact with
+        medicines or conditions. Always consult a qualified physician / registered Ayurvedic practitioner
+        before starting any herb, diet or therapy, especially in pregnancy, or with diabetes, hypertension,
+        kidney/liver disease, or gallstones needing surgical care.
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Register / Start Session</h2>
+      <p class="sub">Details are stored on <b>this device</b> first. If you tick the consent box and an
+        internet connection is available, a login record is also sent to the practitioner's Google Sheet.</p>
+      <form id="loginForm" class="grid cols3">
+        <div><label class="fld">Full name</label><input type="text" id="fName" required placeholder="e.g. Ramesh Kumar"></div>
+        <div><label class="fld">Email</label><input type="email" id="fEmail" required placeholder="you@email.com"></div>
+        <div><label class="fld">City / Address</label><input type="text" id="fAddr" placeholder="City"></div>
+        <div style="grid-column:1/-1">
+          <label style="display:flex; gap:8px; font-size:12px; color:#334155; align-items:flex-start">
+            <input type="checkbox" id="fConsent">
+            <span>I consent to my name, email, address and login time being recorded and, when online,
+            synced to the practitioner's private admin sheet for care and audit.</span>
+          </label>
+        </div>
+        <button type="submit" class="btn block" style="grid-column:1/-1">Start Session</button>
+      </form>
+      <div id="roleAlert" class="hide"></div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-top:0">Access tiers</h3>
+      <p class="kv" style="margin:2px 0">• <b>Admin</b> (advlakhilohia@gmail.com, lakhilohia23@gmail.com) — full access to all plans, herbs and therapies.</p>
+      <p class="kv" style="margin:2px 0">• <b>Subscribed patient</b> — full access (₹100 / week).</p>
+      <p class="kv" style="margin:2px 0">• <b>Free</b> — symptom checker & herb overview; detailed dosages and full herbal/Sujok plans need a subscription.</p>
+    </div>
+  </section>
+
+  <!-- ================= SYMPTOM CHECKER ================= -->
+  <section class="tabpane hide" data-pane="symptom">
+    <div class="card">
+      <h2>Interactive Symptom Checker</h2>
+      <p class="sub">Tick every symptom that applies across organs. The engine builds one combined plan and
+        resolves conflicts (e.g. gallbladder safety takes priority over heavy oily lung foods).</p>
+      <div class="checks" id="symptomChecks"></div>
+      <button class="btn block" style="margin-top:12px" onclick="analyzeSymptoms()">Analyze &amp; Build Protocol</button>
+    </div>
+    <div class="card hide" id="symptomResults">
+      <h2>Your Integrated Protocol</h2>
+      <div id="symptomOut"></div>
+    </div>
+  </section>
+
+  <!-- ================= DIET PLAN ================= -->
+  <section class="tabpane hide" data-pane="diet">
+    <div class="card">
+      <h2>Holistic Diet Plan Builder</h2>
+      <p class="sub">Select active conditions to generate a unified daily plan where one condition's diet
+        complements the others.</p>
+      <div class="checks" id="conditionChecks"></div>
+      <button class="btn block" style="margin-top:12px" onclick="renderDietPlan()">Generate Holistic Plan</button>
+    </div>
+    <div class="card hide" id="dietResults">
+      <h2>Unified Daily Plan</h2>
+      <div id="dietOut"></div>
+    </div>
+  </section>
+
+  <!-- ================= HERBS ================= -->
+  <section class="tabpane hide" data-pane="herbs">
+    <div class="card">
+      <h2>Ayurvedic Herbal Formulations</h2>
+      <p class="sub">Traditional uses, modern scientific direction, dosage and contraindications. Classical
+        references are from <i>Charaka Samhita</i> / <i>Ashtanga Hridaya</i>; modern notes are indicative
+        research areas — verify with a practitioner.</p>
+      <div id="herbList"></div>
+    </div>
+  </section>
+
+  <!-- ================= THERAPY ================= -->
+  <section class="tabpane hide" data-pane="therapy">
+    <div class="card">
+      <h2>Sujok &amp; Homeopathy (Complementary)</h2>
+      <p class="sub">Supportive, non-invasive complementary guidance. These do not replace prescribed
+        treatment. Never place unsterilised material in the eye or ear.</p>
+      <div id="therapyList"></div>
+    </div>
+  </section>
+
+  <!-- ================= MEAL LOG ================= -->
+  <section class="tabpane hide" data-pane="log">
+    <div class="card">
+      <h2>Daily Meal &amp; Remedy Log</h2>
+      <p class="sub">Stored offline on this device. Log food, herbs or a therapy session.</p>
+      <div class="grid cols2" style="margin-bottom:10px">
+        <input type="text" id="mealInput" placeholder="e.g. Mulethi tea, Moong dal, Sujok session">
+        <select id="mealType">
+          <option>Breakfast</option><option>Mid-morning</option><option>Lunch</option>
+          <option>Evening</option><option>Dinner</option><option>Bedtime</option>
+          <option>Herb / Remedy</option><option>Therapy session</option>
+        </select>
+      </div>
+      <button class="btn block" onclick="logMeal()">Save Entry</button>
+      <h3>Today &amp; history</h3>
+      <ul class="log" id="mealLog"></ul>
+    </div>
+  </section>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="tabpane hide" data-pane="about">
+    <div class="card">
+      <h2>About, Data &amp; Safety</h2>
+      <div class="disclaimer" style="margin-bottom:12px">
+        <b>Not a substitute for professional medical care.</b> Information here is educational and drawn from
+        classical Ayurvedic texts and general nutrition literature. It is not a diagnosis or prescription.
+        Herbs can interact with medication (e.g. licorice/Mulethi with blood-pressure and heart medicines;
+        Ashwagandha with thyroid medicines). Seek a qualified professional before use.
+      </div>
+      <h3 style="margin-top:0">How offline works</h3>
+      <p class="sub" style="margin-bottom:12px">A service worker caches the whole app on first load, so it
+        opens and runs with no connection. Your profile, meal logs and settings live in this browser's local
+        storage. Only the optional login-audit sync needs the internet.</p>
+
+      <h3>Practitioner admin — Google Sheet sync setup</h3>
+      <p class="sub">Login audit records (name, email, address, time) queue offline and upload when online to
+        the endpoint below. To enable it, deploy a Google Apps Script Web App bound to a Sheet owned by
+        advlakhilohia@gmail.com and paste its <code>/exec</code> URL here.</p>
+      <label class="fld">Google Apps Script Web App URL</label>
+      <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/XXXX/exec">
+      <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap">
+        <button class="btn sm" onclick="saveScriptUrl()">Save endpoint</button>
+        <button class="btn sm ghost" onclick="forceSync()">Sync now</button>
+        <span class="pill" id="pendingCount">0 pending</span>
+      </div>
+      <p class="cite" style="margin-top:12px"><b>Admin note:</b> collecting personal data creates
+        responsibilities under privacy law (e.g. India's DPDP Act 2023). Keep the sheet private, collect only
+        what you need, and honour the consent shown to users.</p>
+
+      <h3>Legal / branding note</h3>
+      <p class="sub">Bar Council of India Rules restrict advocates from running a personal commercial trade.
+        Accordingly this product is branded <b>“CoserveU powered by studymadease”</b> with Adv. Lakhi Lohia in
+        a non-executive advisory role, not as a personal commercial venture. This is general information, not
+        legal advice — confirm your specific position with the Bar Council / your own counsel.</p>
+
+      <h3>Classical &amp; modern sources referenced</h3>
+      <p class="cite"><b>Classical:</b> Charaka Samhita (Chikitsa Sthana — Hikka-Svasa, Kushtha, Grahani;
+        Sutra Sthana — Nidra); Ashtanga Hridaya (Uttara Sthana — Netra &amp; Karna Roga).
+        <b>Modern (indicative):</b> peer-reviewed work on glycyrrhizin/licorice in respiratory inflammation;
+        lutein/zeaxanthin in lens &amp; macular health; soluble fibre &amp; low saturated fat in bile
+        lithogenicity; withanolides and sleep. Citations are indicative pointers for further reading, not
+        clinical endorsements — verify primary sources before relying on them.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  CoserveU • powered by studymadease • Educational use only — not a substitute for professional medical advice.
+</footer>
+
+<script>
+/* ============================================================
+   CoserveU — offline-first logic (vanilla JS, no dependencies)
+   ============================================================ */
+const ADMIN_EMAILS = ["advlakhilohia@gmail.com", "lakhilohia23@gmail.com"];
+const LS = {
+  user:"coserveu_user", meals:"coserveu_meals", pending:"coserveu_pending",
+  script:"coserveu_script_url"
+};
+let currentUser = safeParse(localStorage.getItem(LS.user), null);
+
+function safeParse(s, fb){ try{ return s? JSON.parse(s): fb; }catch(e){ return fb; } }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function now(){ return new Date().toLocaleString(); }
+
+/* ---------- Access role ---------- */
+function role(){
+  if(!currentUser) return "guest";
+  if(ADMIN_EMAILS.includes((currentUser.email||"").toLowerCase())) return "admin";
+  if(currentUser.paid) return "paid";
+  return "free";
+}
+function isFull(){ const r=role(); return r==="admin"||r==="paid"; }
+
+/* ============================================================
+   KNOWLEDGE BASE
+   ============================================================ */
+// Symptom -> condition key
+const SYMPTOMS = [
+  {grp:"Lungs & Respiratory", items:[
+    {v:"ild", t:"Breathlessness / Interstitial Lung Disease (ILD)"},
+    {v:"cough", t:"Dry cough or mucus"}
+  ]},
+  {grp:"Eyes & Vision", items:[
+    {v:"cataract", t:"Blurry vision / cataract"},
+    {v:"conjunctivitis", t:"Redness, itching (conjunctivitis)"}
+  ]},
+  {grp:"Ear", items:[
+    {v:"ear", t:"Earache / ringing (tinnitus)"}
+  ]},
+  {grp:"Gallbladder & Digestion", items:[
+    {v:"gallstone", t:"Right-upper abdominal pain / gallstones"},
+    {v:"digestion", t:"Acidity, bloating, weak digestion"}
+  ]},
+  {grp:"Skin & Sleep", items:[
+    {v:"skin", t:"Rash / eczema / Kushtha"},
+    {v:"insomnia", t:"Sleeplessness (Anidra)"}
+  ]}
+];
+
+// Condition knowledge. fatHeavy/priority flags feed the conflict engine.
+const COND = {
+  ild:{ label:"Lungs / ILD", cls:"lung",
+    have:["Mulethi (licorice) warm decoction","Vasaka (Adhatoda) leaf infusion","Warm barley (yava) gruel","A little warm ghee","Honey (not heated)","Steamed vegetables, warm soups"],
+    avoid:["Cold & iced drinks","Curd/dairy at night","Dry, astringent, raw foods","Deep-fried heavy oils"],
+    classical:"Charaka Samhita, Chikitsa Sthana — Hikka-Svasa Chikitsa (17)",
+    clinical:"Licorice glycyrrhizin & Vasaka vasicine studied for anti-inflammatory / bronchodilator, mucolytic action.",
+    sujok:"Warm/press the lung correspondence zone (base of the thumb, palm) 1–2 min; a red dot or seed may be taped there." },
+  cough:{ alias:"ild" },
+  cataract:{ label:"Eyes / Cataract", cls:"eye",
+    have:["Triphala Ghrita (1 tsp) with warm water, empty stomach","Amla (Indian gooseberry)","Cooked spinach, carrot, green gram","A little cow's ghee"],
+    avoid:["Excess salt","Excess pungent (katu) spices","Fermented foods","Direct heat / smoke to eyes"],
+    classical:"Ashtanga Hridaya, Uttara Sthana — Netra Roga (approx. 13)",
+    clinical:"Lutein/zeaxanthin & vitamin-C rich foods associated with lens & macular protection.",
+    sujok:"Eye correspondence is the tip/pad of the thumb — gentle stimulation; never put anything in the eye." },
+  conjunctivitis:{ label:"Eyes / Conjunctivitis", cls:"eye",
+    have:["Cooling foods: green gram, coriander water","Amla, pomegranate","Adequate warm (not hot) water","Triphala eye-wash only if professionally prepared & sterile"],
+    avoid:["Sour, fermented, very salty foods","Pungent chillies","Rubbing the eyes","Heat & dust exposure"],
+    classical:"Ashtanga Hridaya, Uttara Sthana — Netra Roga",
+    clinical:"Anti-inflammatory, hygiene-first approach; Euphrasia traditionally used symptomatically (see Therapies).",
+    sujok:"Thumb-pad (eye zone) gentle press; strict hygiene — no unsterile contact with the eye." },
+  ear:{ label:"Ear (Karna Roga)", cls:"ear",
+    have:["Warm foods & drinks","Ginger, garlic in cooking","Adequate warmth to head/ears"],
+    avoid:["Cold-water head baths","Cold breeze exposure","Excess sour foods"],
+    classical:"Ashtanga Hridaya, Uttara Sthana — Karna Roga",
+    clinical:"Warmth & anti-microbial kitchen herbs (ginger, garlic) traditionally supportive; see a doctor for discharge/pain.",
+    sujok:"Ear correspondence sits on the side of the thumb tip — gentle stimulation only." },
+  gallstone:{ label:"Gallbladder stones", cls:"gall", fatHeavy:true, priority:true,
+    have:["Warm water, warm lemon water","Radish (mulaka) & its juice","High-fibre whole grains, barley","Cooked light vegetables (bottle gourd)","Moong dal"],
+    avoid:["Deep-fried foods","Heavy fats, butter, red meat","Refined sugar & rich sweets","Very large heavy meals"],
+    classical:"Charaka Samhita, Chikitsa Sthana — Grahani/Agni context (15)",
+    clinical:"Low saturated fat + high soluble fibre associated with reduced bile lithogenicity; seek surgical review for acute colic.",
+    sujok:"Gallbladder zone maps to the right palm below the ring finger; gentle green-colour/press support only." },
+  digestion:{ label:"Digestion / Agni", cls:"digest",
+    have:["Warm, freshly cooked light meals","Ginger, cumin, ajwain, fennel","Buttermilk (takra) at midday","Eat to ~75% fullness"],
+    avoid:["Cold, leftover, incompatible (viruddha) foods","Overeating, late-night heavy meals","Excess raw salad at night"],
+    classical:"Charaka Samhita — Agni & Grahani principles",
+    clinical:"Smaller warm meals, carminative spices support digestion & reduce reflux.",
+    sujok:"Stomach zone = centre of the palm; gentle clockwise massage after meals." },
+  skin:{ label:"Skin (Kushtha)", cls:"skin",
+    have:["Bitter greens: neem, bitter gourd","Turmeric in cooking","Moong dal, light bitter vegetables","Plenty of warm water"],
+    avoid:["Sour curd","Fish + milk and other viruddha (incompatible) combos","Excess salt, sour, jaggery","Fried & fermented foods"],
+    classical:"Charaka Samhita, Chikitsa Sthana — Kushtha Chikitsa (7)",
+    clinical:"Curcumin & neem constituents studied for anti-inflammatory / skin-soothing effects.",
+    sujok:"Treat the mapped skin area's correspondence; keep skin clean, avoid known triggers." },
+  insomnia:{ label:"Sleep (Anidra)", cls:"sleep",
+    have:["Warm milk with a pinch of nutmeg at bedtime","Ashwagandha with warm milk (if suitable)","Warm ghee foot-massage (Padabhyanga)","Light early dinner"],
+    avoid:["Caffeine (tea/coffee) after noon","Alcohol","Very spicy or heavy late meals","Screens late at night"],
+    classical:"Charaka Samhita, Sutra Sthana — Nidra Adhyaya (21)",
+    clinical:"Tryptophan/magnesium foods & withanolides (Ashwagandha) studied for sleep support.",
+    sujok:"Head/brain zone = thumb tip; calming gentle press before bed." }
+};
+function condResolve(k){ const c=COND[k]; return c && c.alias ? COND[c.alias] : c; }
+
+/* Herbs */
+const HERBS = [
+  {name:"Triphala / Triphala Ghrita", bot:"Emblica officinalis, Terminalia chebula, Terminalia bellirica",
+   uses:"Eye health (cataract, conjunctivitis), gentle digestion & bowel regularity, skin support.",
+   modern:"Polyphenol-rich; antioxidant activity studied for lens proteins and gut health.",
+   dose:"Powder 3–5 g with warm water at night; or Triphala Ghrita 1 tsp with warm water on empty stomach (as advised).",
+   contra:"Avoid large doses in acute diarrhoea and in pregnancy; may loosen stools.",
+   classical:"Ashtanga Hridaya (Netra); Charaka Sutra Sthana 27", clinical:"Antioxidant / ocular-support research."},
+  {name:"Mulethi (Licorice)", bot:"Glycyrrhiza glabra",
+   uses:"Respiratory support (ILD, cough), soothing to throat and gastric mucosa.",
+   modern:"Glycyrrhizin studied for anti-inflammatory and demulcent effects.",
+   dose:"Decoction 1–3 g twice daily, short courses only.",
+   contra:"AVOID in hypertension, low potassium, heart or kidney disease, pregnancy; interacts with BP/heart/diuretic drugs. Do not use long-term.",
+   classical:"Charaka Samhita — Hikka-Svasa Chikitsa (17)", clinical:"Glycyrrhizin respiratory / mucosal research."},
+  {name:"Ashwagandha", bot:"Withania somnifera",
+   uses:"Sleep (Anidra), stress, general strength & recovery.",
+   modern:"Withanolides studied for sleep quality and stress markers.",
+   dose:"300–600 mg standardized extract, or ~3 g powder with warm milk before bed.",
+   contra:"Avoid in hyperthyroidism, acute fever; caution with thyroid, sedative & immunosuppressant medicines; avoid in pregnancy.",
+   classical:"Charaka Samhita — Rasayana / Vata context", clinical:"Withanolide sleep & stress research."},
+  {name:"Vasaka (Malabar nut)", bot:"Adhatoda vasica",
+   uses:"Cough, bronchial congestion, respiratory support.",
+   modern:"Vasicine studied for bronchodilator & mucolytic (expectorant) action.",
+   dose:"Leaf juice 5–10 ml with honey, or as decoction (as advised).",
+   contra:"Avoid in pregnancy and bleeding disorders.",
+   classical:"Ashtanga Hridaya — Kasa-Svasa", clinical:"Vasicine expectorant research."},
+  {name:"Guggulu (with Triphala = Triphala Guggulu)", bot:"Commiphora mukul",
+   uses:"Fat & lipid metabolism, joint and gallbladder/biliary support.",
+   modern:"Guggulsterones studied for lipid metabolism.",
+   dose:"250–500 mg with warm water after meals (as advised).",
+   contra:"Caution with thyroid & blood-thinning medicines; avoid in pregnancy.",
+   classical:"Classical Guggulu Kalpanas", clinical:"Guggulsterone lipid research."},
+  {name:"Neem", bot:"Azadirachta indica",
+   uses:"Skin disorders (Kushtha), blood purification, antimicrobial support.",
+   modern:"Nimbidin/azadirachtin studied for anti-inflammatory & antimicrobial effects.",
+   dose:"Small amounts of leaf/decoction, short courses; topical use as advised.",
+   contra:"Avoid in pregnancy; not for infants; avoid prolonged high doses (liver caution).",
+   classical:"Charaka Samhita — Kushtha Chikitsa (7)", clinical:"Nimbidin dermatological research."},
+  {name:"Turmeric (Haridra)", bot:"Curcuma longa",
+   uses:"Skin, anti-inflammatory support, digestion.",
+   modern:"Curcumin widely studied for anti-inflammatory activity (low oral bioavailability).",
+   dose:"Culinary use; 1–3 g/day with black pepper & fat to aid absorption.",
+   contra:"High doses caution with gallstones (may stimulate bile), blood thinners, and before surgery.",
+   classical:"Charaka Samhita — Kushtha", clinical:"Curcumin anti-inflammatory research."}
+];
+
+/* Homeopathy notes (symptomatic, complementary) */
+const HOMEO = {
+  ild:["Arsenicum album (breathing ease)","Spongia tosta (dry cough)"],
+  gallstone:["Chelidonium majus (biliary/liver)","Lycopodium (bloating)"],
+  conjunctivitis:["Euphrasia officinalis (watering/redness)"],
+  cataract:["Cineraria maritima drops — alcohol-free, only if professionally supplied"],
+  insomnia:["Coffea cruda","Nux vomica (over-stimulation)"],
+  skin:["Sulphur","Graphites (oozing eczema)"]
+};
+
+/* ============================================================
+   UI: tabs
+   ============================================================ */
+document.getElementById('tabs').addEventListener('click', (e)=>{
+  const b=e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  const t=b.dataset.tab;
+  document.querySelectorAll('.tabpane').forEach(p=>p.classList.toggle('hide', p.dataset.pane!==t));
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ---------- Online/offline ---------- */
+function updateStatus(){
+  const el=document.getElementById('statusInd');
+  if(navigator.onLine){ el.textContent="Online"; el.className="status online"; syncPending(); }
+  else { el.textContent="Offline Mode"; el.className="status offline"; }
+}
+window.addEventListener('online', updateStatus);
+window.addEventListener('offline', updateStatus);
+
+/* ---------- Registration ---------- */
+document.getElementById('loginForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  const name=document.getElementById('fName').value.trim();
+  const email=document.getElementById('fEmail').value.trim().toLowerCase();
+  const addr=document.getElementById('fAddr').value.trim();
+  const consent=document.getElementById('fConsent').checked;
+  if(!name||!email){ alert("Please enter name and email."); return; }
+  const prevPaid = currentUser && currentUser.email===email ? !!currentUser.paid : false;
+  currentUser={ name, email, address:addr, loginTime:now(), consent, paid:prevPaid };
+  localStorage.setItem(LS.user, JSON.stringify(currentUser));
+  if(consent) queueAudit(currentUser);
+  renderRole(); renderHerbs(); renderTherapies(); renderPending();
+});
+
+function renderRole(){
+  const box=document.getElementById('roleAlert');
+  if(!currentUser){ box.classList.add('hide'); return; }
+  box.classList.remove('hide');
+  const r=role();
+  if(r==="admin"){
+    box.className="alert admin";
+    box.innerHTML="<b>Admin access active</b> — full master access to all plans, herbs and therapies. Welcome, "+esc(currentUser.name)+".";
+  } else if(r==="paid"){
+    box.className="alert paid";
+    box.innerHTML="<b>Subscribed patient</b> — full access active. Welcome, "+esc(currentUser.name)+".";
+  } else {
+    box.className="alert free";
+    box.innerHTML="<span><b>Free tier</b> — symptom checker & herb overview available. Unlock full plans, dosages & Sujok for ₹100/week.</span>"+
+      "<button class='btn sm amber' onclick='subscribe()'>Unlock ₹100/wk</button>";
+  }
+}
+function subscribe(){
+  if(!currentUser){ alert("Please register first."); return; }
+  // NOTE: placeholder unlock. A real static site cannot securely process payments;
+  // integrate a payment gateway + server before charging money.
+  if(!confirm("This is a demo unlock (no real payment is taken). Enable full access on this device?")) return;
+  currentUser.paid=true;
+  localStorage.setItem(LS.user, JSON.stringify(currentUser));
+  renderRole(); renderHerbs(); renderTherapies();
+  alert("Full access enabled on this device (demo).");
+}
+
+/* ============================================================
+   Google Sheets audit sync (offline queue -> online push)
+   ============================================================ */
+function scriptUrl(){ return localStorage.getItem(LS.script) || ""; }
+function saveScriptUrl(){
+  const v=document.getElementById('scriptUrl').value.trim();
+  localStorage.setItem(LS.script, v);
+  alert(v? "Endpoint saved. Records will sync when online." : "Endpoint cleared.");
+  syncPending();
+}
+function queueAudit(u){
+  const p=safeParse(localStorage.getItem(LS.pending), []);
+  p.push({ adminTargets:ADMIN_EMAILS, name:u.name, email:u.email, address:u.address, loginTime:u.loginTime });
+  localStorage.setItem(LS.pending, JSON.stringify(p));
+  renderPending();
+  if(navigator.onLine) syncPending();
+}
+async function syncPending(){
+  const url=scriptUrl();
+  let p=safeParse(localStorage.getItem(LS.pending), []);
+  if(!url || p.length===0 || !navigator.onLine){ renderPending(); return; }
+  const remaining=[];
+  for(const rec of p){
+    try{
+      await fetch(url,{ method:"POST", mode:"no-cors",
+        headers:{ "Content-Type":"application/json" }, body:JSON.stringify(rec) });
+      // no-cors gives an opaque response; we optimistically treat as sent.
+    }catch(err){ remaining.push(rec); }
+  }
+  localStorage.setItem(LS.pending, JSON.stringify(remaining));
+  renderPending();
+}
+function forceSync(){ if(!navigator.onLine){ alert("You are offline — records will sync automatically when back online."); return; } if(!scriptUrl()){ alert("Set the Apps Script URL first."); return;} syncPending(); }
+function renderPending(){
+  const p=safeParse(localStorage.getItem(LS.pending), []);
+  const el=document.getElementById('pendingCount'); if(el) el.textContent=p.length+" pending";
+  const s=document.getElementById('scriptUrl'); if(s && !s.value) s.value=scriptUrl();
+}
+
+/* ============================================================
+   Symptom checker + conflict engine
+   ============================================================ */
+function buildSymptomUI(){
+  const c=document.getElementById('symptomChecks');
+  c.innerHTML=SYMPTOMS.map(g=>`
+    <div class="grp"><span class="glab">${esc(g.grp)}</span>
+      ${g.items.map(it=>`<label><input type="checkbox" class="sym" value="${it.v}"><span>${esc(it.t)}</span></label>`).join("")}
+    </div>`).join("");
+}
+function buildConditionUI(){
+  const keys=["ild","cataract","conjunctivitis","ear","gallstone","digestion","skin","insomnia"];
+  const c=document.getElementById('conditionChecks');
+  c.innerHTML=`<div class="grp"><span class="glab">Active conditions</span>
+    ${keys.map(k=>`<label><input type="checkbox" class="cond" value="${k}"><span>${esc(condResolve(k).label)}</span></label>`).join("")}
+  </div>`;
+}
+
+function analyzeSymptoms(){
+  if(!currentUser){ alert("Please register on the Home tab first."); return; }
+  const picked=[...document.querySelectorAll('.sym:checked')].map(x=>x.value);
+  if(picked.length===0){ alert("Select at least one symptom."); return; }
+  // map symptom -> canonical condition key
+  const map={ild:"ild",cough:"ild",cataract:"cataract",conjunctivitis:"conjunctivitis",ear:"ear",gallstone:"gallstone",digestion:"digestion",skin:"skin",insomnia:"insomnia"};
+  const keys=[...new Set(picked.map(p=>map[p]))];
+  renderProtocol(keys, document.getElementById('symptomOut'));
+  document.getElementById('symptomResults').classList.remove('hide');
+  document.getElementById('symptomResults').scrollIntoView({behavior:'smooth'});
+}
+
+function renderDietPlan(){
+  if(!currentUser){ alert("Please register on the Home tab first."); return; }
+  const keys=[...document.querySelectorAll('.cond:checked')].map(x=>x.value);
+  if(keys.length===0){ alert("Select at least one condition."); return; }
+  renderProtocol(keys, document.getElementById('dietOut'));
+  document.getElementById('dietResults').classList.remove('hide');
+  document.getElementById('dietResults').scrollIntoView({behavior:'smooth'});
+}
+
+// Conflict engine: gallbladder low-fat wins over heavy oily lung foods, etc.
+function conflictNotes(keys){
+  const notes=[];
+  if(keys.includes("gallstone")){
+    notes.push("Gallbladder safety takes priority: keep fats low. Use Mulethi as a <b>watery decoction</b> (not ghee-heavy), and take medicated ghee (Triphala Ghrita) only in a very small dose or as your practitioner advises.");
+  }
+  if(keys.includes("ild") && (keys.includes("conjunctivitis"))){
+    notes.push("Lungs prefer warm; eyes/conjunctivitis prefer cooling. Bridge them with <b>warm-but-not-hot</b> foods, and favour cooling herbs (green gram, amla) rather than iced items.");
+  }
+  if(keys.includes("skin") && keys.includes("insomnia")){
+    notes.push("For skin, bitter/cooling foods help; for sleep, warm milk at night helps. Keep the bitter foods for daytime and the warm milk at bedtime.");
+  }
+  if(keys.includes("ear") && keys.includes("conjunctivitis")){
+    notes.push("Ears want warmth, eyes want cooling — apply warmth to the ears/head and keep the diet neutral-cooling.");
+  }
+  return notes;
+}
+
+// unified sample day, adapted for gallbladder priority
+function sampleDay(keys){
+  const gall=keys.includes("gallstone");
+  const lung=keys.includes("ild");
+  const eye=keys.includes("cataract")||keys.includes("conjunctivitis");
+  const sleep=keys.includes("insomnia");
+  const rows=[
+    ["Morning", (lung? "Warm Mulethi decoction + " : "Warm water + ")+"lemon"],
+    ["Breakfast", "Barley/oats porridge"+(gall? " (low-fat)":"")+" + stewed apple"],
+    ["Mid-morning", eye? "Amla juice"+(isFull()? " + Triphala Ghrita ½–1 tsp":""): "Buttermilk (takra)"],
+    ["Lunch", "Steamed moong dal + bottle gourd + rice"+(keys.includes("skin")? " + bitter gourd":"")],
+    ["Evening", lung? "Warm ginger tea (no dairy)":"Warm herbal tea"],
+    ["Dinner", "Bottle-gourd / vegetable soup + soft rice (light, early)"],
+    ["Bedtime", sleep? "Warm milk + pinch of nutmeg":"Warm water"]
+  ];
+  return `<table style="width:100%; border-collapse:collapse; font-size:13px; margin-top:6px">
+    ${rows.map(r=>`<tr><td style="padding:6px 8px; border-bottom:1px solid var(--line); font-weight:600; white-space:nowrap; color:#334155">${r[0]}</td>
+    <td style="padding:6px 8px; border-bottom:1px solid var(--line)">${esc(r[1])}</td></tr>`).join("")}
+  </table>`;
+}
+
+function renderProtocol(keys, target){
+  const full=isFull();
+  const notes=conflictNotes(keys);
+  let html="";
+
+  // priority / conflict banner
+  if(notes.length){
+    html+=`<div class="panel gall"><h4>Cross-compatibility (how these plans complement each other)</h4>${notes.map(n=>`<p>• ${n}</p>`).join("")}</div>`;
+  }
+
+  // per-condition cards
+  keys.forEach(k=>{
+    const c=condResolve(k); if(!c) return;
+    html+=`<div class="panel ${c.cls}">
+      <h4>${esc(c.label)}</h4>
+      <p><span class="tag">Have</span><span class="have">${c.have.map(esc).join(" · ")}</span></p>
+      <p><span class="tag">Avoid</span><span class="avoid">${c.avoid.map(esc).join(" · ")}</span></p>
+      ${ full
+        ? `<p><span class="tag">Sujok</span>${esc(c.sujok)}</p>`
+        : `<p class="locked">🔒 Sujok mapping & detailed herbal dosing — subscribe (₹100/wk) to unlock.</p>` }
+      <div class="cite"><b>Classical:</b> ${esc(c.classical)}<br><b>Modern (indicative):</b> ${esc(c.clinical)}</div>
+    </div>`;
+  });
+
+  // unified day
+  html+=`<div class="panel"><h4>Suggested unified day</h4>${sampleDay(keys)}
+    <p class="cite" style="margin-top:8px">Adjust portions to your digestive strength (Agni). Stop and seek care if symptoms worsen.</p></div>`;
+
+  if(!full){
+    html+=`<div class="block-note" style="margin-top:10px">You're on the <b>Free tier</b>. What-to-have / what-to-avoid and citations are shown.
+      Full herbal dosing, Sujok maps and homeopathy pairing unlock with a ₹100/week subscription.
+      <div style="margin-top:8px"><button class="btn sm amber" onclick="subscribe()">Unlock ₹100/wk</button></div></div>`;
+  }
+
+  // homeopathy pairing for full users
+  if(full){
+    const hs=keys.flatMap(k=> HOMEO[k]? [[condResolve(k).label, HOMEO[k]]]:[]);
+    if(hs.length){
+      html+=`<div class="panel sleep"><h4>Complementary homeopathy (symptomatic)</h4>
+        ${hs.map(([lab,arr])=>`<p><b>${esc(lab)}:</b> ${arr.map(esc).join(", ")}</p>`).join("")}
+        <p class="cite">Take ~30 min apart from strong herbal decoctions. Complementary only — not a replacement for prescribed care.</p></div>`;
+    }
+  }
+
+  target.innerHTML=html;
+}
+
+/* ---------- Herbs ---------- */
+function renderHerbs(){
+  const full=isFull();
+  document.getElementById('herbList').innerHTML = HERBS.map(h=>`
+    <div class="herb">
+      <div class="hh"><h4>${esc(h.name)}</h4><span class="bot">${esc(h.bot)}</span></div>
+      <dl>
+        <dt>Traditional uses</dt><dd>${esc(h.uses)}</dd>
+        <dt>Modern scientific direction</dt><dd>${esc(h.modern)}</dd>
+        <dt>Dosage</dt><dd>${ full ? esc(h.dose) : '<span class="locked">🔒 Unlock dosage with a ₹100/week subscription.</span>' }</dd>
+        <dt>Contraindications / cautions</dt><dd style="color:#b91c1c">${esc(h.contra)}</dd>
+      </dl>
+      <div class="cite"><b>Classical:</b> ${esc(h.classical)} &nbsp;·&nbsp; <b>Modern (indicative):</b> ${esc(h.clinical)}</div>
+    </div>`).join("");
+}
+
+/* ---------- Therapies ---------- */
+function renderTherapies(){
+  const full=isFull();
+  const keys=["ild","cataract","conjunctivitis","ear","gallstone","digestion","skin","insomnia"];
+  document.getElementById('therapyList').innerHTML = keys.map(k=>{
+    const c=condResolve(k);
+    const homeo=HOMEO[k]||[];
+    return `<div class="panel ${c.cls}">
+      <h4>${esc(c.label)}</h4>
+      <p><span class="tag">Sujok</span>${ full? esc(c.sujok) : '<span class="locked">🔒 Subscribe to view Sujok correspondence points.</span>' }</p>
+      ${ homeo.length? `<p><span class="tag">Homeopathy</span>${ full? esc(homeo.join(", ")) : '<span class="locked">🔒 Subscribe to view.</span>'}</p>`:"" }
+    </div>`;
+  }).join("") + `<p class="cite">Sujok & homeopathy here are supportive/complementary and symptomatic. They do not replace prescribed medical treatment. Never place unsterile material in the eye or ear.</p>`;
+}
+
+/* ---------- Meal log ---------- */
+function logMeal(){
+  const input=document.getElementById('mealInput');
+  const type=document.getElementById('mealType').value;
+  const txt=input.value.trim(); if(!txt) return;
+  const logs=safeParse(localStorage.getItem(LS.meals), []);
+  logs.unshift({ text:txt, type, time:now() });
+  localStorage.setItem(LS.meals, JSON.stringify(logs));
+  input.value=""; renderMealLog();
+}
+function delMeal(i){
+  const logs=safeParse(localStorage.getItem(LS.meals), []);
+  logs.splice(i,1); localStorage.setItem(LS.meals, JSON.stringify(logs)); renderMealLog();
+}
+function renderMealLog(){
+  const logs=safeParse(localStorage.getItem(LS.meals), []);
+  const el=document.getElementById('mealLog');
+  if(logs.length===0){ el.innerHTML="<li class='empty'>No entries yet.</li>"; return; }
+  el.innerHTML=logs.map((l,i)=>`<li>
+    <span><span class="pill">${esc(l.type||"")}</span> ${esc(l.text)}</span>
+    <span class="t">${esc(l.time)} <button onclick="delMeal(${i})">✕</button></span></li>`).join("");
+}
+
+/* ============================================================
+   Boot
+   ============================================================ */
+buildSymptomUI(); buildConditionUI();
+renderRole(); renderHerbs(); renderTherapies(); renderMealLog(); renderPending();
+updateStatus();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=> navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>

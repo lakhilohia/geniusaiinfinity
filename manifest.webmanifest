@@ -1,0 +1,14 @@
+{
+  "name": "CoserveU powered by studymadease",
+  "short_name": "CoserveU",
+  "description": "Offline-first holistic diet, symptom checker and Ayurvedic herbal guide (Charaka Samhita & Ashtanga Hridaya + modern nutrition).",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ecfdf5",
+  "theme_color": "#065f46",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
