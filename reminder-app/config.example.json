@@ -1,0 +1,7 @@
+{
+  "sender_email": "your_gmail_here@gmail.com",
+  "app_password": "xxxx xxxx xxxx xxxx",
+  "recipient_email": "coserveu@gmail.com",
+  "check_interval_seconds": 60,
+  "default_remind_before": "1h"
+}

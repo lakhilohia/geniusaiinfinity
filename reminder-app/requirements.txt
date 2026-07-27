@@ -1,0 +1,9 @@
+# The Termux / CLI version (cli.py, daemon.py, reminder.py) uses ONLY the
+# Python standard library — nothing to install here.
+#
+# You only need the packages below if you build the GUI Android APK
+# (see android-apk/). Install them on a Linux PC, not on the phone.
+#
+# kivy>=2.3.0
+# buildozer>=1.5.0
+# cython

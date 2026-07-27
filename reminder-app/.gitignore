@@ -1,0 +1,11 @@
+# Your private settings (contains your Gmail app password) - never commit!
+config.json
+
+# Local task data
+tasks.json
+
+# Buildozer / build artifacts
+android-apk/.buildozer/
+android-apk/bin/
+*.pyc
+__pycache__/
