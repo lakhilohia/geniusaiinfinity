@@ -10,149 +10,174 @@
 <link rel="apple-touch-icon" href="./icon.svg" />
 <style>
   :root{
-    --bg:#f1f5f4; --card:#ffffff; --ink:#0f172a; --muted:#64748b;
-    --line:#e2e8f0; --brand:#065f46; --brand2:#047857; --brand-soft:#ecfdf5;
-    --amber:#b45309; --amber-soft:#fffbeb; --indigo:#3730a3; --indigo-soft:#eef2ff;
-    --red:#b91c1c; --radius:14px; --shadow:0 1px 2px rgba(2,6,23,.06),0 8px 24px rgba(2,6,23,.06);
+    --bg:#0a0f1e; --card:#141c30; --card2:#1a2439; --ink:#e8edf7; --muted:#9fb0cc;
+    --line:#2a3654; --brand:#34d399; --brand2:#10b981; --brand-soft:rgba(52,211,153,.14);
+    --amber:#fbbf24; --amber-soft:rgba(251,191,36,.14); --indigo:#818cf8; --indigo-soft:rgba(129,140,248,.14);
+    --red:#f87171; --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.45);
   }
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
     font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:var(--bg); color:var(--ink); line-height:1.5; -webkit-text-size-adjust:100%;
+    background:#0a0f1e; color:var(--ink); line-height:1.5; -webkit-text-size-adjust:100%;
     min-height:100vh; display:flex; flex-direction:column;
+    background-image:
+      radial-gradient(1200px 600px at 8% -10%, rgba(16,185,129,.18), transparent 60%),
+      radial-gradient(1000px 520px at 100% 0%, rgba(99,102,241,.18), transparent 55%),
+      radial-gradient(900px 700px at 50% 120%, rgba(217,70,239,.14), transparent 55%);
+    background-attachment:fixed;
   }
-  a{color:var(--brand2)}
+  a{color:var(--brand)}
   [dir=rtl]{text-align:right}
   .wrap{width:100%; max-width:900px; margin:0 auto; padding:16px; flex:1}
   header.top{
-    background:linear-gradient(135deg,#065f46,#047857); color:#fff; padding:14px 16px;
+    background:linear-gradient(120deg,#065f46 0%,#0891b2 45%,#6d28d9 100%); color:#fff; padding:14px 16px;
     display:flex; align-items:center; justify-content:space-between; gap:12px; position:sticky; top:0; z-index:40;
-    box-shadow:0 2px 10px rgba(2,6,23,.15);
+    box-shadow:0 4px 24px rgba(109,40,217,.35); border-bottom:1px solid rgba(255,255,255,.12);
   }
-  header.top h1{font-size:20px; margin:0; letter-spacing:.3px}
-  header.top p{margin:2px 0 0; font-size:11px; color:#a7f3d0}
+  header.top h1{font-size:20px; margin:0; letter-spacing:.5px; text-shadow:0 1px 8px rgba(0,0,0,.3)}
+  header.top p{margin:2px 0 0; font-size:11px; color:#c7f9ec}
   .hright{display:flex; align-items:center; gap:8px}
-  #langSel{font-size:12px; padding:5px 8px; border-radius:8px; border:1px solid #34d399; background:#065f46; color:#fff}
+  #langSel{font-size:12px; padding:5px 8px; border-radius:8px; border:1px solid rgba(255,255,255,.4); background:rgba(0,0,0,.25); color:#fff}
   .status{font-size:11px; padding:5px 10px; border-radius:999px; border:1px solid; white-space:nowrap}
-  .status.online{background:#059669; border-color:#34d399; color:#fff}
-  .status.offline{background:#b45309; border-color:#f59e0b; color:#fff}
+  .status.online{background:rgba(16,185,129,.25); border-color:#34d399; color:#a7f3d0}
+  .status.offline{background:rgba(251,146,60,.25); border-color:#fbbf24; color:#fde68a}
 
-  nav.tabs{background:#fff; border-bottom:1px solid var(--line); display:flex; overflow-x:auto; position:sticky; top:58px; z-index:30}
+  nav.tabs{background:rgba(10,15,30,.9); backdrop-filter:blur(8px); border-bottom:1px solid var(--line); display:flex; overflow-x:auto; position:sticky; top:58px; z-index:30}
   nav.tabs button{
     flex:0 0 auto; background:none; border:none; padding:12px 14px; font-size:13px; color:var(--muted);
     cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; font-weight:500;
   }
-  nav.tabs button.active{color:var(--brand2); border-bottom-color:var(--brand2); font-weight:700}
+  nav.tabs button:hover{color:#cbd5e1}
+  nav.tabs button.active{color:#fff; border-bottom-color:var(--brand); font-weight:700;
+    background:linear-gradient(180deg,transparent,rgba(52,211,153,.12))}
 
-  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; margin:0 0 16px}
+  .card{background:linear-gradient(180deg,var(--card),var(--card2)); border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px; margin:0 0 16px}
   .card h2{margin:0 0 4px; font-size:17px; color:var(--brand)}
-  .card h3{margin:14px 0 6px; font-size:14px}
+  .card h3{margin:14px 0 6px; font-size:14px; color:#e2e8f0}
   .sub{color:var(--muted); font-size:12px; margin:0 0 12px}
 
-  label.fld{display:block; font-size:12px; font-weight:600; margin:0 0 4px; color:#334155}
+  label.fld{display:block; font-size:12px; font-weight:600; margin:0 0 4px; color:#cbd5e1}
   input[type=text],input[type=email],select{
-    width:100%; padding:10px; border:1px solid var(--line); border-radius:10px; font-size:14px; background:#fff; color:var(--ink);
+    width:100%; padding:10px; border:1px solid var(--line); border-radius:10px; font-size:14px; background:#0d1424; color:var(--ink);
   }
-  input:focus,select:focus{outline:2px solid #a7f3d0; border-color:var(--brand2)}
+  input::placeholder{color:#64748b}
+  input:focus,select:focus{outline:2px solid var(--brand); border-color:var(--brand)}
+  option{background:#141c30; color:var(--ink)}
   .grid{display:grid; grid-template-columns:1fr; gap:10px}
   @media(min-width:640px){ .grid.cols3{grid-template-columns:1fr 1fr 1fr} .grid.cols2{grid-template-columns:1fr 1fr} }
 
   .btn{display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer; border:none;
-    background:var(--brand2); color:#fff; padding:11px 16px; border-radius:10px; font-size:14px; font-weight:600}
-  .btn:hover{background:var(--brand)}
+    background:linear-gradient(135deg,#10b981,#0891b2); color:#fff; padding:11px 16px; border-radius:10px; font-size:14px; font-weight:700; box-shadow:0 4px 14px rgba(8,145,178,.35)}
+  .btn:hover{filter:brightness(1.08)}
   .btn.block{width:100%}
-  .btn.ghost{background:#fff; color:var(--brand2); border:1px solid var(--brand2)}
-  .btn.amber{background:var(--amber)}
+  .btn.ghost{background:transparent; color:var(--brand); border:1px solid var(--brand); box-shadow:none}
+  .btn.amber{background:linear-gradient(135deg,#f59e0b,#db2777)}
   .btn.sm{padding:6px 12px; font-size:12px}
 
   .checks{display:grid; grid-template-columns:1fr; gap:8px}
   @media(min-width:560px){ .checks{grid-template-columns:1fr 1fr} }
-  .grp{border:1px solid var(--line); border-radius:12px; padding:12px; background:#fafcfb}
+  .grp{border:1px solid var(--line); border-radius:12px; padding:12px; background:rgba(255,255,255,.03)}
   .grp .glab{font-weight:700; font-size:12px; color:var(--brand); display:block; margin-bottom:6px}
   .grp label{display:flex; gap:8px; align-items:flex-start; font-size:13px; padding:3px 0; cursor:pointer}
+  input[type=checkbox]{accent-color:#10b981; width:16px; height:16px}
 
   .alert{padding:10px 12px; border-radius:10px; font-size:12.5px; border:1px solid; margin:10px 0}
-  .alert.admin{background:var(--indigo-soft); color:var(--indigo); border-color:#c7d2fe}
-  .alert.paid{background:var(--brand-soft); color:var(--brand); border-color:#a7f3d0}
-  .alert.free{background:var(--amber-soft); color:var(--amber); border-color:#fde68a; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+  .alert.admin{background:var(--indigo-soft); color:#c7d2fe; border-color:rgba(129,140,248,.4)}
+  .alert.paid{background:var(--brand-soft); color:#a7f3d0; border-color:rgba(52,211,153,.4); display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
+  .alert.free{background:var(--amber-soft); color:#fde68a; border-color:rgba(251,191,36,.4); display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap}
 
-  .block-note{background:#eef2ff; border:1px solid #c7d2fe; color:#3730a3; border-radius:10px; padding:14px; text-align:center; font-size:13px}
+  .block-note{background:var(--indigo-soft); border:1px solid rgba(129,140,248,.4); color:#c7d2fe; border-radius:10px; padding:14px; text-align:center; font-size:13px}
 
-  .panel{border:1px solid var(--line); border-radius:12px; padding:14px; margin:12px 0; background:#fff}
-  .panel.lung{border-left:4px solid #059669}
-  .panel.eye{border-left:4px solid #4f46e5}
-  .panel.ear{border-left:4px solid #0891b2}
-  .panel.gall{border-left:4px solid #b45309}
-  .panel.skin{border-left:4px solid #db2777}
-  .panel.sleep{border-left:4px solid #7c3aed}
-  .panel.digest{border-left:4px solid #ca8a04}
-  .panel h4{margin:0 0 6px; font-size:14px}
+  .panel{border:1px solid var(--line); border-radius:12px; padding:14px; margin:12px 0; background:var(--card2)}
+  .panel.lung{border-left:4px solid #34d399; background:linear-gradient(90deg,rgba(52,211,153,.08),var(--card2) 30%)}
+  .panel.eye{border-left:4px solid #818cf8; background:linear-gradient(90deg,rgba(129,140,248,.08),var(--card2) 30%)}
+  .panel.ear{border-left:4px solid #22d3ee; background:linear-gradient(90deg,rgba(34,211,238,.08),var(--card2) 30%)}
+  .panel.gall{border-left:4px solid #fbbf24; background:linear-gradient(90deg,rgba(251,191,36,.08),var(--card2) 30%)}
+  .panel.skin{border-left:4px solid #f472b6; background:linear-gradient(90deg,rgba(244,114,182,.08),var(--card2) 30%)}
+  .panel.sleep{border-left:4px solid #a78bfa; background:linear-gradient(90deg,rgba(167,139,250,.08),var(--card2) 30%)}
+  .panel.digest{border-left:4px solid #facc15; background:linear-gradient(90deg,rgba(250,204,21,.08),var(--card2) 30%)}
+  .panel h4{margin:0 0 6px; font-size:14px; color:#e8edf7}
   .panel p{margin:4px 0; font-size:13px}
-  .tag{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:2px 7px; border-radius:6px; background:#f1f5f9; color:#475569; margin-right:6px}
-  .tag.allo{background:#e0f2fe; color:#075985}
-  .tag.sujok{background:#dcfce7; color:#166534}
-  .tag.homeo{background:#fef9c3; color:#854d0e}
-  .tag.mantra{background:#fae8ff; color:#86198f}
-  .tag.tantra{background:#ede9fe; color:#5b21b6}
-  .condwrap{border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:0 0 16px; background:#fff}
-  .condhead{padding:10px 14px; font-weight:700; color:#fff; font-size:14px; background:var(--brand2)}
-  .condhead.lung{background:#059669}.condhead.eye{background:#4f46e5}.condhead.ear{background:#0891b2}
-  .condhead.gall{background:#b45309}.condhead.skin{background:#db2777}.condhead.sleep{background:#7c3aed}.condhead.digest{background:#ca8a04}
+  .tag{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:2px 7px; border-radius:6px; background:rgba(148,163,184,.18); color:#cbd5e1; margin-right:6px}
+  .tag.allo{background:rgba(56,189,248,.2); color:#7dd3fc}
+  .tag.sujok{background:rgba(52,211,153,.2); color:#6ee7b7}
+  .tag.homeo{background:rgba(250,204,21,.2); color:#fde047}
+  .tag.mantra{background:rgba(232,121,249,.2); color:#f0abfc}
+  .tag.tantra{background:rgba(167,139,250,.2); color:#c4b5fd}
+  .condwrap{border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:0 0 16px; background:var(--card2)}
+  .condhead{padding:11px 14px; font-weight:700; color:#fff; font-size:14px; background:linear-gradient(135deg,#10b981,#0891b2)}
+  .condhead.lung{background:linear-gradient(135deg,#059669,#0d9488)}.condhead.eye{background:linear-gradient(135deg,#4f46e5,#7c3aed)}.condhead.ear{background:linear-gradient(135deg,#0891b2,#0ea5e9)}
+  .condhead.gall{background:linear-gradient(135deg,#d97706,#ea580c)}.condhead.skin{background:linear-gradient(135deg,#db2777,#e11d48)}.condhead.sleep{background:linear-gradient(135deg,#7c3aed,#6d28d9)}.condhead.digest{background:linear-gradient(135deg,#ca8a04,#d97706)}
   .modality{padding:12px 14px; border-top:1px solid var(--line)}
   .modality p{margin:4px 0; font-size:13px}
-  .modality .sk{font-family:"Noto Sans Devanagari",serif; color:#86198f; font-weight:600}
-  .cnt{display:inline-block; font-size:11px; font-weight:700; background:#f5d0fe; color:#86198f; padding:1px 8px; border-radius:999px}
+  .modality .sk{color:#f0abfc; font-weight:600}
+  .cnt{display:inline-block; font-size:11px; font-weight:700; background:rgba(232,121,249,.22); color:#f0abfc; padding:1px 8px; border-radius:999px}
   .sujokrow{display:flex; gap:14px; flex-wrap:wrap; align-items:flex-start}
   .sujoktext{flex:1; min-width:200px}
   .handpic{text-align:center}
   .handpic .cap{font-size:10px; color:var(--muted); margin-top:2px}
+  /* Diagnosis Helper (Nidan) */
+  .dxcard{border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:12px; background:var(--card2); position:relative; overflow:hidden}
+  .dxcard::before{content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:linear-gradient(180deg,#34d399,#0891b2)}
+  .dxtop{display:flex; align-items:center; gap:10px}
+  .dxrank{flex:0 0 auto; width:30px; height:30px; border-radius:50%; display:grid; place-items:center; font-weight:800; color:#04121a; background:linear-gradient(135deg,#34d399,#22d3ee)}
+  .dxname{font-weight:700; font-size:15px; color:#e8edf7}
+  .dxsys{font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:#94a3b8}
+  .dxbarwrap{height:8px; border-radius:999px; background:rgba(255,255,255,.08); margin:8px 0; overflow:hidden}
+  .dxbar{height:100%; border-radius:999px; background:linear-gradient(90deg,#34d399,#22d3ee)}
+  .dxdesc{font-size:12.5px; color:#c3cee0; margin:6px 0}
+  .dxmatch{font-size:12px; color:#6ee7b7; margin:3px 0}
+  .dxno{font-size:12px; color:#94a3b8; margin:3px 0}
+  .chip{display:inline-block; font-size:11px; padding:1px 8px; border-radius:999px; margin:2px 3px 0 0}
+  .chip.y{background:rgba(52,211,153,.18); color:#6ee7b7}
+  .chip.n{background:rgba(148,163,184,.14); color:#94a3b8}
   /* Donate */
-  .donatecard{max-width:320px; margin:0 auto; padding:16px; border:1px solid var(--line); border-radius:16px; background:#fafcfb}
+  .donatecard{max-width:320px; margin:0 auto; padding:16px; border:1px solid var(--line); border-radius:16px; background:rgba(255,255,255,.03)}
   .qrbox{width:240px; height:240px; margin:0 auto; background:#fff; padding:10px; border-radius:12px; border:1px solid var(--line)}
   .qrbox svg{width:100%; height:100%; display:block}
   .paylines{max-width:360px; margin:14px auto 0; display:flex; flex-direction:column; gap:8px}
-  .payrow{display:flex; align-items:center; gap:10px; justify-content:space-between; border:1px solid var(--line); border-radius:10px; padding:8px 12px; font-size:13px; background:#fff}
+  .payrow{display:flex; align-items:center; gap:10px; justify-content:space-between; border:1px solid var(--line); border-radius:10px; padding:8px 12px; font-size:13px; background:var(--card2)}
   .payrow span{color:var(--muted); font-size:12px}
-  .payrow b{flex:1; text-align:left; word-break:break-all}
+  .payrow b{flex:1; text-align:left; word-break:break-all; color:#e8edf7}
   /* Library */
-  .libitem{border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px; background:#fff; font-size:13px}
-  .libitem .bk{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; padding:1px 7px; border-radius:6px; margin-bottom:5px}
-  .libitem mark{background:#fde68a; padding:0 1px}
+  .libitem{border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px; background:var(--card2); font-size:13px}
+  .libitem .bk{display:inline-block; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#6ee7b7; background:rgba(52,211,153,.14); border:1px solid rgba(52,211,153,.35); padding:1px 7px; border-radius:6px; margin-bottom:5px}
+  .libitem mark{background:#fbbf24; color:#111; padding:0 2px; border-radius:2px}
   .bookhdr{margin:14px 0 6px; font-size:14px; color:var(--brand); font-weight:700}
-  .have{color:#065f46}
-  .avoid{color:#b91c1c}
-  .cite{font-size:11px; color:var(--muted); background:#f8fafc; border:1px solid var(--line); border-radius:8px; padding:6px 8px; margin-top:6px}
-  .cite b{color:#334155}
-  .allo-note{font-size:12px; background:#f0f9ff; border:1px solid #bae6fd; color:#075985; border-radius:8px; padding:8px; margin-top:6px}
+  .have{color:#6ee7b7}
+  .avoid{color:#fca5a5}
+  .cite{font-size:11px; color:var(--muted); background:rgba(255,255,255,.03); border:1px solid var(--line); border-radius:8px; padding:6px 8px; margin-top:6px}
+  .cite b{color:#cbd5e1}
+  .allo-note{font-size:12px; background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.3); color:#bae6fd; border-radius:8px; padding:8px; margin-top:6px}
 
-  .herb{border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:12px; background:#fff}
+  .herb{border:1px solid var(--line); border-radius:12px; padding:14px; margin-bottom:12px; background:var(--card2)}
   .herb .hh{display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap}
   .herb .hh h4{margin:0; color:var(--brand)}
   .herb .bot{font-style:italic; color:var(--muted); font-size:12px}
   .herb dl{margin:8px 0 0; font-size:13px}
-  .herb dt{font-weight:700; color:#334155; margin-top:6px; font-size:12px}
-  .herb dd{margin:0 0 2px}
+  .herb dt{font-weight:700; color:#cbd5e1; margin-top:6px; font-size:12px}
+  .herb dd{margin:0 0 2px; color:#d5dded}
   .locked{color:var(--amber); font-weight:600}
 
   ul.log{list-style:none; margin:0; padding:0}
   ul.log li{display:flex; justify-content:space-between; gap:8px; padding:9px 2px; border-bottom:1px solid var(--line); font-size:13px}
   ul.log li .t{color:var(--muted); font-size:11px; white-space:nowrap}
   ul.log li button{background:none;border:none;color:var(--red);cursor:pointer;font-size:12px}
-  .empty{color:#94a3b8; font-style:italic; font-size:13px; padding:8px 0}
+  .empty{color:#64748b; font-style:italic; font-size:13px; padding:8px 0}
 
-  .disclaimer{background:#fff7ed; border:1px solid #fdba74; color:#9a3412; border-radius:12px; padding:14px; font-size:12.5px}
-  .disclaimer b{color:#7c2d12}
-  .mantra-box{background:#fdf4ff; border:1px solid #f0abfc; border-radius:12px; padding:14px; margin:10px 0}
-  .mantra-box .sk{font-weight:600; color:#86198f}
-  .mantra-box .cnt{display:inline-block; font-size:11px; font-weight:700; background:#f5d0fe; color:#86198f; padding:1px 8px; border-radius:999px; margin-left:6px}
+  .disclaimer{background:rgba(251,146,60,.12); border:1px solid rgba(253,186,116,.4); color:#fed7aa; border-radius:12px; padding:14px; font-size:12.5px}
+  .disclaimer b{color:#fdba74}
+  .mantra-box{background:rgba(217,70,239,.1); border:1px solid rgba(240,171,252,.35); border-radius:12px; padding:14px; margin:10px 0}
+  .mantra-box .sk{font-weight:600; color:#f0abfc}
+  .mantra-box .cnt{display:inline-block; font-size:11px; font-weight:700; background:rgba(232,121,249,.22); color:#f0abfc; padding:1px 8px; border-radius:999px; margin-left:6px}
   footer{padding:18px 16px; text-align:center; font-size:11px; color:var(--muted)}
   .kv{font-size:12px; color:var(--muted)}
   .hide{display:none !important}
-  .pill{font-size:11px; padding:2px 8px; border-radius:999px; background:#e2e8f0; color:#475569}
+  .pill{font-size:11px; padding:2px 8px; border-radius:999px; background:rgba(148,163,184,.18); color:#cbd5e1}
   table.day{width:100%; border-collapse:collapse; font-size:13px; margin-top:6px}
   table.day td{padding:6px 8px; border-bottom:1px solid var(--line)}
-  table.day td:first-child{font-weight:600; white-space:nowrap; color:#334155}
+  table.day td:first-child{font-weight:600; white-space:nowrap; color:#cbd5e1}
 </style>
 </head>
 <body>
@@ -178,6 +203,7 @@
 
 <nav class="tabs" id="tabs">
   <button data-tab="home" class="active" data-i18n="navHome">Home</button>
+  <button data-tab="nidan" data-i18n="navNidan">🔎 Diagnosis Helper</button>
   <button data-tab="symptom" data-i18n="navSymptom">Symptom Checker</button>
   <button data-tab="diet" data-i18n="navDiet">Diet Plan</button>
   <button data-tab="herbs" data-i18n="navHerbs">Herbal Formulations</button>
@@ -211,8 +237,8 @@
       </div>
     </div>
 
-    <div class="card" style="border-left:5px solid #dc2626">
-      <h2 style="color:#b91c1c" data-i18n="emergTitle">🚑 Emergency signs — turant hospital jaayein</h2>
+    <div class="card" style="border-left:5px solid #ef4444">
+      <h2 style="color:#f87171" data-i18n="emergTitle">🚑 Emergency signs — turant hospital jaayein</h2>
       <p class="sub">In me se koi bhi ho to diet/herb par time mat gawaayein — <b>seedha doctor / hospital</b>:</p>
       <ul style="font-size:13px;margin:0;padding-left:18px;line-height:1.7">
         <li><b>Saans:</b> bahut tez saans phoolna, honth/naakhun neele padna, seene me dard.</li>
@@ -225,12 +251,9 @@
     </div>
 
     <div class="card">
-      <h2 data-i18n="registerTitle">Login / Register (this is the login)</h2>
-      <div class="allo-note" style="margin:0 0 10px"><b>🔑 Admin full access:</b> apna admin email
-        (<b>advlakhilohia@gmail.com</b> ya <b>lakhilohia23@gmail.com</b>) + koi bhi naam daal ke
-        <b>Start Session</b> dabayein — poora access (Sujok, mantra, dosage) khul jayega.</div>
-      <p class="sub">Details are stored on <b>this device</b> first. With consent and internet, a login record
-        is also synced to the practitioner's Google Sheet.</p>
+      <h2 data-i18n="registerTitle">Login / Register (optional)</h2>
+      <p class="sub">Saare features <b>bina login</b> ke bhi free hain. Login karne par aapki details
+        <b>is device</b> par save hoti hain; consent + internet ho to practitioner ki private sheet me sync hoti hain.</p>
       <form id="loginForm" class="grid cols3">
         <div><label class="fld" data-i18n="nameLbl">Full name</label><input type="text" id="fName" required placeholder="e.g. Ramesh Kumar"></div>
         <div><label class="fld" data-i18n="emailLbl">Email</label><input type="email" id="fEmail" required placeholder="you@email.com"></div>
@@ -252,6 +275,29 @@
       <p class="kv" style="margin:2px 0">• <b>Sabhi features free</b> — symptom checker, full diet, herbal dosing, Sujok maps, mantra, tantra, reference books. Koi ₹100/week fee nahi.</p>
       <p class="kv" style="margin:2px 0">• <b>Login optional</b> — bina login bhi sab chalega. Admin email se login karne par audit sync milta hai.</p>
       <p class="kv" style="margin:2px 0">• <b>❤️ Donation swaeksha</b> — sirf agar app se sach me fayda ho. <a href="#" onclick="goTab('donate');return false">Donate tab kholein</a>.</p>
+    </div>
+  </section>
+
+  <!-- ================= NIDAN / DIAGNOSIS HELPER ================= -->
+  <section class="tabpane hide" data-pane="nidan">
+    <div class="card">
+      <h2 data-i18n="nidanTitle">🔎 Diagnosis Helper (Nidan Sahayak)</h2>
+      <p class="sub">Apne symptoms tick karein — app <b>offline</b> (bina internet) sambhavit bimariyan match
+        karke rank karega, matching &amp; non-matching symptoms ke saath. Ye <b>DxGPT jaisa</b> hai lekin 100%
+        free &amp; offline. <b>Ye nidan (diagnosis) NAHI hai</b> — sirf sochne me madad; pakka doctor se milein.</p>
+      <div class="disclaimer" style="margin-bottom:12px">
+        <b>Educational only — not a diagnosis, not for emergencies.</b> Suggested conditions AI/rule-based hain
+        aur galat ho sakti hain. Emergency me 108/112 call karein ya hospital jaayein.
+      </div>
+      <div class="checks" id="nidanChecks"></div>
+      <button class="btn block" style="margin-top:12px" onclick="analyzeNidan()" data-i18n="nidanBtn">Analyze &amp; Show Possible Conditions</button>
+    </div>
+    <div class="card hide" id="nidanResults">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+        <h2 style="margin:0">Possible conditions (ranked)</h2>
+        <button class="btn sm" onclick="downloadNidanPDF()">🖨️ Report PDF</button>
+      </div>
+      <div id="nidanOut" style="margin-top:10px"></div>
     </div>
   </section>
 
@@ -460,8 +506,9 @@ const I18N = {
   en:{}, // base = HTML defaults
   hi:{ brandTag:"स्टडीमेडईज़ द्वारा • संस्थापक: एडवोकेट लखी लोहिया (सलाहकार)",
     navHome:"होम", navSymptom:"लक्षण जाँच", navDiet:"आहार योजना", navHerbs:"औषधीय जड़ी-बूटियाँ",
-    navTherapy:"सुजोक व एक्यूप्रेशर", navTraditions:"अथर्ववेद / मंत्र / तंत्र", navLibrary:"संदर्भ ग्रंथ", navDonate:"❤️ दान", navLog:"भोजन लॉग", navAbout:"जानकारी व सुरक्षा",
+    navTherapy:"सुजोक व एक्यूप्रेशर", navTraditions:"अथर्ववेद / मंत्र / तंत्र", navLibrary:"संदर्भ ग्रंथ", navDonate:"❤️ दान", navLog:"भोजन लॉग", navAbout:"जानकारी व सुरक्षा", navNidan:"🔎 निदान सहायक",
     libraryTitle:"संदर्भ ग्रंथालय (ऑफ़लाइन)", donateTitle:"❤️ दान करें (केवल यदि लाभ हुआ हो)", emergTitle:"🚑 आपातकालीन लक्षण — तुरंत अस्पताल जाएं",
+    nidanTitle:"🔎 निदान सहायक (संभावित रोग)", nidanBtn:"विश्लेषण करें व संभावित रोग देखें",
     welcomeTitle:"स्वागत है", registerTitle:"पंजीकरण / सत्र आरंभ करें", nameLbl:"पूरा नाम", emailLbl:"ईमेल", addrLbl:"शहर / पता",
     consentLbl:"मैं सहमत हूँ कि मेरा नाम, ईमेल, पता व लॉगिन समय दर्ज किया जाए और ऑनलाइन होने पर एडमिन शीट में सिंक हो।",
     startBtn:"सत्र आरंभ करें", symptomTitle:"इंटरैक्टिव लक्षण जाँच", analyzeBtn:"विश्लेषण करें व योजना बनाएं",
@@ -471,8 +518,9 @@ const I18N = {
     discBold:"केवल शैक्षिक उपयोग — चिकित्सा सलाह नहीं।" },
   hinglish:{ brandTag:"powered by studymadease • Founder: Adv. Lakhi Lohia (Advisory)",
     navHome:"Home", navSymptom:"Lakshan Check", navDiet:"Diet Plan", navHerbs:"Herbal Jadi-Booti",
-    navTherapy:"Sujok & Acupressure", navTraditions:"Atharvaved / Mantra / Tantra", navLibrary:"Reference Granth", navDonate:"❤️ Donate", navLog:"Meal Log", navAbout:"Info & Safety",
+    navTherapy:"Sujok & Acupressure", navTraditions:"Atharvaved / Mantra / Tantra", navLibrary:"Reference Granth", navDonate:"❤️ Donate", navLog:"Meal Log", navAbout:"Info & Safety", navNidan:"🔎 Nidan Sahayak",
     libraryTitle:"Reference Library (offline)", donateTitle:"❤️ Donate (only if it helped)", emergTitle:"🚑 Emergency signs — turant hospital jaayein",
+    nidanTitle:"🔎 Nidan Sahayak (sambhavit rog)", nidanBtn:"Analyze karein & sambhavit rog dekhein",
     welcomeTitle:"Swagat hai", registerTitle:"Register / Session shuru karein", nameLbl:"Pura naam", emailLbl:"Email", addrLbl:"Sheher / Pata",
     consentLbl:"Main sehmat hoon ki mera naam, email, pata aur login time record ho aur online hone par admin sheet me sync ho.",
     startBtn:"Session Shuru Karein", symptomTitle:"Interactive Lakshan Check", analyzeBtn:"Analyze karein & plan banayein",
@@ -1157,10 +1205,181 @@ function renderLibrary(){
 }
 
 /* ============================================================
+   NIDAN — offline rule-based differential-diagnosis helper (DxGPT-style)
+   ============================================================ */
+const DIAG_SYMPTOMS = [
+  {grp:"🫁 Lungs / Respiratory", items:[
+    {v:"breathless",t:"Shortness of breath"},{v:"cough",t:"Cough"},{v:"wheeze",t:"Wheezing"},
+    {v:"chestpain",t:"Chest pain/tightness"},{v:"sputum",t:"Phlegm / mucus"}]},
+  {grp:"👁️ Eyes", items:[
+    {v:"blurry",t:"Blurry vision"},{v:"eyered",t:"Red / itchy eyes"},{v:"eyepain",t:"Eye pain"},
+    {v:"dryeye",t:"Dry eyes"},{v:"watering",t:"Watering eyes"}]},
+  {grp:"👂 Ear", items:[
+    {v:"earache",t:"Earache"},{v:"hearloss",t:"Hearing loss"},{v:"tinnitus",t:"Ringing (tinnitus)"},
+    {v:"eardisch",t:"Ear discharge"}]},
+  {grp:"🍽️ Gallbladder / Digestive", items:[
+    {v:"rabdopain",t:"Right-upper abdominal pain"},{v:"nausea",t:"Nausea / vomiting"},{v:"bloating",t:"Bloating"},
+    {v:"acidity",t:"Acidity / reflux"},{v:"jaundice",t:"Yellow eyes/skin (jaundice)"},
+    {v:"constip",t:"Constipation"},{v:"diarrhea",t:"Loose motions"}]},
+  {grp:"🧴 Skin", items:[
+    {v:"rash",t:"Rash"},{v:"itching",t:"Itching"},{v:"dryskin",t:"Dry skin"},{v:"scaling",t:"Scaling / flaking"}]},
+  {grp:"😴 Sleep / General", items:[
+    {v:"insomnia",t:"Sleeplessness"},{v:"headache",t:"Headache"},{v:"dizziness",t:"Dizziness"},
+    {v:"anxiety",t:"Anxiety / stress"},{v:"fatigue",t:"Tiredness / weakness"},{v:"fever",t:"Fever"},
+    {v:"weightloss",t:"Weight loss"},{v:"jointpain",t:"Joint pain"},{v:"swelling",t:"Swelling"},
+    {v:"excthirst",t:"Excess thirst"},{v:"frequrine",t:"Frequent urination"}]}
+];
+const SXLABEL = {}; DIAG_SYMPTOMS.forEach(g=>g.items.forEach(it=>SXLABEL[it.v]=it.t));
+// Disease knowledge base (educational). cond = link to our Diet Plan tab where relevant.
+const DISEASES = [
+  {name:"Interstitial Lung Disease (ILD)", sys:"Respiratory", cond:"ild", sx:["breathless","cough","fatigue","chestpain"],
+   desc:"Scarring/inflammation of lung tissue causing progressive breathlessness and dry cough."},
+  {name:"Bronchial Asthma", sys:"Respiratory", cond:"ild", sx:["breathless","wheeze","cough","chestpain"],
+   desc:"Reversible airway narrowing with episodic wheeze, cough and breathlessness."},
+  {name:"COPD", sys:"Respiratory", cond:"ild", sx:["breathless","cough","sputum","wheeze","fatigue"],
+   desc:"Chronic obstructive airway disease, usually smoking-related, with chronic cough & breathlessness."},
+  {name:"Pneumonia", sys:"Respiratory", sx:["fever","cough","sputum","breathless","chestpain"],
+   desc:"Lung infection with fever, productive cough and breathlessness — needs prompt medical care."},
+  {name:"Pulmonary Tuberculosis", sys:"Respiratory", sx:["cough","weightloss","fever","fatigue","sputum"],
+   desc:"Chronic infection; cough >2 weeks, weight loss, evening fever — see a doctor for testing."},
+  {name:"Cataract", sys:"Eye", cond:"cataract", sx:["blurry"],
+   desc:"Clouding of the lens causing painless progressive blurring; treated by surgery."},
+  {name:"Conjunctivitis", sys:"Eye", cond:"conjunctivitis", sx:["eyered","itching","watering","eyepain"],
+   desc:"Inflammation of the eye surface — red, watery, itchy eyes; hygiene-first."},
+  {name:"Dry Eye Disease", sys:"Eye", sx:["dryeye","eyered","watering","blurry"],
+   desc:"Insufficient/poor tears causing grittiness, redness and fluctuating vision."},
+  {name:"Glaucoma", sys:"Eye", sx:["eyepain","blurry","headache"],
+   desc:"Raised eye pressure damaging the optic nerve; can threaten sight — urgent if painful."},
+  {name:"Otitis Media (ear infection)", sys:"Ear", cond:"ear", sx:["earache","eardisch","hearloss","fever"],
+   desc:"Middle-ear infection with pain, discharge and reduced hearing — see ENT."},
+  {name:"Tinnitus / Hearing loss", sys:"Ear", cond:"ear", sx:["tinnitus","hearloss"],
+   desc:"Ringing and/or reduced hearing; many causes — needs ENT assessment."},
+  {name:"Gallstones (Cholelithiasis)", sys:"Digestive", cond:"gallstone", sx:["rabdopain","nausea","bloating"],
+   desc:"Stones in the gallbladder; right-upper pain after fatty meals, nausea, bloating."},
+  {name:"Acute Cholecystitis", sys:"Digestive", cond:"gallstone", sx:["rabdopain","fever","nausea","jaundice"],
+   desc:"Inflamed/infected gallbladder — severe pain + fever ± jaundice = emergency."},
+  {name:"GERD / Acid Reflux", sys:"Digestive", cond:"digestion", sx:["acidity","chestpain","cough"],
+   desc:"Stomach acid rising up — heartburn, sour reflux, sometimes cough."},
+  {name:"Gastritis", sys:"Digestive", cond:"digestion", sx:["acidity","nausea","bloating","rabdopain"],
+   desc:"Stomach-lining inflammation with upper-abdomen burning, nausea and bloating."},
+  {name:"Irritable Bowel Syndrome", sys:"Digestive", cond:"digestion", sx:["bloating","constip","diarrhea"],
+   desc:"Functional gut disorder with bloating and alternating bowel habits."},
+  {name:"Eczema / Dermatitis (Kushtha)", sys:"Skin", cond:"skin", sx:["rash","itching","dryskin","scaling"],
+   desc:"Itchy, dry, inflamed skin patches; avoid triggers, moisturise, treat flares."},
+  {name:"Psoriasis", sys:"Skin", cond:"skin", sx:["scaling","rash","itching","jointpain"],
+   desc:"Chronic scaly plaques; can involve joints — needs dermatology review."},
+  {name:"Fungal skin infection", sys:"Skin", cond:"skin", sx:["rash","itching","scaling"],
+   desc:"Ring-shaped itchy scaly patches; common in warm, moist areas."},
+  {name:"Urticaria (hives)", sys:"Skin", sx:["rash","itching","swelling"],
+   desc:"Raised itchy welts, often allergic; sudden severe swelling can be dangerous."},
+  {name:"Chronic Insomnia (Anidra)", sys:"Sleep", cond:"insomnia", sx:["insomnia","fatigue","anxiety"],
+   desc:"Persistent difficulty sleeping with daytime tiredness; sleep-hygiene & CBT-I first."},
+  {name:"Migraine", sys:"Neuro", sx:["headache","nausea","dizziness"],
+   desc:"Recurrent throbbing headache, often with nausea and light sensitivity."},
+  {name:"Anxiety / Stress disorder", sys:"Mind", cond:"insomnia", sx:["anxiety","insomnia","fatigue","headache"],
+   desc:"Excess worry with poor sleep, tiredness and tension headaches."},
+  {name:"Hypothyroidism", sys:"Endocrine", sx:["fatigue","dryskin","insomnia","constip","weightloss"],
+   desc:"Underactive thyroid — tiredness, dry skin, sluggish bowels; simple blood test diagnoses it."},
+  {name:"Diabetes Mellitus", sys:"Endocrine", sx:["excthirst","frequrine","fatigue","weightloss","blurry"],
+   desc:"High blood sugar — excess thirst/urination, tiredness, blurred vision; get tested."},
+  {name:"Anaemia", sys:"Blood", sx:["fatigue","dizziness","breathless"],
+   desc:"Low haemoglobin causing tiredness, dizziness and breathlessness on exertion."},
+  {name:"Sarcoidosis", sys:"Multi-system", sx:["breathless","cough","eyered","rash","jointpain"],
+   desc:"Inflammatory granulomas affecting lungs, eyes, skin & joints together."},
+  {name:"Sjögren syndrome", sys:"Autoimmune", sx:["dryeye","dryskin","fatigue","jointpain"],
+   desc:"Autoimmune dryness of eyes/mouth with fatigue and joint aches."},
+  {name:"Rheumatoid arthritis", sys:"Autoimmune", sx:["jointpain","fatigue","swelling"],
+   desc:"Autoimmune joint inflammation; can also affect lungs and eyes."},
+  {name:"Hypertension", sys:"Cardiovascular", sx:["headache","dizziness"],
+   desc:"High blood pressure — often silent; get BP checked regularly."}
+];
+function buildNidanUI(){
+  document.getElementById('nidanChecks').innerHTML = DIAG_SYMPTOMS.map(g=>`
+    <div class="grp"><span class="glab">${esc(g.grp)}</span>
+      ${g.items.map(it=>`<label><input type="checkbox" class="nsym" value="${it.v}"><span>${esc(it.t)}</span></label>`).join("")}
+    </div>`).join("");
+}
+let NIDAN_LAST=null;
+function nidanRank(sel){
+  return DISEASES.map(d=>{
+    const match=d.sx.filter(x=>sel.includes(x));
+    const nonMatch=sel.filter(x=>!d.sx.includes(x));
+    const other=d.sx.filter(x=>!sel.includes(x));
+    return {d, match, nonMatch, other, score:match.length, pct:Math.round(match.length/sel.length*100)};
+  }).filter(r=>r.score>0).sort((a,b)=> b.score-a.score || a.nonMatch.length-b.nonMatch.length).slice(0,8);
+}
+function analyzeNidan(){
+  const sel=[...document.querySelectorAll('.nsym:checked')].map(x=>x.value);
+  if(sel.length===0){ toast("Kam se kam ek symptom tick karein."); return; }
+  const ranked=nidanRank(sel);
+  NIDAN_LAST={sel, ranked};
+  const out=document.getElementById('nidanOut');
+  if(ranked.length===0){ out.innerHTML="<p class='empty'>Koi match nahi mila. Aur symptoms select karein.</p>"; }
+  else out.innerHTML = ranked.map((r,i)=>`
+    <div class="dxcard">
+      <div class="dxtop"><span class="dxrank">${i+1}</span>
+        <div><div class="dxname">${esc(r.d.name)}</div><div class="dxsys">${esc(r.d.sys)}</div></div></div>
+      <div class="dxbarwrap"><div class="dxbar" style="width:${Math.max(8,r.pct)}%"></div></div>
+      <div class="dxdesc">${esc(r.d.desc)}</div>
+      <div class="dxmatch">✔ Matching: ${r.match.map(x=>`<span class="chip y">${esc(SXLABEL[x]||x)}</span>`).join(" ")}</div>
+      ${r.nonMatch.length?`<div class="dxno">✘ Your other symptoms: ${r.nonMatch.map(x=>`<span class="chip n">${esc(SXLABEL[x]||x)}</span>`).join(" ")}</div>`:""}
+      ${r.other.length?`<div class="dxno">Also typical: ${r.other.map(x=>esc(SXLABEL[x]||x)).join(", ")}</div>`:""}
+      ${r.d.cond?`<button class="btn sm" style="margin-top:8px" onclick="goCondPlan('${r.d.cond}')">🌿 Holistic diet plan for this</button>`:""}
+    </div>`).join("") + `<p class="cite">Ye ranked list sirf symptom-overlap par based educational suggestion hai — pakka <b>diagnosis nahi</b>. Confirm karne ke liye qualified doctor se milein aur zaroori tests karwayein.</p>`;
+  document.getElementById('nidanResults').classList.remove('hide');
+  document.getElementById('nidanResults').scrollIntoView({behavior:'smooth'});
+}
+function goCondPlan(k){
+  goTab('diet');
+  const cb=document.querySelector('.cond[value="'+k+'"]');
+  if(cb){ document.querySelectorAll('.cond').forEach(x=>x.checked=false); cb.checked=true; renderDietPlan(); }
+}
+function downloadNidanPDF(){
+  if(!NIDAN_LAST){ toast("Pehle analyze karein."); return; }
+  const u=currentUser||{}; const {sel,ranked}=NIDAN_LAST;
+  let inner=`<h1>CoserveU — Diagnosis Helper Report</h1>
+    <div class="muted">powered by studymadease · Founder: Adv. Lakhi Lohia (Advisory)</div>
+    <p><b>Name:</b> ${esc(u.name||"__________")} &nbsp; <b>Date:</b> ${esc(new Date().toLocaleString())}</p>
+    <p><b>Reported symptoms:</b> ${sel.map(x=>`<span class="chip">${esc(SXLABEL[x]||x)}</span>`).join(" ")}</p>
+    <div class="warn"><b>Not a diagnosis.</b> These AI/rule-based suggestions may contain errors and are for
+      educational support only — not a substitute for a doctor. Not for emergencies (call 108/112).</div>`;
+  ranked.forEach((r,i)=>{ inner+=`<h2>${i+1}. ${esc(r.d.name)} <span class="muted">(${esc(r.d.sys)}, ${r.pct}% match)</span></h2>
+    <p>${esc(r.d.desc)}</p>
+    <p><b>Matching:</b> ${r.match.map(x=>esc(SXLABEL[x]||x)).join(", ")||"—"}</p>
+    ${r.nonMatch.length?`<p><b>Your other symptoms:</b> ${r.nonMatch.map(x=>esc(SXLABEL[x]||x)).join(", ")}</p>`:""}`; });
+  inner+=`<p class="muted" style="margin-top:16px">Reviewed by (doctor): ____________________  Signature &amp; Reg No.: __________</p>`;
+  printReport("CoserveU Diagnosis Helper Report", inner);
+}
+/* Shared printable report (popup, with inline fallback for sandboxes) */
+function printReport(title, inner){
+  const css=`body{font-family:system-ui,Arial,sans-serif;color:#0f172a;max-width:760px;margin:24px auto;padding:0 16px;line-height:1.5}
+    h1{color:#065f46;margin:0 0 2px} h2{color:#047857;font-size:15px;margin:14px 0 4px;border-bottom:1px solid #ddd}
+    .muted{color:#64748b;font-size:12px} p{margin:3px 0;font-size:13px}
+    .warn{background:#fff7ed;border:1px solid #fdba74;color:#9a3412;padding:10px;border-radius:8px;font-size:12px;margin:12px 0}
+    .chip{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:#ecfdf5;border:1px solid #a7f3d0;margin:2px}
+    @media print{.noprint{display:none}}`;
+  const w=window.open("","_blank");
+  if(!w){
+    let box=document.getElementById('reportInline');
+    if(!box){ box=document.createElement('div'); box.id='reportInline'; document.querySelector('.wrap').prepend(box); }
+    box.innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <b style="color:var(--brand)">${esc(title)}</b>
+      <span><button class="btn sm" onclick="window.print()">🖨️ Print / PDF</button>
+      <button class="btn sm ghost" onclick="document.getElementById('reportInline').remove()">Close</button></span></div>
+      <div style="background:#fff;border-radius:8px;padding:12px;margin-top:8px"><style>${css}</style>${inner}</div></div>`;
+    box.scrollIntoView({behavior:'smooth'}); toast("Report neeche khula — Print/PDF dabayein.");
+    return;
+  }
+  w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>'+css+'</style></head><body>'+inner+
+    '<button class="noprint" onclick="window.print()" style="margin-top:16px;padding:10px 16px;background:#047857;color:#fff;border:none;border-radius:8px;cursor:pointer">Print / Save as PDF</button></body></html>');
+  w.document.close(); setTimeout(()=>{ try{ w.print(); }catch(e){} }, 400);
+}
+
+/* ============================================================
    Boot
    ============================================================ */
 cacheEnglish();
-buildSymptomUI(); buildConditionUI();
+buildSymptomUI(); buildConditionUI(); buildNidanUI();
 renderRole(); renderHerbs(); renderTherapies(); renderTraditions(); renderMealLog(); renderPending();
 initDonate(); renderLibrary();
 const savedLang=localStorage.getItem(LS.lang)||"en";
